@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#0d0d0d" />
+    <title>NOR PERFUME | Official Online Store</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Tenor+Sans&family=Montserrat:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Tenor+Sans&family=Montserrat:wght@300;400;500;600;700&display=swap" />
+    </noscript>
+
+    <!-- Speed up Shopify and Social assets -->
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
+    <link rel="preconnect" href="https://nor-perfume-4.myshopify.com" crossorigin />
+    <link rel="preconnect" href="https://connect.facebook.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.shopify.com" />
+    <link rel="dns-prefetch" href="https://nor-perfume-4.myshopify.com" />
+    <link rel="dns-prefetch" href="https://connect.facebook.net" />
+    <meta
+      name="description"
+      content="Experience automotive luxury with NOR's premium car fragrances. Handcrafted in India with 100% natural oils and zero-liquid technology for a lasting, sophisticated scent."
+    />
+    <meta name="keywords" content="car perfume, luxury car fragrance, automotive scent, premium car freshener, natural oil car perfume, NOR car perfume, made in India" />
+    <meta name="author" content="NOR PERFUME" />
+    <link rel="canonical" href="https://www.norperfume.com" />
+
+    <meta property="og:title" content="NOR PERFUME | Official Online Store" />
+    <meta
+      property="og:description"
+      content="Experience automotive luxury with NOR's premium car fragrances. Handcrafted in India with 100% natural oils."
+    />
+    <meta property="og:image" content="https://www.norperfume.com/og-image.jpg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.norperfume.com" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NOR PERFUME | Official Online Store" />
+    <meta
+      name="twitter:description"
+      content="Premium handcrafted car fragrances with 100% natural oils. Crafted in India."
+    />
+    <meta name="twitter:image" content="https://www.norperfume.com/og-image.jpg" />
+
+    <!-- Meta Pixel Code -->
+    <script>
+    const isProductionHost = window.location.hostname === 'www.norperfume.com' || window.location.hostname === 'norperfume.com';
+    const rawEnableMetaPixel = "%VITE_ENABLE_META_PIXEL%";
+    const enableMetaPixel = !rawEnableMetaPixel.startsWith("%") && rawEnableMetaPixel.toLowerCase() === "true";
+    const rawPixelId = "%VITE_META_PIXEL_ID%";
+    const pixelId = !rawPixelId.startsWith("%") ? rawPixelId : "1006383931833299";
+    
+    if (isProductionHost && enableMetaPixel) {
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('set', 'autoConfig', false, pixelId);
+      fbq('init', pixelId);
+
+    } else {
+      window.fbq = function() {};
+    }
+    </script>
+    <!-- End Meta Pixel Code -->
+  </head>
+
+  <body style="background-color: #0d0d0d; margin: 0;">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:bg-background focus:text-foreground focus:p-4 focus:rounded-md focus:m-2">
+      Skip to content
+    </a>
+    <div id="root">
+      <!-- Minimal initial loader shown before JS loads -->
+      <div style="height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #0d0d0d;">
+        <div style="width: 40px; height: 40px; border: 2px solid rgba(212,175,55,0.1); border-top-color: #d4af37; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+      </div>
+      <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+      </style>
+    </div>
+    <script type="module" src="/src/main.tsx" fetchpriority="high"></script>
+  </body>
+</html>
