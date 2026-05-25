@@ -40,7 +40,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       resolvedId // Return the GID so frontend can use it for edit/delete checks
     });
   } catch (error: any) {
-    console.error('Eligibility check error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

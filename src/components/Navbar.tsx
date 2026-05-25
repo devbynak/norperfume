@@ -73,23 +73,34 @@ const Navbar = () => {
       <nav className="fixed left-0 right-0 z-50 px-4 py-2 lg:px-4 lg:py-1 top-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="max-w-7xl lg:max-w-4xl mx-auto flex items-center justify-between bg-surface-glass rounded-full px-6 py-3 lg:px-5 lg:py-1 relative border border-white/5 shadow-2xl shadow-black/40 backdrop-blur-md">
           {mobileSearchActive ? (
-            <div className="w-full flex items-center gap-3 z-10">
+            <div className="w-full flex items-center gap-3 z-10 py-1">
               <button 
                 onClick={() => { haptic("selection"); setMobileSearchActive(false); setSearchQuery(""); }}
-                className="text-foreground/60 hover:text-foreground shrink-0 outline-none p-1"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-foreground/60 hover:text-foreground shrink-0 outline-none"
                 aria-label="Close search"
               >
-                <X className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4" />
               </button>
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-                className="w-full bg-transparent border-none text-white placeholder-white/40 text-base md:text-sm focus:outline-none focus:ring-0 px-1 py-0.5"
-              />
-              <Search className="w-5 h-5 text-foreground/40 shrink-0" />
+              <div className="relative flex-1 group">
+                <input
+                  id="mobile-search-input"
+                  name="q"
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full bg-white/5 border border-white/10 rounded-full text-white placeholder-white/30 text-sm focus:outline-none focus:border-primary/40 px-5 py-1.5 transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => { haptic("light"); setSearchQuery(""); }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <>
@@ -111,7 +122,7 @@ const Navbar = () => {
                 <img 
                   src={logo} 
                   alt="NOR" 
-                  className="h-11 w-auto sm:h-12 lg:h-14 object-contain transition-all duration-300 group-hover:scale-110 group-active:scale-95 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" 
+                  className="h-9 w-auto sm:h-11 md:h-12 lg:h-14 object-contain transition-all duration-300 group-hover:scale-110 group-active:scale-95 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" 
                   {...({ fetchpriority: "high" } as any)}
                 />
               </Link>
@@ -162,33 +173,39 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed top-24 left-4 right-4 z-40 bg-surface-glass backdrop-blur-2xl border border-white/10 rounded-[28px] overflow-hidden shadow-2xl max-h-[60vh] overflow-y-auto p-4 space-y-2 sm:hidden"
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            className="fixed top-24 left-4 right-4 z-40 bg-[#0d0d0d]/90 backdrop-blur-[32px] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl max-h-[60vh] overflow-y-auto p-4 space-y-3 sm:hidden scrollbar-hide"
           >
+            <div className="flex items-center justify-between px-2 mb-2">
+              <p className="text-[10px] font-display tracking-[0.3em] uppercase text-white/40">Results ({filteredProducts.length})</p>
+            </div>
             {filteredProducts.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-6">No products found.</p>
+              <p className="text-sm text-muted-foreground text-center py-8">No products found.</p>
             ) : (
-              filteredProducts.map((product) => (
-                <button
+              filteredProducts.map((product, idx) => (
+                <motion.button
                   key={product.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.05 }}
                   onClick={() => {
                     haptic("light");
                     setMobileSearchActive(false);
                     setSearchQuery("");
                     navigate(`/product/${product.id}`);
                   }}
-                  className="w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-colors text-left"
+                  className="w-full flex items-center gap-4 p-3 rounded-[20px] bg-white/[0.03] border border-white/5 active:bg-white/[0.08] transition-all text-left"
                 >
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-12 h-12 rounded-xl object-cover shrink-0 border border-white/10"
+                    className="w-14 h-14 rounded-xl object-cover shrink-0 border border-white/10"
                   />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-foreground truncate">{product.name}</p>
-                    <p className="text-xs text-primary font-medium mt-0.5">{formatCurrency(product.price, product.currencyCode)}</p>
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <p className="text-sm font-bold text-foreground tracking-tight uppercase line-clamp-1">{product.name}</p>
+                    <p className="text-primary font-bold text-sm font-numbers-inter">{formatCurrency(product.price, product.currencyCode)}</p>
                   </div>
-                </button>
+                </motion.button>
               ))
             )}
           </motion.div>
@@ -211,7 +228,7 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 z-[61] h-[100dvh] w-full max-w-[340px] bg-white/[0.03] backdrop-blur-[24px] border-r border-white/10 flex flex-col shadow-2xl overflow-hidden"
+              className="fixed top-0 left-0 z-[61] h-[100dvh] w-full max-w-[340px] bg-[#0d0d0d]/80 backdrop-blur-[32px] border-r border-white/10 flex flex-col shadow-2xl overflow-hidden !rounded-none"
             >
               {/* Subtle background light gradients */}
               <div className="absolute top-[-10%] left-[-10%] w-[200px] h-[200px] bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
@@ -269,7 +286,6 @@ const Navbar = () => {
                           {item.label}
                         </Link>
                       )}
-                      <div className="h-[1px] w-full bg-white/[0.03]" />
                     </motion.div>
                   ))}
                 </div>

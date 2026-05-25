@@ -240,7 +240,7 @@ const TermsOfService = () => {
                   These Terms, coupled with our Return, Shipping, and Privacy Policies, supersede all prior communications whether written, verbal, or via Instagram DM.
                 </p>
                 <div className="pt-6">
-                  <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-widest">Legal & Governance • norperfume.help@gmail.com</p>
+                  <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-widest">Legal & Governance • support@norperfume.com</p>
                 </div>
               </div>
 

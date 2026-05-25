@@ -11,7 +11,6 @@ const SHOP_ID = process.env.VITE_SHOPIFY_SHOP_ID;
  */
 export async function getCustomerIdFromToken(accessToken: string): Promise<string | null> {
   if (!SHOP_ID) {
-    console.error('VITE_SHOPIFY_SHOP_ID is missing');
     return null;
   }
 
@@ -36,7 +35,6 @@ export async function getCustomerIdFromToken(accessToken: string): Promise<strin
     const result = await response.json();
     return result.data?.customer?.id || null;
   } catch (error) {
-    console.error('Error resolving customer ID:', error);
     return null;
   }
 }
@@ -47,7 +45,6 @@ export async function getCustomerIdFromToken(accessToken: string): Promise<strin
  */
 export async function verifyPurchase(customerId: string, productId: string): Promise<string | null> {
   if (!ADMIN_API_TOKEN) {
-    console.error('ADMIN_API_TOKEN is not set');
     return null;
   }
 
@@ -91,7 +88,6 @@ export async function verifyPurchase(customerId: string, productId: string): Pro
     const result = await response.json();
     
     if (result.errors) {
-      console.error('Shopify Admin API Error:', result.errors);
       return null;
     }
 
@@ -111,7 +107,6 @@ export async function verifyPurchase(customerId: string, productId: string): Pro
 
     return null;
   } catch (error) {
-    console.error('Error verifying purchase:', error);
     return null;
   }
 }

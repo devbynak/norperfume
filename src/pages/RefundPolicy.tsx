@@ -202,7 +202,7 @@ const RefundPolicy = () => {
                 <div className="space-y-4">
                   <h3 className="font-display text-lg text-foreground m-0">08. How to submit</h3>
                   <p className="text-xs text-muted-foreground/70 font-light leading-relaxed">
-                    Contact us at <a href="mailto:norperfume.help@gmail.com" className="text-primary underline">norperfume.help@gmail.com</a> or via Instagram <span className="text-foreground font-medium">@norperfumeofficial</span> with your unboxing video, photos, and order ID.
+                    Contact us at <a href="mailto:support@norperfume.com" className="text-primary underline">support@norperfume.com</a> or via Instagram <span className="text-foreground font-medium">@norperfumeofficial</span> with your unboxing video, photos, and order ID.
                   </p>
                 </div>
                 <div className="space-y-4">

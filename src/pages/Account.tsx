@@ -59,7 +59,10 @@ const Account = () => {
         setLastName(p.lastName || "");
         setPhone(p.phoneNumber?.phoneNumber || "");
       })
-      .catch((e) => setError(e instanceof Error ? e.message : "Failed to load profile"))
+      .catch((e) => {
+        setError("Your session may have expired. Please log in again.");
+        logout();
+      })
       .finally(() => setLoading(false));
   };
 
@@ -148,11 +151,7 @@ const Account = () => {
   };
 
   if (authLoading || !isAuthenticated || loading) {
-    return (
-      <div className="min-h-dvh bg-background flex items-center justify-center">
-        <div className="w-10 h-10 border-t-2 border-primary rounded-full animate-spin" />
-      </div>
-    );
+    return null;
   }
 
   const inputCls =
@@ -213,12 +212,16 @@ const Account = () => {
               <div className="space-y-3 mt-2">
                 <div className="grid grid-cols-2 gap-3">
                   <input
+                    id="profile-firstname"
+                    name="firstName"
                     className={inputCls}
                     placeholder="First name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                   <input
+                    id="profile-lastname"
+                    name="lastName"
                     className={inputCls}
                     placeholder="Last name"
                     value={lastName}
@@ -226,6 +229,8 @@ const Account = () => {
                   />
                 </div>
                 <input
+                  id="profile-phone"
+                  name="phone"
                   className={`${inputCls} opacity-60 cursor-not-allowed`}
                   placeholder="No phone number on file"
                   value={phone}
@@ -297,28 +302,28 @@ const Account = () => {
           {(creatingAddr || editingAddrId) && (
             <div className="mb-5 p-4 rounded-xl border border-white/10 space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <input className={inputCls} placeholder="First name"
+                <input id="addr-firstname" name="firstName" className={inputCls} placeholder="First name"
                   value={addrDraft.firstName || ""} onChange={(e) => setAddrDraft({ ...addrDraft, firstName: e.target.value })} />
-                <input className={inputCls} placeholder="Last name"
+                <input id="addr-lastname" name="lastName" className={inputCls} placeholder="Last name"
                   value={addrDraft.lastName || ""} onChange={(e) => setAddrDraft({ ...addrDraft, lastName: e.target.value })} />
               </div>
-              <input className={inputCls} placeholder="Address line 1"
+              <input id="addr-line1" name="address1" className={inputCls} placeholder="Address line 1"
                 value={addrDraft.address1 || ""} onChange={(e) => setAddrDraft({ ...addrDraft, address1: e.target.value })} />
-              <input className={inputCls} placeholder="Address line 2 (optional)"
+              <input id="addr-line2" name="address2" className={inputCls} placeholder="Address line 2 (optional)"
                 value={addrDraft.address2 || ""} onChange={(e) => setAddrDraft({ ...addrDraft, address2: e.target.value })} />
               <div className="grid grid-cols-2 gap-3">
-                <input className={inputCls} placeholder="City"
+                <input id="addr-city" name="city" className={inputCls} placeholder="City"
                   value={addrDraft.city || ""} onChange={(e) => setAddrDraft({ ...addrDraft, city: e.target.value })} />
-                <input className={inputCls} placeholder="ZIP / PIN"
+                <input id="addr-zip" name="zip" className={inputCls} placeholder="ZIP / PIN"
                   value={addrDraft.zip || ""} onChange={(e) => setAddrDraft({ ...addrDraft, zip: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <input className={inputCls} placeholder="State code (e.g. MH)"
+                <input id="addr-state" name="zoneCode" className={inputCls} placeholder="State code (e.g. MH)"
                   value={addrDraft.zoneCode || ""} onChange={(e) => setAddrDraft({ ...addrDraft, zoneCode: e.target.value.toUpperCase() })} />
-                <input className={inputCls} placeholder="Country (ISO, e.g. IN)"
+                <input id="addr-country" name="territoryCode" className={inputCls} placeholder="Country (ISO, e.g. IN)"
                   value={addrDraft.territoryCode || ""} onChange={(e) => setAddrDraft({ ...addrDraft, territoryCode: e.target.value.toUpperCase() })} />
               </div>
-              <input className={inputCls} placeholder="Phone" inputMode="tel"
+              <input id="addr-phone" name="phone" className={inputCls} placeholder="Phone" inputMode="tel"
                 value={addrDraft.phoneNumber || ""} onChange={(e) => setAddrDraft({ ...addrDraft, phoneNumber: e.target.value })} />
               <div className="flex gap-2 pt-1">
                 <button

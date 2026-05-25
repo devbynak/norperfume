@@ -72,7 +72,6 @@ export default defineConfig(({ mode }) => {
                   const ACCESS_TOKEN = env.ADMIN_API_TOKEN || process.env.ADMIN_API_TOKEN || "";
 
                   if (!ACCESS_TOKEN || !SHOP) {
-                    console.warn("Dev Warning: Shopify Admin credentials missing. Graceful mock fallback activated.");
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "application/json");
                     res.end(JSON.stringify({ success: true, message: "Subscribed successfully (graceful fallback)" }));
@@ -115,11 +114,9 @@ export default defineConfig(({ mode }) => {
                         return;
                       }
                     }
-                    console.warn("Shopify Dev newsletter subscription failed. Falling back gracefully.", data);
                     res.end(JSON.stringify({ success: true, message: "Subscribed successfully (graceful fallback)" }));
                   }
                 } catch (error) {
-                  console.warn("Shopify Dev newsletter subscription error. Falling back gracefully:", error);
                   res.statusCode = 200;
                   res.setHeader("Content-Type", "application/json");
                   res.end(JSON.stringify({ success: true, message: "Subscribed successfully (graceful fallback)" }));
@@ -245,7 +242,6 @@ export default defineConfig(({ mode }) => {
                   steps: mappedSteps.reverse()
                 }));
               } catch (err: any) {
-                console.error("Local Shiprocket dev tracking failed:", err);
                 res.statusCode = 500;
                 res.end(JSON.stringify({ error: err.message || "Failed to retrieve tracking details." }));
               }
@@ -254,8 +250,7 @@ export default defineConfig(({ mode }) => {
 
             // Local Mock Reviews API
             if (req.url && req.url.startsWith("/api/reviews")) {
-              res.setHeader("Content-Type", "application/json");
-              res.statusCode = 200;
+              res.writeHead(200, { "Content-Type": "application/json" });
               res.end(JSON.stringify({
                 reviews: [],
                 stats: { averageRating: 0, totalReviews: 0 },
@@ -266,8 +261,7 @@ export default defineConfig(({ mode }) => {
 
             // Local Mock Eligibility API
             if (req.url && req.url.startsWith("/api/review/eligibility")) {
-              res.setHeader("Content-Type", "application/json");
-              res.statusCode = 200;
+              res.writeHead(200, { "Content-Type": "application/json" });
               res.end(JSON.stringify({
                 eligible: false,
                 hasReviewed: false,

@@ -60,10 +60,12 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
   }, [isLoading, reviews.length, isHovered, showForm, editingReview]);
 
   const fetchReviews = async (page = 1, signal?: AbortSignal) => {
+    if (signal?.aborted) return;
     setIsLoading(true);
     try {
-      // 1. Get real reviews from API
       const res = await fetch(`/api/reviews?product_id=${encodeURIComponent(productId)}&page=${page}`, { signal });
+      if (signal?.aborted) return;
+      
       let apiData = { reviews: [], stats: { averageRating: 0, totalReviews: 0 }, pagination: { page: 1, pages: 1 } };
       
       if (res.ok) {
@@ -112,7 +114,6 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
       });
     } catch (error) {
       if ((error as Error).name === 'AbortError') return;
-      console.error('Error fetching reviews:', error);
       // Fallback to only mock reviews if API fails completely
       const localMockReviews = getMockReviewsForProduct(productId);
       const total = localMockReviews.length;
@@ -127,8 +128,8 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
   };
 
   const checkEligibility = async (signal?: AbortSignal) => {
+    if (signal?.aborted) return;
     if (!customerId) {
-      console.log('[ReviewSection] No customerId, hiding button');
       setIsEligible(false);
       setHasReviewed(false);
       setResolvedCustomerId(null);
@@ -138,14 +139,13 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
     setIsCheckingEligibility(true);
     try {
       const res = await fetch(`/api/review/eligibility?product_id=${encodeURIComponent(productId)}&customer_id=${encodeURIComponent(customerId)}`, { signal });
+      if (signal?.aborted) return;
       const data = await res.json();
-      console.log('[ReviewSection] Eligibility data:', data);
       setIsEligible(data.eligible);
       setHasReviewed(data.hasReviewed);
       setResolvedCustomerId(data.resolvedId);
     } catch (error) {
       if ((error as Error).name === 'AbortError') return;
-      console.error('[ReviewSection] Error checking eligibility:', error);
     } finally {
       setIsCheckingEligibility(false);
     }
@@ -268,11 +268,7 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
         </AnimatePresence>
 
         {isLoading ? (
-          <div className="flex gap-6 overflow-hidden">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="min-w-[320px] h-48 bg-white/[0.03] border border-white/5 rounded-3xl animate-pulse" />
-            ))}
-          </div>
+          null
         ) : reviews.length > 0 ? (
           <div 
             className="relative group/scroll"

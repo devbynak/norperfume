@@ -71,13 +71,13 @@ const App = () => (
     <CustomerAuthProvider>
       <CartProvider>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <CartDrawer />
-          {import.meta.env.PROD && import.meta.env.VITE_ENABLE_SPEED_INSIGHTS === "true" ? (
-            <SpeedInsights />
-          ) : null}
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <Toaster />
+            <Sonner />
+            <CartDrawer />
+            {import.meta.env.PROD && import.meta.env.VITE_ENABLE_SPEED_INSIGHTS === "true" ? (
+              <SpeedInsights />
+            ) : null}
             <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>

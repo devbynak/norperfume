@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useHeroSlides } from "@/lib/shopify/hooks";
@@ -8,6 +8,16 @@ const HeroCarousel = () => {
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
   const { data: slides, isLoading } = useHeroSlides();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   const getDescriptors = (title: string) => {
     const normalizedTitle = title.toUpperCase();
@@ -50,14 +60,6 @@ const HeroCarousel = () => {
     setCurrent((value) => (slides.length && value < slides.length ? value : 0));
   }, [slides.length]);
 
-  if (isLoading && !slides.length) {
-    return (
-      <section className="relative h-dvh w-full overflow-hidden bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-      </section>
-    );
-  }
-
   if (!slides.length) {
     return null;
   }
@@ -67,7 +69,7 @@ const HeroCarousel = () => {
   const next = () => setCurrent((value) => (value + 1) % slides.length);
 
   return (
-    <section className="relative h-dvh w-full overflow-hidden">
+    <section ref={containerRef} className="relative h-dvh w-full overflow-hidden">
       <AnimatePresence>
         <motion.div
           key={currentSlide.id}
@@ -92,43 +94,49 @@ const HeroCarousel = () => {
             const targetUrl = currentSlide.ctaHref && currentSlide.ctaHref !== "#collections" ? currentSlide.ctaHref : "/products";
             navigate(targetUrl);
           }}
-          className="absolute inset-0 cursor-grab active:cursor-grabbing touch-pan-y"
+          className="absolute inset-0 cursor-grab active:cursor-grabbing touch-pan-y overflow-hidden"
+          style={{ y, opacity }}
         >
-          {isMobile ? (
-            currentSlide.mobileVideo ? (
-              <video
-                key={currentSlide.mobileVideo}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-cover"
-                poster={currentSlide.mobileImage || currentSlide.image}
-              >
-                <source src={currentSlide.mobileVideo} />
-              </video>
+          <motion.div 
+            className="w-full h-full"
+            style={{ scale }}
+          >
+            {isMobile ? (
+              currentSlide.mobileVideo ? (
+                <video
+                  key={currentSlide.mobileVideo}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={currentSlide.mobileImage || currentSlide.image}
+                >
+                  <source src={currentSlide.mobileVideo} />
+                </video>
+              ) : (
+                <img
+                  src={currentSlide.mobileImage || currentSlide.image}
+                  alt={currentSlide.title}
+                  className="w-full h-full object-cover"
+                  width={1080}
+                  height={1440}
+                  loading={current === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              )
             ) : (
               <img
-                src={currentSlide.mobileImage || currentSlide.image}
+                src={currentSlide.image}
                 alt={currentSlide.title}
                 className="w-full h-full object-cover"
-                width={1080}
-                height={1440}
+                width={1920}
+                height={1080}
                 loading={current === 0 ? "eager" : "lazy"}
                 decoding="async"
               />
-            )
-          ) : (
-            <img
-              src={currentSlide.image}
-              alt={currentSlide.title}
-              className="w-full h-full object-cover"
-              width={1920}
-              height={1080}
-              loading={current === 0 ? "eager" : "lazy"}
-              decoding="async"
-            />
-          )}
+            )}
+          </motion.div>
 
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
         </motion.div>

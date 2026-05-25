@@ -243,8 +243,8 @@ const LegalNotice = () => {
                   <p className="text-xs text-muted-foreground/60 max-w-sm mx-auto font-light italic">Response time: Within 48 hours | Jurisdiction: Kerala, India</p>
                 </div>
                 <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mt-6">
-                  <a href="mailto:norperfume.help@gmail.com" className="flex items-center gap-2 text-primary font-medium hover:underline text-base">
-                    <Mail className="w-4 h-4" /> norperfume.help@gmail.com
+                  <a href="mailto:support@norperfume.com" className="flex items-center gap-2 text-primary font-medium hover:underline text-base">
+                    <Mail className="w-4 h-4" /> support@norperfume.com
                   </a>
                   <a href="https://instagram.com/norperfumeofficial" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary font-medium hover:underline text-base">
                     <Instagram className="w-4 h-4" /> @norperfumeofficial

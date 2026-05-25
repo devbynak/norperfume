@@ -4,7 +4,7 @@ import { Instagram, Facebook, Mail, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { haptic } from "@/lib/haptics";
 
-// Custom Threads SVG Icon matching Lucide style (pure spiral, no background/border circle)
+// Custom Threads SVG Icon matching Lucide style
 const ThreadsIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
@@ -155,7 +155,7 @@ const Footer = () => {
               </a>
 
               <a 
-                href="mailto:norperfume.help@gmail.com" 
+                href="mailto:support@norperfume.com" 
                 className="group w-9 h-9 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center transition-all duration-300 hover:bg-primary/[0.08] hover:border-primary/30 hover:text-primary hover:-translate-y-0.5"
                 aria-label="Email"
               >
@@ -194,6 +194,7 @@ const Footer = () => {
               <li><Link to="/faq" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">FAQ</Link></li>
               <li><Link to="/contact" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">Contact</Link></li>
               <li><Link to="/track-order" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">Track Order</Link></li>
+              <li><a href="mailto:business@norperfume.com" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">Business Enquiry</a></li>
             </ul>
           </div>
 

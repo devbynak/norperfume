@@ -119,9 +119,7 @@ const ProductGrid = () => {
 
       <div className="max-w-6xl mx-auto px-4">
         {isLoading || !products.length ? (
-          <div className="h-[400px] flex items-center justify-center text-muted-foreground">
-            Curating best sellers...
-          </div>
+          null
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">
             {products.map((product) => (

@@ -48,16 +48,14 @@ const Orders = () => {
     }
     fetchCustomerOrders(25)
       .then(setOrders)
-      .catch((e) => setError(e instanceof Error ? e.message : "Failed to load orders"))
+      .catch((e) => {
+        setError("Unable to load orders at this time.");
+      })
       .finally(() => setLoading(false));
   }, [isAuthenticated, login]);
 
   if (!isAuthenticated || loading) {
-    return (
-      <div className="min-h-dvh bg-background flex items-center justify-center">
-        <div className="w-10 h-10 border-t-2 border-primary rounded-full animate-spin" />
-      </div>
-    );
+    return null;
   }
 
   return (

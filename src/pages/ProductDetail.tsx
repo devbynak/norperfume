@@ -93,9 +93,9 @@ const ProductDetail = () => {
 
   if (!product && productQuery.isLoading) {
     return (
-      <div className="min-h-dvh bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-      </div>
+      <main className="min-h-dvh bg-background">
+        <Navbar />
+      </main>
     );
   }
 
@@ -253,7 +253,7 @@ const ProductDetail = () => {
               </div>
 
               <p className="text-[10px] md:text-[11px] tracking-[0.5em] md:tracking-[0.6em] uppercase text-primary/80 font-bold mb-4 md:mb-6 ml-1">The NOR Signature</p>
-              <h1 className="font-display text-5xl md:text-8xl text-foreground mb-8 md:mb-12 leading-[0.85] tracking-tighter uppercase italic">
+              <h1 className="font-display text-5xl md:text-8xl text-foreground mb-4 md:mb-6 leading-[0.85] tracking-tighter uppercase italic">
                 {product.name}
               </h1>
             </motion.div>
@@ -264,7 +264,7 @@ const ProductDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-8 pt-4 md:pt-8"
+            className="space-y-6 pt-2 md:pt-4"
           >
             <div className="flex items-baseline gap-4 md:gap-6 justify-start">
               <span className="font-display text-3xl md:text-5xl text-foreground">

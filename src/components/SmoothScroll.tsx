@@ -8,16 +8,7 @@ const SmoothScroll = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Check if device supports touch scrolling or has small screen (mobile/tablet)
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isMobileDevice = window.innerWidth <= 768;
-
-    if (isTouchDevice || isMobileDevice) {
-      // Don't initialize Lenis on touch/mobile viewports to ensure buttery smooth native inertia touch scrolling
-      return;
-    }
-
-    // Initialize Lenis for desktop only
+    // Initialize Lenis for all devices
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -26,6 +17,9 @@ const SmoothScroll = () => {
       smoothWheel: true,
       wheelMultiplier: 1,
       infinite: false,
+      // Enable for touch with specific settings for responsive feel
+      syncTouch: true,
+      touchMultiplier: 1.5,
     });
 
     lenisRef.current = lenis;

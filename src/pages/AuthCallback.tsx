@@ -17,7 +17,9 @@ const AuthCallback = () => {
         signalAuthenticated();
         navigate(returnTo || "/account", { replace: true });
       })
-      .catch((e) => setError(e instanceof Error ? e.message : "Login failed"));
+      .catch((e) => {
+        setError("Unable to complete sign-in. Please try again.");
+      });
   }, [navigate, signalAuthenticated]);
 
   return (

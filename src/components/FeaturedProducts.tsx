@@ -21,7 +21,7 @@ const FeaturedProducts = () => {
         </div>
 
         {isLoading && !products.length ? (
-          <div className="text-center text-muted-foreground">Loading products...</div>
+          null
         ) : products.length ? (
           <div className="grid gap-8 lg:grid-cols-2">
             {products.map((product, index) => (

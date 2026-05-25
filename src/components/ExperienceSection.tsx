@@ -1,6 +1,27 @@
-import { motion, useMotionValue, useTransform, animate, useInView } from "framer-motion";
-import { Zap, FlaskConical, Timer } from "lucide-react";
+import { motion, useMotionValue, useTransform, animate, useInView, useScroll } from "framer-motion";
+import { FlaskConical, Timer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+const SprayIcon = ({ className }: { className?: string }) => (
+  <svg 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="1.5" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M4 12h.01" />
+    <path d="M9 8h.01" />
+    <path d="M9 16h.01" />
+    <path d="M14 5h.01" />
+    <path d="M14 12h.01" />
+    <path d="M14 19h.01" />
+    <path d="M19 9h.01" />
+    <path d="M19 15h.01" />
+  </svg>
+);
 
 const Counter = ({ value, suffix = "" }: { value: number, suffix?: string }) => {
   const count = useMotionValue(0);
@@ -31,7 +52,7 @@ const features = [
   { 
     title: "240+ SPRAYS", 
     desc: "Engineered for endurance across the longest continental drives.",
-    icon: Zap 
+    icon: SprayIcon 
   },
   { 
     title: "LUXURY OIL BLEND", 
@@ -53,9 +74,45 @@ const stats = [
 
 const ExperienceSection = () => {
   const [activeIndex, setActiveIndex] = useState(2); // Default to last one as in screenshot
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   return (
-    <section className="py-12 md:py-20 px-4 bg-background relative overflow-hidden">
+    <section ref={sectionRef} className="py-12 md:py-20 px-4 bg-background relative overflow-hidden">
+      {/* Premium Background Layers */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Top & Bottom Section Blends */}
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-background to-transparent z-10" />
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent z-10" />
+
+        {/* Subtle Dark Texture/Image */}
+        <motion.div 
+          style={{ y: backgroundY }}
+          className="absolute inset-0 opacity-[0.07] grayscale"
+        >
+          <img 
+            src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop" 
+            alt="" 
+            className="w-full h-[120%] object-cover"
+          />
+        </motion.div>
+
+        {/* Ambient Glows */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-background via-transparent to-background z-0" />
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-primary/3 rounded-full blur-[120px] animate-pulse [animation-delay:2s]" />
+        
+        {/* Grain Texture Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay" 
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} 
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-32 items-center mb-16 md:mb-20">
           <div className="space-y-10">

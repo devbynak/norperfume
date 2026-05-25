@@ -190,7 +190,7 @@ const ShippingPolicy = () => {
                   <h2 className="font-display text-2xl text-foreground m-0">Order tracking</h2>
                 </div>
                 <p className="text-sm text-muted-foreground/80 font-light leading-relaxed">
-                  Once dispatched, you will receive a shipment notification via SMS or email with a tracking number and a direct link to track your order in real time. You can also use the <strong>Track Order</strong> page on www.norperfume.com. If you have not received tracking information within 3 business days of order confirmation, contact us at <a href="mailto:norperfume.help@gmail.com" className="text-primary underline">norperfume.help@gmail.com</a>.
+                  Once dispatched, you will receive a shipment notification via SMS or email with a tracking number and a direct link to track your order in real time. You can also use the <strong>Track Order</strong> page on www.norperfume.com. If you have not received tracking information within 3 business days of order confirmation, contact us at <a href="mailto:support@norperfume.com" className="text-primary underline">support@norperfume.com</a>.
                 </p>
               </div>
 
@@ -201,7 +201,7 @@ const ShippingPolicy = () => {
                   <h2 className="font-display text-2xl text-foreground m-0">Incorrect delivery address — customer error</h2>
                 </div>
                 <p className="text-sm text-muted-foreground/80 font-light leading-relaxed">
-                  It is the customer's sole responsibility to provide a complete, accurate, and accessible delivery address at checkout. NOR is not responsible for delayed, failed, or misdelivered orders resulting from an incorrect, incomplete, or inaccessible address provided by the customer. Address changes can only be accommodated before dispatch — contact <strong>norperfume.help@gmail.com</strong> immediately if a correction is needed. Once in transit, the delivery address cannot be changed.
+                  It is the customer's sole responsibility to provide a complete, accurate, and accessible delivery address at checkout. NOR is not responsible for delayed, failed, or misdelivered orders resulting from an incorrect, incomplete, or inaccessible address provided by the customer. Address changes can only be accommodated before dispatch — contact <strong>support@norperfume.com</strong> immediately if a correction is needed. Once in transit, the delivery address cannot be changed.
                 </p>
               </div>
 
@@ -235,7 +235,7 @@ const ShippingPolicy = () => {
                 </div>
                 <div className="p-8 bg-white/[0.01] border border-white/5 rounded-3xl space-y-4">
                   <p className="text-sm text-muted-foreground/80 font-light leading-relaxed">
-                    If tracking has not updated for more than <strong>5 business days</strong> or shows an exception, contact <strong>norperfume.help@gmail.com</strong> with your order number. NOR will raise a formal investigation with the courier. If the order is confirmed lost by the courier, NOR will arrange a replacement at no cost. <strong>No monetary refunds are issued for lost orders</strong>. Investigations may take up to 7–10 business days.
+                    If tracking has not updated for more than <strong>5 business days</strong> or shows an exception, contact <strong>support@norperfume.com</strong> with your order number. NOR will raise a formal investigation with the courier. If the order is confirmed lost by the courier, NOR will arrange a replacement at no cost. <strong>No monetary refunds are issued for lost orders</strong>. Investigations may take up to 7–10 business days.
                   </p>
                 </div>
               </div>
@@ -258,7 +258,7 @@ const ShippingPolicy = () => {
                   <p className="text-xs text-muted-foreground/60 max-w-sm mx-auto font-light italic">Our logistics team ensures every NOR package is handled with precision.</p>
                 </div>
                 <div className="p-6 bg-primary/5 border border-primary/10 rounded-2xl inline-block">
-                  <a href="mailto:norperfume.help@gmail.com" className="text-primary font-medium hover:underline text-lg">norperfume.help@gmail.com</a>
+                  <a href="mailto:support@norperfume.com" className="text-primary font-medium hover:underline text-lg">support@norperfume.com</a>
                 </div>
                 <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.3em]">Acknowledgements within 24 hours</p>
               </div>

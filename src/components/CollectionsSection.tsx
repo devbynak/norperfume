@@ -86,11 +86,7 @@ const CollectionsSection = () => {
         </div>
 
         {isLoading && !visibleCollections.length ? (
-          <div className="flex justify-center gap-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-48 w-full bg-muted/20 animate-pulse rounded-xl" />
-            ))}
-          </div>
+          null
         ) : visibleCollections.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
             {visibleCollections.map((collection, index) => (

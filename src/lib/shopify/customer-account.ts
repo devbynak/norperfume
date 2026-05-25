@@ -107,7 +107,7 @@ export async function handleCallback(search: string) {
 
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`Token exchange failed (${res.status}): ${txt}`);
+    throw new Error(`Token exchange failed (${res.status})`);
   }
 
   const data = (await res.json()) as TokenResponse;
@@ -146,7 +146,8 @@ export function getAccessToken() {
 export function isAuthenticated() {
   const t = getAccessToken();
   const exp = Number(localStorage.getItem(STORAGE.expiresAt) || 0);
-  return Boolean(t) && Date.now() < exp;
+  const isValid = Boolean(t) && Date.now() < exp;
+  return isValid;
 }
 
 /** Refresh the access token using the refresh token. Returns new access token or null. */

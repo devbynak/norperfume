@@ -54,9 +54,7 @@ const Products = () => {
           </p>
 
           {isLoading && !products.length ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-            </div>
+            null
           ) : products.length ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product, index) => (

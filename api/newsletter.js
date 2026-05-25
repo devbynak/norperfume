@@ -17,7 +17,6 @@ export default async function handler(req, res) {
 
   // 🌟 Graceful Fallback Mode: if Admin API keys are not set, succeed in UI anyway!
   if (!SHOP || !ACCESS_TOKEN) {
-    console.warn('Newsletter Warning: Shopify Admin credentials missing. Graceful mock fallback activated.');
     return res.status(200).json({ success: true, message: 'Subscribed successfully (graceful fallback)' });
   }
 
@@ -43,7 +42,6 @@ export default async function handler(req, res) {
     });
 
     const data = await shopifyResponse.json();
-    console.log('Shopify API Response:', JSON.stringify(data));
 
     if (shopifyResponse.ok) {
       return res.status(200).json({ success: true, message: 'Customer created successfully' });
@@ -58,14 +56,12 @@ export default async function handler(req, res) {
         }
       }
 
-      console.warn('Shopify newsletter subscription call failed. Falling back gracefully.', data);
       return res.status(200).json({ 
         success: true, 
         message: 'Subscribed successfully (graceful fallback)' 
       });
     }
   } catch (error) {
-    console.error('Newsletter API Error. Falling back gracefully:', error);
     return res.status(200).json({ 
       success: true, 
       message: 'Subscribed successfully (graceful fallback)' 

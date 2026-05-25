@@ -12,20 +12,20 @@ import { trackContact } from "@/lib/meta-pixel";
 const contactInfo = [
   {
     icon: Mail,
-    label: "Email",
-    value: "norperfume.help@gmail.com",
-    href: "mailto:norperfume.help@gmail.com"
+    label: "Support",
+    value: "support@norperfume.com",
+    href: "mailto:support@norperfume.com"
+  },
+  {
+    icon: Mail,
+    label: "Business",
+    value: "business@norperfume.com",
+    href: "mailto:business@norperfume.com"
   },
   {
     icon: Clock,
     label: "Hours",
     value: "Mon - Sat: 9am - 7pm",
-    href: null
-  },
-  {
-    icon: MessageCircle,
-    label: "Response",
-    value: "Within 24 hours",
     href: null
   }
 ];

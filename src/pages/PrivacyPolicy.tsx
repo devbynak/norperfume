@@ -68,7 +68,7 @@ const PrivacyPolicy = () => {
                   <h2 className="font-display text-2xl text-foreground m-0">Who we are</h2>
                 </div>
                 <p className="text-muted-foreground/80 font-light leading-relaxed">
-                  NOR is a luxury automotive fragrance brand operated as an individual seller, designed and manufactured in Kerala, India. Our website is <strong>www.norperfume.com</strong>. For any privacy-related queries, contact us at <strong>norperfume.help@gmail.com</strong> or via Instagram DM <strong>@norperfumeofficial</strong>. We respond to all privacy enquiries within 24 hours.
+                  NOR is a luxury automotive fragrance brand operated as an individual seller, designed and manufactured in Kerala, India. Our website is <strong>www.norperfume.com</strong>. For any privacy-related queries, contact us at <strong>support@norperfume.com</strong> or via Instagram DM <strong>@norperfumeofficial</strong>. We respond to all privacy enquiries within 24 hours.
                 </p>
               </div>
 
@@ -83,7 +83,7 @@ const PrivacyPolicy = () => {
                     <Database className="w-5 h-5 text-primary" /> www.norperfume.com — when you browse, add to cart, or place an order
                   </li>
                   <li className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 text-sm text-foreground/80">
-                    <Mail className="w-5 h-5 text-primary" /> Email (norperfume.help@gmail.com) — when you contact us for support
+                    <Mail className="w-5 h-5 text-primary" /> Email (support@norperfume.com) — when you contact us for support
                   </li>
                   <li className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 text-sm text-foreground/80">
                     <Instagram className="w-5 h-5 text-primary" /> Instagram DM (@norperfumeofficial) — when you contact us for support
@@ -233,7 +233,7 @@ const PrivacyPolicy = () => {
                   ))}
                 </div>
                 <p className="text-xs text-muted-foreground/80 font-light leading-relaxed italic">
-                  Contact <strong>norperfume.help@gmail.com</strong> to exercise any of these rights. We respond within 24 hours and resolve within 7 business days.
+                  Contact <strong>support@norperfume.com</strong> to exercise any of these rights. We respond within 24 hours and resolve within 7 business days.
                 </p>
               </div>
 
@@ -244,7 +244,7 @@ const PrivacyPolicy = () => {
                   <p className="text-xs text-muted-foreground/60 max-w-sm mx-auto font-light italic">Your data security and trust are the foundation of NOR.</p>
                 </div>
                 <div className="inline-flex flex-col gap-2">
-                  <a href="mailto:norperfume.help@gmail.com" className="text-primary font-medium hover:underline text-lg">norperfume.help@gmail.com</a>
+                  <a href="mailto:support@norperfume.com" className="text-primary font-medium hover:underline text-lg">support@norperfume.com</a>
                   <span className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.3em] font-display">Data Protection Officer</span>
                 </div>
               </div>

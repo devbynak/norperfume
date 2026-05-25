@@ -34,7 +34,6 @@ export default async function handler(req, res) {
 
     // 2. Step A: Get JWT token (use cache if valid, otherwise fetch fresh one)
     if (!token || !tokenExpiry || now >= tokenExpiry) {
-      console.log("Fetching a fresh Shiprocket JWT Token...");
       const authResponse = await fetch("https://apiv2.shiprocket.in/v1/external/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,7 +58,6 @@ export default async function handler(req, res) {
         
         errMsg += " (Tip: You must use a dedicated API User credentials created from Shiprocket Panel -> Settings -> API -> Add New API User, not your primary account credentials.)";
         
-        console.error("Shiprocket Login Failed:", errMsg);
         return res.status(401).json({ error: errMsg });
       }
 
@@ -69,8 +67,6 @@ export default async function handler(req, res) {
       // Cache the token for 12 hours (Shiprocket tokens expire in 24 hours)
       cachedToken = token;
       tokenExpiry = now + 12 * 60 * 60 * 1000;
-    } else {
-      console.log("Using cached Shiprocket JWT Token.");
     }
 
     // 3. Step B: Fetch live tracking status using AWB number and our secure JWT
@@ -131,7 +127,6 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error("Tracking Error:", error);
     return res.status(500).json({ error: "Internal server error occurred while tracking." });
   }
 }

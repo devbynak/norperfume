@@ -86,18 +86,7 @@
   </head>
 
   <body style="background-color: #0d0d0d; margin: 0;">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:bg-background focus:text-foreground focus:p-4 focus:rounded-md focus:m-2">
-      Skip to content
-    </a>
-    <div id="root">
-      <!-- Minimal initial loader shown before JS loads -->
-      <div style="height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #0d0d0d;">
-        <div style="width: 40px; height: 40px; border: 2px solid rgba(212,175,55,0.1); border-top-color: #d4af37; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-      </div>
-      <style>
-        @keyframes spin { to { transform: rotate(360deg); } }
-      </style>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx" fetchpriority="high"></script>
   </body>
 </html>

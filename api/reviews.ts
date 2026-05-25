@@ -30,7 +30,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Graceful fallback if Supabase is not configured
   if (!supabaseAdmin) {
-    console.warn('Reviews API Warning: Supabase credentials missing. Returning empty reviews.');
     return res.status(200).json({
       reviews: [],
       pagination: { total: 0, page: 1, limit: 10, pages: 1 },
@@ -54,7 +53,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .range(from, to);
 
     if (error) {
-      console.error('Supabase query error:', error);
       // Don't 500, just return empty with error log
       return res.status(200).json({
         reviews: [],
@@ -89,7 +87,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     });
   } catch (error: any) {
-    console.error('Reviews API Error:', error);
     // Return a 200 with empty data instead of 500 to keep UI happy
     return res.status(200).json({ 
       reviews: [],
