@@ -60,7 +60,17 @@ const HeroCarousel = () => {
     setCurrent((value) => (slides.length && value < slides.length ? value : 0));
   }, [slides.length]);
 
-  if (!slides.length) {
+  if (!slides.length && isLoading) {
+    return (
+      <section className="relative h-dvh w-full overflow-hidden bg-background">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4">
+          <div className="w-48 h-12 bg-white/[0.03] rounded-full animate-pulse" />
+        </div>
+      </section>
+    );
+  }
+
+  if (!slides.length && !isLoading) {
     return null;
   }
 

@@ -86,7 +86,11 @@ const CollectionsSection = () => {
         </div>
 
         {isLoading && !visibleCollections.length ? (
-          null
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 min-h-[300px]">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="aspect-[4/3] sm:aspect-[4/5] bg-white/[0.03] rounded-xl animate-pulse" />
+            ))}
+          </div>
         ) : visibleCollections.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
             {visibleCollections.map((collection, index) => (
@@ -100,8 +104,14 @@ const CollectionsSection = () => {
               />
             ))}
           </div>
-        ) : (
+        ) : !isLoading ? (
           <div className="text-center text-muted-foreground">No Shopify collections found.</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 min-h-[300px]">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="aspect-[4/3] sm:aspect-[4/5] bg-white/[0.03] rounded-xl animate-pulse" />
+            ))}
+          </div>
         )}
       </div>
     </section>

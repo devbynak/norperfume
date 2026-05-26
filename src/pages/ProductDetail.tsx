@@ -277,12 +277,6 @@ const ProductDetail = () => {
               )}
             </div>
 
-            {product.description && (
-              <p className="text-muted-foreground/80 leading-relaxed text-sm md:text-lg w-full font-light">
-                {product.description}
-              </p>
-            )}
-
             <div className="flex flex-row items-center gap-3 md:gap-4 max-w-xl md:max-w-2xl">
               <div className="flex items-center justify-between bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-full px-2 md:px-3 h-[56px] md:h-[60px] w-[112px] md:w-[128px] shrink-0">
                 <button
@@ -310,6 +304,12 @@ const ProductDetail = () => {
                 {product.availableForSale ? "ADD TO CART" : "OUT OF STOCK"}
               </Button>
             </div>
+
+            {product.description && (
+              <p className="text-muted-foreground/80 leading-relaxed text-sm md:text-lg w-full font-light">
+                {product.description}
+              </p>
+            )}
 
             {/* Accordions */}
             <div className="space-y-4 max-w-4xl pt-2">

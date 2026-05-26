@@ -118,7 +118,13 @@ const ProductGrid = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4">
-        {isLoading || !products.length ? (
+        {isLoading && !products.length ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 min-h-[400px]">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="aspect-[3/4] bg-white/[0.03] rounded-2xl animate-pulse" />
+            ))}
+          </div>
+        ) : !products.length && !isLoading ? (
           null
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">

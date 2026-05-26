@@ -67,9 +67,9 @@ const features = [
 ];
 
 const stats = [
-  { value: 2, suffix: "", label: "Curated Fragrance" },
+  { value: 2, suffix: "", label: "CURATED FRAGRANCE" },
   { value: 100, suffix: "%", label: "PURE ESSENTIAL OILS" },
-  { value: 500, suffix: "+", label: "Happy Customers" },
+  { value: 500, suffix: "+", label: "HAPPY CUSTOMERS" },
 ];
 
 const ExperienceSection = () => {
@@ -93,7 +93,7 @@ const ExperienceSection = () => {
         {/* Subtle Dark Texture/Image */}
         <motion.div 
           style={{ y: backgroundY }}
-          className="absolute inset-0 opacity-[0.07] grayscale"
+          className="absolute inset-0 opacity-[0.08] grayscale"
         >
           <img 
             src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop" 
