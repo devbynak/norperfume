@@ -1,4 +1,4 @@
-# NOR | Luxury Car Fragrance Storefront
+# NOR PERFUME| Luxury Car Fragrance Storefront
 
 NOR is a high-fidelity, production-ready storefront designed for a luxury automotive fragrance brand. This project is built using a modern stack (Vite, React, TypeScript, Tailwind CSS) and is deeply integrated with the Shopify eco-system.
 
