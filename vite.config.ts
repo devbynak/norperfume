@@ -45,7 +45,8 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         manifest: false,
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024 // Increase limit to 10MB to handle large assets
         }
       }),
       viteCompression({
