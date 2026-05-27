@@ -26,7 +26,7 @@ const TestimonialsSection = () => {
     await controls.start({
       x: -itemWidth * testimonials.length,
       transition: {
-        duration: 40,
+        duration: 50,
         ease: "linear",
         repeat: Infinity,
       },
@@ -48,15 +48,23 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="py-12 md:py-20 overflow-hidden relative bg-background">
-      <div className="max-w-6xl mx-auto px-4 mb-12 md:mb-16 text-center">
-        <p className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold mb-4">Customer Love</p>
-        <h2 className="font-display text-3xl md:text-5xl text-foreground font-bold tracking-tight">
-          What They're Saying
+    <section className="relative py-20 md:py-32 overflow-hidden bg-background">
+      {/* Top & Bottom Section Blends */}
+      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-background via-background/50 to-transparent pointer-events-none z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/50 to-transparent pointer-events-none z-10" />
+
+      {/* Ambient Glows */}
+      <div className="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] bg-primary/[0.04] rounded-full blur-[120px] pointer-events-none animate-pulse" />
+      <div className="absolute -bottom-[10%] -right-[5%] w-[40%] h-[40%] bg-primary/[0.03] rounded-full blur-[120px] pointer-events-none animate-pulse [animation-delay:2s]" />
+
+      <div className="max-w-7xl mx-auto px-4 mb-16 md:mb-20 text-center space-y-4 relative z-20">
+        <p className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-primary font-bold">Customer Love</p>
+        <h2 className="font-display text-3xl md:text-6xl lg:text-7xl text-white font-bold tracking-tighter uppercase italic leading-[0.9]">
+          What They're <span className="text-white/60">Saying</span>
         </h2>
       </div>
 
-      <div className="relative group">
+      <div className="relative group z-20">
         <motion.div
           ref={containerRef}
           style={{ x }}

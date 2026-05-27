@@ -15,9 +15,9 @@ const HeroCarousel = () => {
     offset: ["start start", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
   const getDescriptors = (title: string) => {
     const normalizedTitle = title.toUpperCase();
@@ -62,11 +62,7 @@ const HeroCarousel = () => {
 
   if (!slides.length && isLoading) {
     return (
-      <section className="relative h-dvh w-full overflow-hidden bg-background">
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4">
-          <div className="w-48 h-12 bg-white/[0.03] rounded-full animate-pulse" />
-        </div>
-      </section>
+      <section className="relative h-dvh w-full overflow-hidden bg-background" />
     );
   }
 
@@ -148,28 +144,39 @@ const HeroCarousel = () => {
             )}
           </motion.div>
 
+          {/* Bottom Blend Effect to merge with marquee/badges */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/60 to-transparent z-10" />
+          
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
         </motion.div>
       </AnimatePresence>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4">
         <h1 className="sr-only">NOR PERFUME | Official Online Store</h1>
-        <motion.h2
+        <motion.div
           key={`heading-${currentSlide.id}`}
-          initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+          initial={{ opacity: 0, y: 30, filter: "blur(20px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ delay: 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display text-[clamp(2.5rem,7vw,5.5rem)] text-foreground leading-[1.1] mb-6 tracking-normal"
+          transition={{ delay: 0.1, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-10 relative"
         >
-          Signature Series
-        </motion.h2>
+          {/* Subtle Background Glow behind logo */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/[0.08] rounded-full blur-[80px] pointer-events-none z-0" />
+          
+          <img 
+            src="/5.png" 
+            alt="NOR PERFUME" 
+            className="w-auto h-[clamp(6rem,20vw,14rem)] filter drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] relative z-10" 
+            loading="eager"
+          />
+        </motion.div>
         {currentSlide.description && (
           <motion.p
             key={`desc-${currentSlide.id}`}
-            initial={{ opacity: 0, y: 15, filter: "blur(2px)" }}
+            initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(0.9rem,2.5vw,1.4rem)] text-foreground/60 max-w-lg mx-auto leading-relaxed tracking-normal font-light"
+            transition={{ delay: 0.2, duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[clamp(1.1rem,3.2vw,1.8rem)] text-foreground/80 max-w-2xl mx-auto leading-relaxed tracking-normal font-light"
           >
             {currentSlide.description}
           </motion.p>
@@ -182,7 +189,7 @@ const HeroCarousel = () => {
         >
           <Link
             to="/products"
-            className="mt-12 px-12 py-3.5 glass-card rounded-full text-foreground text-[12px] font-medium tracking-wide hover:bg-white/10 transition-all duration-500 backdrop-blur-md inline-block"
+            className="-mt-32 px-8 py-3 md:px-12 md:py-3.5 glass-card rounded-full text-foreground text-[11px] md:text-[12px] font-medium tracking-wide hover:bg-white/10 transition-all duration-500 backdrop-blur-md inline-block whitespace-nowrap"
           >
             Explore NOR
           </Link>

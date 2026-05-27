@@ -61,12 +61,10 @@
     <!-- Meta Pixel Code -->
     <script>
     const isProductionHost = window.location.hostname === 'www.norperfume.com' || window.location.hostname === 'norperfume.com';
-    const rawEnableMetaPixel = "%VITE_ENABLE_META_PIXEL%";
-    const enableMetaPixel = !rawEnableMetaPixel.startsWith("%") && rawEnableMetaPixel.toLowerCase() === "true";
-    const rawPixelId = "%VITE_META_PIXEL_ID%";
-    const pixelId = !rawPixelId.startsWith("%") ? rawPixelId : "1006383931833299";
+    const pixelId = "%VITE_META_PIXEL_ID%";
+    const enablePixel = "%VITE_ENABLE_META_PIXEL%" === "true";
     
-    if (isProductionHost && enableMetaPixel) {
+    if (isProductionHost && enablePixel && pixelId && !pixelId.startsWith("%")) {
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -77,12 +75,25 @@
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('set', 'autoConfig', false, pixelId);
       fbq('init', pixelId);
-
     } else {
       window.fbq = function() {};
     }
     </script>
     <!-- End Meta Pixel Code -->
+    
+    <script>
+    // Automatic Service Worker Cleanup for Dev Environments
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+            console.log('[Dev] Service Worker unregistered successfully to prevent connection issues.');
+          }
+        });
+      }
+    }
+    </script>
   </head>
 
   <body style="background-color: #0d0d0d; margin: 0;">

@@ -15,11 +15,13 @@ const SmoothScroll = () => {
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 1.0,
       infinite: false,
-      // Enable for touch with specific settings for responsive feel
-      syncTouch: true,
+      autoResize: true,
+      // Touch behavior: use native on mobile for better performance, sync for desktop
+      syncTouch: false,
       touchMultiplier: 1.5,
+      lerp: 0.1,
     });
 
     lenisRef.current = lenis;

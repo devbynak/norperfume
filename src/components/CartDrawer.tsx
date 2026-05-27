@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 import { useNavigate } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
@@ -87,74 +88,76 @@ const CartDrawer = () => {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-3 relative z-10 scrollbar-hide">
-              <AnimatePresence mode="popLayout">
-                {items.map((item) => (
-                  <motion.div
-                    key={item.product.id}
-                    layout
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="flex gap-3 p-3 md:p-4 rounded-[20px] md:rounded-[24px] bg-white/[0.02] border border-white/[0.05] group relative"
-                  >
-                    <div className="relative shrink-0">
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        className="w-[85px] h-[85px] md:w-[100px] md:h-[100px] rounded-[16px] md:rounded-[18px] object-cover border border-white/10"
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-0.5">
-                          <h4 className="font-display text-foreground text-sm md:text-lg font-bold tracking-tight uppercase line-clamp-1">
-                            {item.product.name}
-                          </h4>
-                          <p className="text-primary font-bold text-sm md:text-base font-numbers-inter">
-                            {formatCurrency(item.product.price, item.product.currencyCode)}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => { haptic("warning"); removeItem(item.product.id); }}
-                          className="w-8 h-8 -mt-1 -mr-1 rounded-full flex items-center justify-center text-foreground/20 hover:text-destructive active:bg-destructive/10 transition-all duration-300"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
-                        </button>
+            <ScrollArea className="flex-1 relative z-10 scroll-fade-mask">
+              <div className="px-4 md:px-6 py-4 space-y-3">
+                <AnimatePresence mode="popLayout">
+                  {items.map((item) => (
+                    <motion.div
+                      key={item.product.id}
+                      layout
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      className="flex gap-3 p-3 md:p-4 rounded-[20px] md:rounded-[24px] bg-white/[0.02] border border-white/[0.05] group relative"
+                    >
+                      <div className="relative shrink-0">
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          className="w-[85px] h-[85px] md:w-[100px] md:h-[100px] rounded-[16px] md:rounded-[18px] object-cover border border-white/10"
+                        />
                       </div>
 
-                      <div className="flex items-center justify-between mt-1">
-                        <div className="flex items-center gap-3 md:gap-4">
+                      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                        <div className="flex justify-between items-start">
+                          <div className="space-y-0.5">
+                            <h4 className="font-display text-foreground text-sm md:text-lg font-bold tracking-tight uppercase line-clamp-1">
+                              {item.product.name}
+                            </h4>
+                            <p className="text-primary font-bold text-sm md:text-base font-numbers-inter">
+                              {formatCurrency(item.product.price, item.product.currencyCode)}
+                            </p>
+                          </div>
                           <button
-                            onClick={() => { haptic("light"); updateQuantity(item.product.id, item.quantity - 1); }}
-                            className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-white/10 flex items-center justify-center text-foreground/40 hover:text-primary active:border-primary/50 transition-all active:scale-90"
+                            onClick={() => { haptic("warning"); removeItem(item.product.id); }}
+                            className="w-8 h-8 -mt-1 -mr-1 rounded-full flex items-center justify-center text-foreground/20 hover:text-destructive active:bg-destructive/10 transition-all duration-300"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
                           </button>
-                          <span className="text-foreground text-xs md:text-sm font-bold font-numbers-inter w-3 md:w-4 text-center">
-                            {item.quantity}
+                        </div>
+
+                        <div className="flex items-center justify-between mt-1">
+                          <div className="flex items-center gap-3 md:gap-4">
+                            <button
+                              onClick={() => { haptic("light"); updateQuantity(item.product.id, item.quantity - 1); }}
+                              className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-white/10 flex items-center justify-center text-foreground/40 hover:text-primary active:border-primary/50 transition-all active:scale-90"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="text-foreground text-xs md:text-sm font-bold font-numbers-inter w-3 md:w-4 text-center">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => { haptic("light"); updateQuantity(item.product.id, item.quantity + 1); }}
+                              className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-white/10 flex items-center justify-center text-foreground/40 hover:text-primary active:border-primary/50 transition-all active:scale-90"
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                          
+                          <span className="text-foreground font-bold text-sm md:text-lg font-numbers-inter tracking-tight">
+                            {formatCurrency(
+                              item.product.price * item.quantity,
+                              item.product.currencyCode,
+                            )}
                           </span>
-                          <button
-                            onClick={() => { haptic("light"); updateQuantity(item.product.id, item.quantity + 1); }}
-                            className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-white/10 flex items-center justify-center text-foreground/40 hover:text-primary active:border-primary/50 transition-all active:scale-90"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
                         </div>
-                        
-                        <span className="text-foreground font-bold text-sm md:text-lg font-numbers-inter tracking-tight">
-                          {formatCurrency(
-                            item.product.price * item.quantity,
-                            item.product.currencyCode,
-                          )}
-                        </span>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </ScrollArea>
 
             <div className="px-5 pb-8 pt-4 bg-white/[0.02] backdrop-blur-xl relative z-10 space-y-4">
               <div className="space-y-1.5">

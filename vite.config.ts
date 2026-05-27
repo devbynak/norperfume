@@ -10,8 +10,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
-      host: "::",
       port: 8082,
+      strictPort: false,
       hmr: {
         overlay: false,
       },
@@ -41,6 +41,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       VitePWA({
+        disable: mode === 'development',
         registerType: 'autoUpdate',
         manifest: false,
         workbox: {
@@ -55,6 +56,18 @@ export default defineConfig(({ mode }) => {
         algorithm: 'gzip',
         ext: '.gz',
       }),
+      {
+        name: 'html-transform',
+        transformIndexHtml(html) {
+          return html.replace(
+            /%VITE_META_PIXEL_ID%/g,
+            env.VITE_META_PIXEL_ID || "1006383931833299"
+          ).replace(
+            /%VITE_ENABLE_META_PIXEL%/g,
+            env.VITE_ENABLE_META_PIXEL || "false"
+          );
+        },
+      },
       {
         name: "api-newsletter",
         configureServer(server) {

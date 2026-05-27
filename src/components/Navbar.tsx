@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { ScrollArea } from "@/components/ui/scroll-area";
 // Customer Account API uses internal /login + /account routes (no Shopify redirect).
 import logo from "@/assets/logo.png";
 import SearchDialog from "@/components/SearchDialog";
@@ -247,117 +248,119 @@ const Navbar = () => {
                 </button>
               </div>
 
-              <motion.div
-                className="flex flex-col px-8 py-4 flex-1 overflow-y-auto overscroll-none scrollbar-hide relative z-10"
-                initial="closed"
-                animate="open"
-                variants={{
-                  open: { transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
-                  closed: {},
-                }}
-              >
-                <div className="flex flex-col gap-2">
-                  {menuItems.map((item) => (
-                    <motion.div
-                      key={item.label}
-                      variants={{
-                        closed: { opacity: 0, x: -20 },
-                        open: { opacity: 1, x: 0 },
-                      }}
-                      whileHover={{ x: 8 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      className="relative overflow-hidden group/item"
-                    >
-                      {item.external ? (
-                        <a
-                          onClick={() => { haptic("light"); setMenuOpen(false); }}
-                          className={`font-display text-[26px] py-4 transition-all block relative z-10 ${isActive(item.href) ? 'text-primary' : 'text-foreground/90 group-hover/item:text-primary'}`}
-                          href={item.href}
-                        >
-                          {item.label}
-                        </a>
-                      ) : (
-                        <Link
-                          onClick={() => { haptic("light"); setMenuOpen(false); }}
-                          className={`font-display text-[26px] py-4 transition-all block relative z-10 ${isActive(item.href) ? 'text-primary' : 'text-foreground/90 group-hover/item:text-primary'}`}
-                          to={item.href}
-                        >
-                          {item.label}
-                        </Link>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-
+              <ScrollArea className="flex-1 relative z-10 px-8 py-4 scroll-fade-mask">
                 <motion.div
-                  className="mt-auto pt-10 pb-10 space-y-8"
+                  className="flex flex-col h-full"
+                  initial="closed"
+                  animate="open"
                   variants={{
-                    closed: { opacity: 0, y: 20 },
-                    open: { opacity: 1, y: 0 },
+                    open: { transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
+                    closed: {},
                   }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 >
-                  <div className="flex items-center gap-6">
-                    <button
-                      onClick={() => {
-                        haptic("light");
-                        setMenuOpen(false);
-                        goToAccount();
-                      }}
-                      className="group flex flex-col items-center gap-2 outline-none"
-                    >
-                      <motion.div 
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className={`w-14 h-14 rounded-full flex items-center justify-center bg-white/5 border transition-all duration-300 ${isActive("/account") || isActive("/login") ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(202,138,4,0.2)]" : "border-white/5 group-hover:border-primary/30 group-hover:bg-white/10"}`}
+                  <div className="flex flex-col gap-2">
+                    {menuItems.map((item) => (
+                      <motion.div
+                        key={item.label}
+                        variants={{
+                          closed: { opacity: 0, x: -20 },
+                          open: { opacity: 1, x: 0 },
+                        }}
+                        whileHover={{ x: 8 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        className="relative overflow-hidden group/item"
                       >
-                        <User className={`w-6 h-6 transition-colors ${isAuthenticated ? "text-primary" : "text-foreground"}`} />
+                        {item.external ? (
+                          <a
+                            onClick={() => { haptic("light"); setMenuOpen(false); }}
+                            className={`font-display text-[26px] py-4 transition-all block relative z-10 ${isActive(item.href) ? 'text-primary' : 'text-foreground/90 group-hover/item:text-primary'}`}
+                            href={item.href}
+                          >
+                            {item.label}
+                          </a>
+                        ) : (
+                          <Link
+                            onClick={() => { haptic("light"); setMenuOpen(false); }}
+                            className={`font-display text-[26px] py-4 transition-all block relative z-10 ${isActive(item.href) ? 'text-primary' : 'text-foreground/90 group-hover/item:text-primary'}`}
+                            to={item.href}
+                          >
+                            {item.label}
+                          </Link>
+                        )}
                       </motion.div>
-                      <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-foreground/40 group-hover:text-foreground/60 transition-colors">Account</span>
-                    </button>
-                    
-                    <Link
-                      to="/orders"
-                      onClick={() => { haptic("light"); setMenuOpen(false); }}
-                      className="group flex flex-col items-center gap-2 outline-none"
-                    >
-                      <motion.div 
-                        whileHover={{ scale: 1.1, rotate: -5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className={`w-14 h-14 rounded-full flex items-center justify-center bg-white/5 border transition-all duration-300 ${isActive("/orders") ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(202,138,4,0.2)]" : "border-white/5 group-hover:border-primary/30 group-hover:bg-white/10"}`}>
-                        <Package className="w-6 h-6 text-foreground" />
-                      </motion.div>
-                      <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-foreground/40 group-hover:text-foreground/60 transition-colors">Orders</span>
-                    </Link>
+                    ))}
                   </div>
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      haptic("warning");
-                      setMenuOpen(false);
-                      if (isAuthenticated) {
-                        logout();
-                      } else {
-                        login();
-                      }
+                  <motion.div
+                    className="mt-12 pt-10 pb-10 space-y-8"
+                    variants={{
+                      closed: { opacity: 0, y: 20 },
+                      open: { opacity: 1, y: 0 },
                     }}
-                    className={`w-full h-14 rounded-2xl flex items-center justify-center gap-3 font-display text-sm tracking-[0.3em] uppercase transition-all duration-300 ${isAuthenticated
-                        ? "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20"
-                        : "bg-primary text-primary-foreground font-bold hover:opacity-90"
-                      }`}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   >
-                    {isAuthenticated ? (
-                      <>
-                        <LogOut className="w-4 h-4" />
-                        Logout
-                      </>
-                    ) : "Login"}
-                  </motion.button>
+                    <div className="flex items-center gap-6">
+                      <button
+                        onClick={() => {
+                          haptic("light");
+                          setMenuOpen(false);
+                          goToAccount();
+                        }}
+                        className="group flex flex-col items-center gap-2 outline-none"
+                      >
+                        <motion.div 
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          whileTap={{ scale: 0.9 }}
+                          className={`w-14 h-14 rounded-full flex items-center justify-center bg-white/5 border transition-all duration-300 ${isActive("/account") || isActive("/login") ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(202,138,4,0.2)]" : "border-white/5 group-hover:border-primary/30 group-hover:bg-white/10"}`}
+                        >
+                          <User className={`w-6 h-6 transition-colors ${isAuthenticated ? "text-primary" : "text-foreground"}`} />
+                        </motion.div>
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-foreground/40 group-hover:text-foreground/60 transition-colors">Account</span>
+                      </button>
+                      
+                      <Link
+                        to="/orders"
+                        onClick={() => { haptic("light"); setMenuOpen(false); }}
+                        className="group flex flex-col items-center gap-2 outline-none"
+                      >
+                        <motion.div 
+                          whileHover={{ scale: 1.1, rotate: -5 }}
+                          whileTap={{ scale: 0.9 }}
+                          className={`w-14 h-14 rounded-full flex items-center justify-center bg-white/5 border transition-all duration-300 ${isActive("/orders") ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(202,138,4,0.2)]" : "border-white/5 group-hover:border-primary/30 group-hover:bg-white/10"}`}>
+                          <Package className="w-6 h-6 text-foreground" />
+                        </motion.div>
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-foreground/40 group-hover:text-foreground/60 transition-colors">Orders</span>
+                      </Link>
+                    </div>
+
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        haptic("warning");
+                        setMenuOpen(false);
+                        if (isAuthenticated) {
+                          logout();
+                        } else {
+                          login();
+                        }
+                      }}
+                      className={`w-full h-14 rounded-2xl flex items-center justify-center gap-3 font-display text-sm tracking-[0.3em] uppercase transition-all duration-300 ${isAuthenticated
+                          ? "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20"
+                          : "bg-primary text-primary-foreground font-bold hover:opacity-90"
+                        }`}
+                    >
+                      {isAuthenticated ? (
+                        <>
+                          <LogOut className="w-4 h-4" />
+                          Logout
+                        </>
+                      ) : "Login"}
+                    </motion.button>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
+              </ScrollArea>
             </motion.div>
           </>
         )}

@@ -13,19 +13,32 @@ declare global {
 import { Product } from "@/data/products";
 import { CartItem } from "@/context/CartContext";
 
-// Pixel ID placeholder (User to update this)
-export const PIXEL_ID = "1006383931833299"; 
+// Get Pixel ID from env var or use placeholder
+const getEnvVar = (key: string) => {
+  // @ts-ignore
+  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
+    // @ts-ignore
+    return import.meta.env[key];
+  }
+  return undefined;
+};
 
-const isProduction = typeof window !== 'undefined' && (window.location.hostname === 'www.norperfume.com' || window.location.hostname === 'norperfume.com');
+export const PIXEL_ID = getEnvVar('VITE_META_PIXEL_ID') || "1006383931833299"; 
+
+const isProduction = typeof window !== 'undefined' && 
+  (window.location.hostname === 'www.norperfume.com' || window.location.hostname === 'norperfume.com') &&
+  getEnvVar('VITE_ENABLE_META_PIXEL') === 'true';
+
+const canTrack = () => typeof window !== 'undefined' && typeof window.fbq === "function" && isProduction;
 
 export const trackPageView = () => {
-  if (typeof window.fbq === "function") {
+  if (canTrack()) {
     window.fbq("track", "PageView");
   }
 };
 
 export const trackViewContent = (product: Product) => {
-  if (typeof window.fbq === "function") {
+  if (canTrack()) {
     window.fbq("track", "ViewContent", {
       content_name: product.name,
       content_category: "Car Fragrance",
@@ -38,7 +51,7 @@ export const trackViewContent = (product: Product) => {
 };
 
 export const trackAddToCart = (product: Product, quantity: number = 1) => {
-  if (typeof window.fbq === "function") {
+  if (canTrack()) {
     window.fbq("track", "AddToCart", {
       content_name: product.name,
       content_ids: [product.id],
@@ -50,7 +63,7 @@ export const trackAddToCart = (product: Product, quantity: number = 1) => {
 };
 
 export const trackInitiateCheckout = (items: CartItem[], total: number) => {
-  if (typeof window.fbq === "function") {
+  if (canTrack()) {
     window.fbq("track", "InitiateCheckout", {
       content_ids: items.map(item => item.product.id),
       content_type: "product",
@@ -62,7 +75,7 @@ export const trackInitiateCheckout = (items: CartItem[], total: number) => {
 };
 
 export const trackContact = () => {
-  if (typeof window.fbq === "function") {
+  if (canTrack()) {
     window.fbq("track", "Contact");
   }
 };

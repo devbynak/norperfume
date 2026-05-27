@@ -42,7 +42,6 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
       <DialogContent className="sm:max-w-2xl p-0 gap-0 overflow-hidden bg-[#0d0d0d]/90 backdrop-blur-[40px] border-white/10 !rounded-[32px] shadow-2xl shadow-black/60 outline-none">
         <VisuallyHidden>
           <DialogTitle>Search products</DialogTitle>
-          <DialogDescription>Search for your favorite car fragrances</DialogDescription>
         </VisuallyHidden>
 
         {/* Subtle background light gradients */}

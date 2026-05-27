@@ -44,78 +44,92 @@ const Products = () => {
         description={description}
       />
       <Navbar />
-      <section className="pt-28 pb-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="font-display text-4xl md:text-5xl text-foreground text-center mb-4">
-            {heading}
-          </h1>
-          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
-            {description}
-          </p>
+      <section className="pt-28 md:pt-40 pb-20 px-4 relative overflow-hidden">
+        {/* Subtle Background Elements */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/[0.03] rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/[0.02] rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="mb-10 md:mb-24 text-center space-y-4">
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl text-foreground font-bold tracking-tight">
+              {heading}
+            </h1>
+            <p className="text-muted-foreground/60 text-sm md:text-lg max-w-2xl mx-auto font-light tracking-wide leading-relaxed">
+              {description}
+            </p>
+          </div>
 
           {isLoading && !products.length ? (
-            null
+            <div className="min-h-[400px] flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+            </div>
           ) : products.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-8 lg:gap-10">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-20px" }}
-                  transition={{ delay: (index % 2) * 0.05, duration: 0.4 }}
-                  className="group bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-all cursor-pointer"
+                  initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{ delay: (index % 3) * 0.1, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                  className="group flex flex-col cursor-pointer w-full max-w-sm mx-auto sm:max-w-none"
+                  onClick={() => { haptic("medium"); navigate(`/product/${product.id}`); }}
                 >
-                  <div
-                    className="relative overflow-hidden aspect-square bg-muted/5"
-                    onClick={() => { haptic("medium"); navigate(`/product/${product.id}`); }}
-                  >
+                  {/* Image Area */}
+                  <div className="relative aspect-square md:aspect-[4/3.5] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)] mb-4">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading={index < 2 ? "eager" : "lazy"}
-                      {...({ fetchpriority: index < 2 ? "high" : "auto" } as any)}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
+                      loading={index < 3 ? "eager" : "lazy"}
+                      {...({ fetchpriority: index < 3 ? "high" : "auto" } as any)}
                       decoding="async"
                     />
+
+                    {/* Dark Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700" />
+
+                    {/* Gold Discount Badge */}
                     {product.discount && (
-                      <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] tracking-widest uppercase font-bold px-2 py-1 rounded-full font-numbers-inter z-10">
-                        -{product.discount}%
+                      <span className="absolute top-4 left-4 z-10 bg-primary text-black text-[9px] md:text-[10px] font-bold px-3 py-1.5 rounded-full shadow-xl backdrop-blur-md">
+                        {product.discount}%
                       </span>
                     )}
                   </div>
-                  <div className="p-4">
-                    <h3
-                      className="font-display text-lg text-foreground mb-1 group-hover:text-primary transition-colors"
-                      onClick={() => { haptic("medium"); navigate(`/product/${product.id}`); }}
-                    >
-                      {product.name}
-                    </h3>
-                    {product.description && (
-                      <p className="text-muted-foreground text-xs mb-3 line-clamp-2">
-                        {product.description}
+
+                  {/* Info Area Below Image */}
+                  <div className="px-1 flex flex-col gap-4">
+                    <div className="space-y-2">
+                      <h3 className="font-display text-lg md:text-2xl text-white font-bold tracking-widest uppercase leading-tight group-hover:text-primary transition-colors duration-500">
+                        {product.name}
+                      </h3>
+                      <p className="text-white/40 text-[10px] md:text-xs font-light tracking-wide line-clamp-2 leading-relaxed">
+                        {product.description || `${product.name} is a premium car interior perfume designed to transform your driving experience.`}
                       </p>
-                    )}
+                    </div>
+
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-primary font-semibold font-numbers-inter text-sm">
+                      <div className="flex items-baseline gap-3">
+                        <span className="text-primary font-bold text-lg md:text-2xl font-numbers-inter">
                           {formatCurrency(product.price, product.currencyCode)}
                         </span>
                         {product.originalPrice && (
-                          <span className="text-muted-foreground text-[10px] line-through font-numbers-inter">
+                          <span className="text-white/20 line-through text-[11px] md:text-sm font-light font-numbers-inter">
                             {formatCurrency(product.originalPrice, product.currencyCode)}
                           </span>
                         )}
                       </div>
+                      
                       <button
                         onClick={(event) => {
                           event.stopPropagation();
                           haptic("success");
                           void addItem(product);
                         }}
-                        className="w-9 h-9 rounded-full bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-300 active:scale-90"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/[0.04] border border-white/5 flex items-center justify-center text-primary hover:bg-primary hover:text-black transition-all duration-500 active:scale-95 shrink-0 group/btn"
+                        aria-label="Add to cart"
                       >
-                        <ShoppingBag className="w-4 h-4" />
+                        <ShoppingBag className="w-5 h-5 md:w-6 md:h-6 group-hover/btn:rotate-12 transition-transform" />
                       </button>
                     </div>
                   </div>
@@ -123,10 +137,12 @@ const Products = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center text-muted-foreground">
-              {collectionHandle
-                ? `No products founds found in the ${heading} collection.`
-                : "No products founds found."}
+            <div className="text-center py-24 bg-white/[0.01] border border-white/5 border-dashed rounded-[3rem]">
+              <p className="text-muted-foreground font-light tracking-widest uppercase text-xs">
+                {collectionHandle
+                  ? `No products found in the ${heading} collection.`
+                  : "No products found."}
+              </p>
             </div>
           )}
         </div>

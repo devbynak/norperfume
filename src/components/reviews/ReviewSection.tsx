@@ -12,9 +12,10 @@ interface ReviewSectionProps {
   productId: string;
   customerId?: string;
   canWriteReview?: boolean;
+  onStatsChange?: (stats: { averageRating: number; totalReviews: number }) => void;
 }
 
-export const ReviewSection = ({ productId, customerId, canWriteReview: initialCanWriteReview }: ReviewSectionProps) => {
+export const ReviewSection = ({ productId, customerId, canWriteReview: initialCanWriteReview, onStatsChange }: ReviewSectionProps) => {
   const location = useLocation();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState({ averageRating: 0, totalReviews: 0 });
@@ -104,10 +105,12 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
       const paginated = allCombined.slice((page - 1) * limit, page * limit);
 
       setReviews(paginated);
-      setStats({
+      const newStats = {
         averageRating: parseFloat(avg as string),
         totalReviews: total
-      });
+      };
+      setStats(newStats);
+      onStatsChange?.(newStats);
       setPagination({
         page,
         pages: pCount
@@ -119,8 +122,10 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
       const total = localMockReviews.length;
       const avg = total > 0 ? (localMockReviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1) : 0;
       
+      const fallbackStats = { averageRating: parseFloat(avg as string), totalReviews: total };
       setReviews(localMockReviews.slice(0, 10));
-      setStats({ averageRating: parseFloat(avg as string), totalReviews: total });
+      setStats(fallbackStats);
+      onStatsChange?.(fallbackStats);
       setPagination({ page: 1, pages: Math.ceil(total / 10) });
     } finally {
       setIsLoading(false);
@@ -197,50 +202,50 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
   const canShowButton = isEligible && !hasReviewed;
 
   return (
-    <section className="pb-16 pt-4 md:pb-24 md:pt-6 overflow-hidden">
+    <section className="pb-4 pt-8 md:pb-6 md:pt-12 overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
-          <div className="space-y-4">
-            <p className="text-[10px] tracking-[0.4em] uppercase text-primary font-bold">Customer Feedback</p>
-            <h2 className="font-display text-4xl md:text-5xl text-foreground">Community Reviews</h2>
+        <div className="flex flex-col gap-12 mb-16">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <p className="text-[8px] tracking-[0.4em] uppercase text-primary font-bold">Customer Feedback</p>
+              <h2 className="font-display text-3xl md:text-5xl text-white italic uppercase">Community Reviews</h2>
+            </div>
             
             <div className="flex items-center gap-6 pt-2">
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl md:text-6xl font-display text-foreground tracking-tighter">
+                <span className="text-4xl md:text-6xl font-display text-white tracking-tighter leading-none">
                   {stats.averageRating}
                 </span>
-                <span className="text-sm text-muted-foreground/60 font-medium">/ 5.0</span>
+                <span className="text-sm text-white/20 font-light italic">/ 5.0</span>
               </div>
               
-              <div className="h-10 w-[1px] bg-white/10 hidden md:block" />
-              
-              <div className="flex flex-col gap-1">
+              <div className="space-y-1.5">
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
-                      className={`w-3.5 h-3.5 ${i < Math.round(stats.averageRating) ? 'fill-primary text-primary' : 'text-white/10'}`} 
+                      className={`w-3 h-3 ${i < Math.round(stats.averageRating) ? 'fill-primary text-primary' : 'text-white/[0.05]'}`} 
                     />
                   ))}
                 </div>
-                <span className="text-[10px] tracking-[0.1em] uppercase font-bold text-muted-foreground/60">
+                <p className="text-[8px] tracking-[0.2em] uppercase font-bold text-white/40">
                   {stats.totalReviews} Verified Experiences
-                </span>
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            {canShowButton && (
+          {canShowButton && (
+            <div className="flex">
               <Button 
                 onClick={() => { haptic("light"); setShowForm(!showForm); }}
-                className="h-12 px-8 rounded-full bg-white/[0.03] backdrop-blur-xl border border-white/10 text-foreground hover:bg-white/[0.08] transition-all text-xs tracking-widest font-bold"
+                className="h-12 px-10 rounded-full bg-white/[0.03] backdrop-blur-xl border border-white/5 text-white/80 hover:bg-white/[0.08] hover:text-white transition-all text-[10px] tracking-[0.3em] font-bold"
                 disabled={isCheckingEligibility}
               >
                 {showForm ? 'CANCEL' : 'WRITE A REVIEW'}
               </Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <AnimatePresence>
@@ -279,7 +284,7 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
           >
             <div 
               ref={scrollRef}
-              className="flex gap-6 overflow-x-auto pb-12 pt-4 px-1 scrollbar-hide snap-x snap-mandatory"
+              className="flex gap-6 overflow-x-auto pb-6 pt-4 px-1 scrollbar-hide snap-x snap-mandatory overscroll-x-contain touch-pan-x"
             >
               {reviews.map((review, idx) => (
                 <motion.div 
@@ -289,79 +294,67 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="min-w-[300px] md:min-w-[400px] max-w-[400px] snap-center"
+                  className="min-w-[300px] md:min-w-[400px] max-w-[400px] snap-center will-change-transform"
                 >
-                  <div className="h-full bg-white/[0.02] backdrop-blur-3xl border border-white/5 p-8 rounded-[2.5rem] relative group/card hover:bg-white/[0.04] transition-all duration-500">
+                  <div className="h-full bg-[#121212] border border-white/[0.05] p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] relative group/card hover:border-primary/20 transition-all duration-700">
                     <div className="flex flex-col h-full">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex gap-1">
+                      <div className="flex items-start justify-between mb-6">
+                        <div className="flex gap-0.5 pt-1">
                           {[...Array(5)].map((_, i) => (
                             <Star 
                               key={i} 
-                              className={`w-3 h-3 ${i < review.rating ? 'fill-primary text-primary' : 'text-white/5'}`} 
+                              className={`w-3 h-3 ${i < review.rating ? 'fill-primary text-primary' : 'text-white/[0.05]'}`} 
                             />
                           ))}
                         </div>
-                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                          <ShieldCheck className="w-3 h-3 text-primary" />
-                          <span className="text-[9px] font-bold tracking-widest text-primary uppercase">Verified</span>
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/20 bg-primary/[0.03]">
+                          <ShieldCheck className="w-2.5 h-2.5 text-primary" />
+                          <span className="text-[7px] font-bold tracking-[0.1em] text-primary uppercase">Verified</span>
                         </div>
                       </div>
 
-                      <p className="text-muted-foreground/90 text-sm leading-relaxed mb-8 flex-grow">
+                      <p className="text-white/60 text-xs md:text-sm leading-relaxed mb-8 flex-grow font-light tracking-wide">
                         "{review.review}"
                       </p>
 
-                      <div className="flex items-center justify-between mt-auto">
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-foreground tracking-widest uppercase">{review.user_name || 'Anonymous'}</span>
-                          <span className="text-[10px] text-muted-foreground/40 mt-1">NOR Enthusiast</span>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[9px] font-bold text-white tracking-[0.2em] uppercase">{review.user_name || 'Anonymous'}</span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[8px] text-white/30 tracking-widest uppercase">NOR Enthusiast</span>
+                          
+                          {resolvedCustomerId === review.user_id && (
+                            <div className="flex gap-1">
+                              <button 
+                                onClick={() => {
+                                  haptic("light");
+                                  setEditingReview(review);
+                                  setTimeout(() => {
+                                    const form = document.getElementById('review-form-anchor');
+                                    if (form) form.scrollIntoView({ behavior: 'smooth' });
+                                  }, 100);
+                                }}
+                                className="p-2 text-white/20 hover:text-primary transition-colors"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button 
+                                onClick={() => { haptic("medium"); handleDelete(review.id); }}
+                                className="p-2 text-white/20 hover:text-red-500 transition-colors"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          )}
                         </div>
-                        
-                        {resolvedCustomerId === review.user_id && (
-                          <div className="flex gap-1">
-                            <button 
-                              onClick={() => {
-                                haptic("light");
-                                setEditingReview(review);
-                                setTimeout(() => {
-                                  const form = document.getElementById('review-form-anchor');
-                                  if (form) form.scrollIntoView({ behavior: 'smooth' });
-                                }, 100);
-                              }}
-                              className="p-2 text-muted-foreground/40 hover:text-primary transition-colors"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                            <button 
-                              onClick={() => { haptic("medium"); handleDelete(review.id); }}
-                              className="p-2 text-muted-foreground/40 hover:text-red-500 transition-colors"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
-
-            {/* Subtle Scroll Indicator */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-1.5">
-              <div className="h-1 w-12 bg-white/5 rounded-full overflow-hidden">
-                <motion.div 
-                  className="h-full bg-primary/40 rounded-full"
-                  initial={{ width: "0%" }}
-                  whileInView={{ width: "40%" }}
-                  transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-                />
-              </div>
-            </div>
           </div>
         ) : (
-          <div className="text-center py-24 bg-white/[0.01] border border-white/5 border-dashed rounded-[3rem]">
+          <div className="text-center py-24 bg-white/[0.005] border border-white/[0.03] border-dashed rounded-[3rem]">
             <MessageSquare className="w-12 h-12 text-white/5 mx-auto mb-6" />
             <h3 className="text-xl font-display text-foreground mb-3">No reviews yet</h3>
             <p className="text-sm text-muted-foreground/60 max-w-xs mx-auto">Be the first to share your experience with the NOR collection.</p>

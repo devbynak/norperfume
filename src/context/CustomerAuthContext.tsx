@@ -11,6 +11,7 @@ import {
   beginLogin,
   isAuthenticated as checkAuth,
   logout as oauthLogout,
+  getAccessToken,
 } from "@/lib/shopify/customer-account";
 
 interface CustomerAuthContextType {
@@ -19,16 +20,19 @@ interface CustomerAuthContextType {
   login: (returnTo?: string) => void;
   logout: () => void;
   signalAuthenticated: () => void;
+  accessToken: string | null;
 }
 
 const CustomerAuthContext = createContext<CustomerAuthContextType | undefined>(undefined);
 
 export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsAuthenticated(checkAuth());
+    setAccessToken(getAccessToken());
     setIsLoading(false);
   }, []);
 
@@ -38,16 +42,18 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = useCallback(() => {
     setIsAuthenticated(false);
+    setAccessToken(null);
     oauthLogout();
   }, []);
 
   const signalAuthenticated = useCallback(() => {
     setIsAuthenticated(checkAuth());
+    setAccessToken(getAccessToken());
   }, []);
 
   return (
     <CustomerAuthContext.Provider
-      value={{ isAuthenticated, isLoading, login, logout, signalAuthenticated }}
+      value={{ isAuthenticated, accessToken, isLoading, login, logout, signalAuthenticated }}
     >
       {children}
     </CustomerAuthContext.Provider>

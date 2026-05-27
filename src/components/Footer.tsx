@@ -23,7 +23,7 @@ const WhatsAppIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
     className={className}
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M379.56,131.67A172.4,172.4,0,0,0,256.67,80.73C161,80.73,83.05,158.64,83.05,254.42a173.47,173.47,0,0,0,23.2,86.82l-24.65,90,92.08-24.17a173.55,173.55,0,0,0,83,21.17h.07c95.73,0,173.69-77.91,173.69-173.69A172.73,172.73,0,0,0,379.53,131.7l0,0ZM256.72,399a144.17,144.17,0,0,1-73.52-20.14l-5.29-3.15L123.27,390l14.59-53.27-3.42-5.47a143.29,143.29,0,0,1-22.11-76.81C112.33,174.81,177.1,110,256.8,110A144.34,144.34,0,0,1,401.12,254.48c-.07,79.67-64.83,144.46-144.41,144.46v0ZM335.87,290.8c-4.32-2.2-25.68-12.67-29.65-14.12s-6.85-2.19-9.8,2.2-11.22,14.12-13.71,17-4.94,3.24-9.26,1.05-18.23-6.72-34.73-21.43c-12.83-11.45-21.5-25.59-24-29.89s-.27-6.63,1.9-8.77c1.94-1.93,4.32-5.07,6.48-7.61s2.88-4.33,4.32-7.21a8.09,8.09,0,0,0-.43-7.62c-1.44-2.88-12.68-30.54-14.12-34.12s-2.83-3-4.32-3.1-3.07-.1-5.23-.1-5.62.82-8.59,4.07-11.37,11.11-11.37,27.1,0,16,11.66,31.44,22.91,30.34,24.35,32.28,1.44,2.1,38.64,59,93.58,82.68c13.07,5.64,23.28,9,31.25,11.53,13.13,4.17,25.08,3.58,34.52,2.16,10.53-1.58,32.41-13.25,37-26s4.58-23.7,3.22-26-.5-4.14-4.81-6.34Z" />
+    <path d="M379.56,131.67A172.4,172.4,0,0,0,256.67,80.73C161,80.73,83.05,158.64,83.05,254.42a173.47,173.47,0,0,0,23.2,86.82l-24.65,90,92.08-24.17a173.55,173.55,0,0,0,83,21.17h.07c95.73,0,173.69-77.91,173.69-173.69A172.73,172.73,0,0,0,379.53,131.7l0,0ZM256.72,399a144.17,144.17,0,0,1-73.52-20.14l-5.29-3.15L123.27,390l14.59-53.27-3.42-5.47a143.29,143.29,0,0,1-22.11-76.81C112.33,174.81,177.1,110,256.8,110A144.34,144.34,0,0,1,401.12,254.48c-.07,79.67-64.83,144.46-144.41,144.46v0ZM335.87,290.8c-4.32-2.2-25.68-12.67-29.65-14.12s-6.85-2.19-9.8,2.2-11.22,14.11-13.76,17-5.06,3.29-9.37,1.09-18.35-6.77-34.92-21.56c-12.88-11.5-21.61-25.74-24.15-30s-.29-6.71,1.92-8.83c2-1.93,4.32-5.06,6.51-7.6s2.88-4.32,4.32-7.26.74-5.42-.35-7.6-9.8-23.55-13.34-32.25c-3.49-8.51-7.12-7.32-9.79-7.47s-5.42-.13-8.29-.13a16,16,0,0,0-11.57,5.41c-4,4.32-15.2,14.86-15.2,36.22s15.54,42,17.72,44.91,30.61,46.76,74.14,65.54c10.34,4.44,18.42,7.11,24.72,9.18a60,60,0,0,0,27.32,1.71c8.35-1.23,25.68-10.49,29.31-20.62s3.63-18.83,2.55-20.62-3.91-3-8.29-5.22l0,0Z" />
   </svg>
 );
 
@@ -72,7 +72,13 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative bg-gradient-to-b from-[#121212]/30 to-[#070707]/90 backdrop-blur-2xl border-t border-white/10 pt-16 pb-12 md:pt-20 md:pb-16 px-8 md:px-16 mt-8 md:mt-16 overflow-hidden">
+    <footer className="relative bg-black/[0.02] backdrop-blur-2xl border-t border-white/[0.05] bg-gradient-to-b from-white/[0.02] to-transparent pt-16 pb-12 md:pt-24 md:pb-20 px-6 sm:px-8 md:px-16 mt-8 md:mt-24 overflow-hidden">
+      {/* Top Blend Effect to merge with section above */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background via-background/50 to-transparent pointer-events-none z-10" />
+      
+      {/* Thin Separator Line for definition */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent z-20" />
+      
       {/* Premium ambient glows */}
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/[0.07] rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/[0.04] rounded-full blur-[120px] pointer-events-none" />
@@ -80,7 +86,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Main Grid Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-10 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 md:gap-12 lg:gap-10 pb-12">
           
           {/* Column 1: Brand Logo & Newsletter */}
           <div className="lg:col-span-2 space-y-8">

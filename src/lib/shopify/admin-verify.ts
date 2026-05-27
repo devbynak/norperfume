@@ -2,9 +2,11 @@
  * Shopify Admin API Utility for Purchase Verification
  */
 
-const SHOP = process.env.VITE_SHOPIFY_DOMAIN || process.env.SHOP;
+import { SHOPIFY_CONFIG } from './client.js';
+
+const SHOP = process.env.VITE_SHOPIFY_DOMAIN || process.env.SHOP || SHOPIFY_CONFIG.domain;
 const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN;
-const SHOP_ID = process.env.VITE_SHOPIFY_SHOP_ID;
+const SHOP_ID = process.env.VITE_SHOPIFY_SHOP_ID || SHOPIFY_CONFIG.shopId;
 
 /**
  * Resolves a Customer GID from an access token using the Customer Account API.

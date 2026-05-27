@@ -3,10 +3,10 @@ const MarqueeBanner = ({ items, className = "" }: { items: string[]; className?:
     <div className="flex items-center shrink-0">
       {items.map((item, i) => (
         <span key={i} className="flex items-center">
-          <span className="text-sm font-semibold tracking-wide uppercase text-black mx-4 whitespace-nowrap">
+          <span className="text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.2em] uppercase text-black mx-4 sm:mx-8 md:mx-12 whitespace-nowrap">
             {item}
           </span>
-          <span className="text-black font-bold mx-4">✦</span>
+          <span className="text-black font-bold mx-2 sm:mx-4">✦</span>
         </span>
       ))}
     </div>

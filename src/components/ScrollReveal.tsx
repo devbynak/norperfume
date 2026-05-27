@@ -26,13 +26,14 @@ export const Reveal = ({
   scale = 1
 }: RevealProps) => {
   const getInitial = () => {
+    const base = { opacity: 0, scale, filter: "blur(10px)" };
     switch (direction) {
-      case "up": return { opacity: 0, y: yOffset, x: 0, scale };
-      case "down": return { opacity: 0, y: -yOffset, x: 0, scale };
-      case "left": return { opacity: 0, x: xOffset || 40, y: 0, scale };
-      case "right": return { opacity: 0, x: -(xOffset || 40), y: 0, scale };
-      case "none": return { opacity: 0, y: 0, x: 0, scale };
-      default: return { opacity: 0, y: yOffset, x: 0, scale };
+      case "up": return { ...base, y: yOffset, x: 0 };
+      case "down": return { ...base, y: -yOffset, x: 0 };
+      case "left": return { ...base, x: xOffset || 40, y: 0 };
+      case "right": return { ...base, x: -(xOffset || 40), y: 0 };
+      case "none": return { ...base, y: 0, x: 0 };
+      default: return { ...base, y: yOffset, x: 0 };
     }
   };
 
@@ -43,8 +44,8 @@ export const Reveal = ({
     >
       <motion.div
         initial={getInitial()}
-        whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-        viewport={{ once: true, margin: "0px" }}
+        whileInView={{ opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)" }}
+        viewport={{ once: true, margin: "-10%" }}
         transition={{ 
           duration, 
           delay, 
