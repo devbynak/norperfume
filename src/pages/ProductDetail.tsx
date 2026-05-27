@@ -377,7 +377,7 @@ const ProductDetail = () => {
                           </span>
                         </div>
                         <ChevronDown className={cn(
-                          "w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/20 transition-all duration-700 ease-[0.16,1,0.3,1]", 
+                          "w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/20 transition-all duration-700 ease-&lsqb;0.16,1,0.3,1&rsqb;", 
                           openSection === section.id && "rotate-180 text-primary scale-125"
                         )} />
                       </button>
@@ -453,7 +453,7 @@ const ProductDetail = () => {
                   <img 
                     src={item.image} 
                     alt={item.name} 
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-105" 
                     loading="lazy"
                   />
 

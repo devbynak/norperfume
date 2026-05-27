@@ -100,7 +100,7 @@ const HeroCarousel = () => {
             const targetUrl = currentSlide.ctaHref && currentSlide.ctaHref !== "#collections" ? currentSlide.ctaHref : "/products";
             navigate(targetUrl);
           }}
-          className="absolute inset-0 cursor-grab active:cursor-grabbing touch-pan-y overflow-hidden"
+          className="absolute inset-0 cursor-grab active:cursor-grabbing touch-pan-y overflow-hidden group"
           style={{ y, opacity }}
         >
           <motion.div 
@@ -124,7 +124,7 @@ const HeroCarousel = () => {
                 <img
                   src={currentSlide.mobileImage || currentSlide.image}
                   alt={currentSlide.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                   width={1080}
                   height={1440}
                   loading={current === 0 ? "eager" : "lazy"}
@@ -135,7 +135,7 @@ const HeroCarousel = () => {
               <img
                 src={currentSlide.image}
                 alt={currentSlide.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                 width={1920}
                 height={1080}
                 loading={current === 0 ? "eager" : "lazy"}

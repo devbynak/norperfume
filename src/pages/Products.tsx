@@ -80,7 +80,7 @@ const Products = () => {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                       loading={index < 3 ? "eager" : "lazy"}
                       {...({ fetchpriority: index < 3 ? "high" : "auto" } as any)}
                       decoding="async"
