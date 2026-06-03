@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ChevronLeft, Package2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ChevronLeft, Package2, Truck, ExternalLink, MapPin, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { fetchCustomerOrders, type CustomerOrder } from "@/lib/shopify/customer-queries";
+import { motion, AnimatePresence } from "framer-motion";
+import { haptic } from "@/lib/haptics";
 
 function formatMoney(amount?: string, currency?: string) {
   if (!amount) return "—";
@@ -35,11 +37,62 @@ function statusPill(label?: string) {
   );
 }
 
+const LiveTrackingStatus = ({ awb }: { awb: string }) => {
+  const [status, setStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!awb) return;
+    
+    const fetchStatus = async () => {
+      try {
+        const res = await fetch(`/api/track?awb=${encodeURIComponent(awb)}`);
+        const data = await res.json();
+        if (data.success) {
+          setStatus(data.status);
+        }
+      } catch (e) {
+        console.error("Tracking fetch failed", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatus();
+  }, [awb]);
+
+  if (loading) return (
+    <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+      <Loader2 className="w-3 h-3 animate-spin" />
+      Syncing...
+    </div>
+  );
+
+  if (!status) return null;
+
+  return (
+    <motion.button
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      onClick={() => {
+        haptic("light");
+        navigate(`/track-order?awb=${awb}`);
+      }}
+      className="flex items-center gap-2 text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/5 px-3 py-1.5 rounded-full border border-primary/20 hover:bg-primary/10 transition-colors"
+    >
+      <Truck className="w-3 h-3" />
+      {status}
+    </motion.button>
+  );
+};
+
 const Orders = () => {
   const { isAuthenticated, login } = useCustomerAuth();
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -106,6 +159,9 @@ const Orders = () => {
               const tracking = order.fulfillments?.nodes?.flatMap(
                 (f) => f.trackingInformation || [],
               );
+              const isDispatched = order.fulfillmentStatus === "FULFILLED";
+              const primaryTracking = tracking?.[0];
+
               return (
                 <li
                   key={order.id}
@@ -122,9 +178,14 @@ const Orders = () => {
                         })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      {statusPill(order.financialStatus)}
-                      {statusPill(order.fulfillmentStatus)}
+                    <div className="flex items-center gap-3">
+                      {isDispatched && primaryTracking?.number && (
+                        <LiveTrackingStatus awb={primaryTracking.number} />
+                      )}
+                      <div className="flex items-center gap-2">
+                        {statusPill(order.financialStatus)}
+                        {statusPill(order.fulfillmentStatus)}
+                      </div>
                     </div>
                   </div>
 
@@ -170,19 +231,19 @@ const Orders = () => {
                     </div>
                     {tracking && tracking.length > 0 && (
                       <div className="flex flex-wrap gap-2">
-                        {tracking.map((t, i) =>
-                          t.url ? (
-                            <a
-                              key={i}
-                              href={t.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-xs underline underline-offset-4 text-primary"
-                            >
-                              Track {t.company || ""} {t.number || ""}
-                            </a>
-                          ) : null,
-                        )}
+                        {tracking.map((t, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              haptic("medium");
+                              navigate(`/track-order?awb=${t.number}`);
+                            }}
+                            className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            Track {t.company || ""} {t.number || ""}
+                          </button>
+                        ))}
                       </div>
                     )}
                   </div>

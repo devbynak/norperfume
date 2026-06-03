@@ -253,7 +253,8 @@ export default defineConfig(({ mode }) => {
                   success: true,
                   status: currentStatus,
                   edd: estimatedDelivery,
-                  steps: mappedSteps.reverse()
+                  steps: mappedSteps.reverse(),
+                  rawData: rawData // Include original tracking details
                 }));
               } catch (err: any) {
                 res.statusCode = 500;

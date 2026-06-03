@@ -15,6 +15,20 @@ const trackingSteps = [
   { status: "Delivered", date: "Expected Oct 16", desc: "Arriving at your doorstep", completed: false, current: false },
 ];
 
+interface ShiprocketData {
+  tracking_data?: {
+    shipment_track?: Array<{
+      courier_name?: string;
+      awb_code?: string;
+      expected_date?: string;
+      weight?: string | number;
+      destination?: string;
+      current_status?: string;
+      current_location?: string;
+    }>;
+  };
+}
+
 const TrackOrder = () => {
   const [orderId, setOrderId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -22,6 +36,7 @@ const TrackOrder = () => {
   const [currentStatus, setCurrentStatus] = useState("In Processing");
   const [edd, setEdd] = useState("Oct 16, 2026");
   const [liveSteps, setLiveSteps] = useState<any[]>(trackingSteps);
+  const [rawTrackingData, setRawTrackingData] = useState<ShiprocketData | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleTrack = async (e: React.FormEvent) => {
@@ -43,6 +58,7 @@ const TrackOrder = () => {
       setCurrentStatus(data.status);
       setEdd(data.edd);
       setLiveSteps(data.steps);
+      setRawTrackingData(data.rawData); // Store original details
       setShowResult(true);
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to retrieve tracking details.");
@@ -216,7 +232,7 @@ const TrackOrder = () => {
                               </p>
                               {step.current && (
                                 <div className="mt-4 flex items-center gap-2 text-[11px] font-bold text-primary bg-primary/5 w-max px-3 py-1 rounded-full uppercase tracking-widest border border-primary/10">
-                                   <MapPin className="w-3 h-3" /> KOCHI STUDIO, KERALA
+                                   <MapPin className="w-3 h-3" /> {rawTrackingData?.tracking_data?.shipment_track?.[0]?.current_location || "KOCHI STUDIO, KERALA"}
                                 </div>
                               )}
                             </div>
@@ -224,6 +240,46 @@ const TrackOrder = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* Original Tracking Details */}
+                    {rawTrackingData?.tracking_data?.shipment_track?.[0] && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-card/30 border border-border/30 rounded-[32px] p-8 overflow-hidden"
+                      >
+                        <h4 className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-6 flex items-center gap-2">
+                          <Package className="w-4 h-4" /> Shiprocket Tracking Details
+                        </h4>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                          <div>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Carrier</p>
+                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].courier_name || "Standard Carrier"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">AWB Code</p>
+                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].awb_code || "N/A"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Expected Delivery</p>
+                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].expected_date || "TBA"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Weight</p>
+                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].weight ? `${rawTrackingData.tracking_data.shipment_track[0].weight} kg` : "N/A"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Destination</p>
+                            <p className="text-sm font-medium text-foreground line-clamp-1">{rawTrackingData.tracking_data.shipment_track[0].destination || "India"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Current Status</p>
+                            <p className="text-sm font-medium text-primary">{rawTrackingData.tracking_data.shipment_track[0].current_status || "In Transit"}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
                     
                     {/* Support Banner */}
                     <div className="bg-muted/10 border border-border/50 rounded-[32px] p-8 text-center sm:text-left flex flex-col sm:flex-row items-center gap-6">
