@@ -9,7 +9,6 @@ import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import CartDrawer from "@/components/CartDrawer";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Import Home page directly for instant initial load
 import Index from "./pages/Index.tsx";
@@ -75,9 +74,6 @@ const App = () => (
             <Toaster />
             <Sonner />
             <CartDrawer />
-            {import.meta.env.PROD && import.meta.env.VITE_ENABLE_SPEED_INSIGHTS === "true" ? (
-              <SpeedInsights />
-            ) : null}
             <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>
