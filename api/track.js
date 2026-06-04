@@ -95,9 +95,18 @@ export default async function handler(req, res) {
 
     // 4. Step C: Map Shiprocket's raw structure to our premium format
     const currentStatus = latestTrack.current_status || "In Processing";
+    const statusLower = currentStatus.toLowerCase();
     const estimatedDelivery = latestTrack.edd || "Pending";
     const courierName = latestTrack.courier_name || "Luxury Courier Partner";
     const trackingNumber = latestTrack.awb_code || awb;
+
+    // Define milestones for the roadmap
+    const milestones = [
+      { id: 'ordered', label: 'Ordered', icon: 'package', completed: true },
+      { id: 'shipped', label: 'Shipped', icon: 'truck', completed: statusLower.includes('shipped') || statusLower.includes('out for delivery') || statusLower.includes('delivered') || statusLower.includes('transit') },
+      { id: 'out_for_delivery', label: 'Out for Delivery', icon: 'map-pin', completed: statusLower.includes('out for delivery') || statusLower.includes('delivered') },
+      { id: 'delivered', label: 'Delivered', icon: 'check-circle', completed: statusLower.includes('delivered') }
+    ];
 
     // Map history activities with raw timestamps for client-side formatting
     const history = shipmentActivities.map((activity) => ({
@@ -135,6 +144,7 @@ export default async function handler(req, res) {
       status: currentStatus,
       location: latestTrack.current_location || "Processing Hub",
       edd: estimatedDelivery,
+      milestones,
       history: history.reverse(), // Send chronological order from API
       steps: mappedSteps.reverse(),
       rawData: rawData

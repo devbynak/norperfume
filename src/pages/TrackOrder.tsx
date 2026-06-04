@@ -6,7 +6,7 @@ import { haptic } from "@/lib/haptics";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { Package, Truck, CheckCircle2, MapPin, Clock, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface ShiprocketData {
   tracking_data?: {
@@ -38,6 +38,7 @@ const TrackOrder = () => {
   const [courierName, setCourierName] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
+  const [milestones, setMilestones] = useState<any[]>([]);
   const [history, setHistory] = useState<TrackingHistory[]>([]);
   const [rawTrackingData, setRawTrackingData] = useState<ShiprocketData | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
@@ -63,6 +64,7 @@ const TrackOrder = () => {
       setCourierName(data.courierName);
       setTrackingNumber(data.trackingNumber);
       setCurrentLocation(data.location);
+      setMilestones(data.milestones || []);
       setHistory(data.history || []);
       setRawTrackingData(data.rawData); 
       setShowResult(true);
@@ -202,6 +204,63 @@ const TrackOrder = () => {
                       <div className="text-center md:text-right">
                         <p className="text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase mb-1">Estimated Delivery</p>
                         <h3 className="text-2xl font-display text-foreground">{edd}</h3>
+                      </div>
+                    </div>
+
+                    {/* Road Map Milestone Tracker */}
+                    <div className="bg-card/20 border border-border/30 rounded-[32px] p-8 md:p-10 relative overflow-hidden">
+                      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-4 relative">
+                        {milestones.length > 0 ? milestones.map((milestone, idx) => (
+                          <React.Fragment key={milestone.id}>
+                            <div className="flex flex-row md:flex-col items-center gap-4 md:gap-3 flex-1 relative z-10">
+                              <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-700 ${
+                                milestone.completed 
+                                  ? 'bg-primary border-primary text-primary-foreground shadow-[0_0_20px_rgba(212,175,55,0.3)]' 
+                                  : 'bg-background border-border/50 text-muted-foreground'
+                              }`}>
+                                {milestone.id === 'ordered' && <Package className="w-5 h-5" />}
+                                {milestone.id === 'shipped' && <Truck className="w-5 h-5" />}
+                                {milestone.id === 'out_for_delivery' && <MapPin className="w-5 h-5" />}
+                                {milestone.id === 'delivered' && <CheckCircle2 className="w-5 h-5" />}
+                              </div>
+                              <div className="text-left md:text-center">
+                                <p className={`text-[11px] font-bold uppercase tracking-[0.15em] transition-colors duration-500 ${
+                                  milestone.completed ? 'text-foreground' : 'text-muted-foreground'
+                                }`}>
+                                  {milestone.label}
+                                </p>
+                                {milestone.completed && idx === milestones.filter(m => m.completed).length - 1 && (
+                                  <span className="inline-block md:block mt-1 px-2 py-0.5 rounded-full bg-primary/10 text-[9px] text-primary font-black uppercase tracking-tighter animate-pulse">
+                                    Current
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            {idx < milestones.length - 1 && (
+                              <div className="hidden md:block flex-[0.5] h-[2px] relative top-[-15px]">
+                                <div className="absolute inset-0 bg-border/20 rounded-full" />
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: milestone.completed && milestones[idx+1].completed ? '100%' : '0%' }}
+                                  className="absolute inset-0 bg-primary rounded-full"
+                                />
+                              </div>
+                            )}
+                            {idx < milestones.length - 1 && (
+                              <div className="md:hidden w-[2px] h-8 ml-[23px] bg-border/20 relative">
+                                <motion.div 
+                                  initial={{ height: 0 }}
+                                  animate={{ height: milestone.completed && milestones[idx+1].completed ? '100%' : '0%' }}
+                                  className="absolute inset-0 bg-primary w-full"
+                                />
+                              </div>
+                            )}
+                          </React.Fragment>
+                        )) : (
+                          <div className="w-full text-center py-4">
+                            <p className="text-muted-foreground text-xs italic">Calculating shipment milestones...</p>
+                          </div>
+                        )}
                       </div>
                     </div>
 

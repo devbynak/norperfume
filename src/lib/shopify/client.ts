@@ -7,13 +7,9 @@ const DEFAULT_SHOPIFY_CONFIG = {
 };
 
 const getEnvVar = (key: string) => {
-  if (typeof process !== 'undefined' && process.env && process.env[key]) {
-    return process.env[key];
-  }
-  // @ts-ignore - import.meta.env is a Vite-ism
-  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
-    // @ts-ignore
-    return import.meta.env[key];
+  const meta = (import.meta as any);
+  if (typeof meta !== 'undefined' && meta.env && meta.env[key]) {
+    return meta.env[key];
   }
   return undefined;
 };

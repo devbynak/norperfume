@@ -226,9 +226,18 @@ export default defineConfig(({ mode }) => {
                 const shipmentActivities = trackingData.shipment_track_activities || [];
                 const latestTrack = trackingData.shipment_track?.[0] || {};
                 const currentStatus = latestTrack.current_status || "In Processing";
+                const statusLower = currentStatus.toLowerCase();
                 const estimatedDelivery = latestTrack.edd || "Pending";
                 const courierName = latestTrack.courier_name || "Luxury Courier Partner";
                 const trackingNumber = latestTrack.awb_code || awb;
+
+                // Define milestones for the roadmap
+                const milestones = [
+                  { id: 'ordered', label: 'Ordered', icon: 'package', completed: true },
+                  { id: 'shipped', label: 'Shipped', icon: 'truck', completed: statusLower.includes('shipped') || statusLower.includes('out for delivery') || statusLower.includes('delivered') || statusLower.includes('transit') },
+                  { id: 'out_for_delivery', label: 'Out for Delivery', icon: 'map-pin', completed: statusLower.includes('out for delivery') || statusLower.includes('delivered') },
+                  { id: 'delivered', label: 'Delivered', icon: 'check-circle', completed: statusLower.includes('delivered') }
+                ];
 
                 // Map history activities with raw timestamps for client-side formatting
                 const history = shipmentActivities.map((activity: any) => ({
@@ -266,6 +275,7 @@ export default defineConfig(({ mode }) => {
                   status: currentStatus,
                   location: latestTrack.current_location || "Processing Hub",
                   edd: estimatedDelivery,
+                  milestones,
                   history: history.reverse(),
                   steps: mappedSteps.reverse(),
                   rawData: rawData

@@ -15,10 +15,9 @@ import { CartItem } from "@/context/CartContext";
 
 // Get Pixel ID from env var or use placeholder
 const getEnvVar = (key: string) => {
-  // @ts-ignore
-  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
-    // @ts-ignore
-    return import.meta.env[key];
+  const meta = (import.meta as any);
+  if (typeof meta !== 'undefined' && meta.env && meta.env[key]) {
+    return meta.env[key];
   }
   return undefined;
 };
