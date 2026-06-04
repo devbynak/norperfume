@@ -118,17 +118,20 @@ export default async function handler(req, res) {
     // Map history activities with raw timestamps for client-side formatting
     const history = shipmentActivities
       .map((activity) => {
-        const formattedStatus = formatLabel(activity.activity) || "Update Received";
-        const formattedLocation = formatLabel(activity.location) || "Logistics Hub";
+        const formattedStatus = formatLabel(activity.activity);
+        const formattedLocation = formatLabel(activity.location);
+        
+        // Only return if we have a valid status
+        if (!formattedStatus) return null;
         
         return {
           status: formattedStatus,
-          location: formattedLocation,
+          location: formattedLocation, // Can be null, UI will handle
           timestamp: activity.date,
           completed: true
         };
       })
-      .filter(item => item.status !== "Update Received" || item.location !== "Logistics Hub");
+      .filter(Boolean); // Remove null entries
 
     // If history is empty after filtering, provide at least one meaningful entry
     if (history.length === 0 && shipmentActivities.length > 0) {

@@ -248,8 +248,10 @@ export default defineConfig(({ mode }) => {
                 // Map history activities with raw timestamps for client-side formatting
                 const history = shipmentActivities
                   .map((activity: any) => {
-                    const formattedStatus = formatLabel(activity.activity) || "Update Received";
-                    const formattedLocation = formatLabel(activity.location) || "Logistics Hub";
+                    const formattedStatus = formatLabel(activity.activity);
+                    const formattedLocation = formatLabel(activity.location);
+                    
+                    if (!formattedStatus) return null;
                     
                     return {
                       status: formattedStatus,
@@ -258,7 +260,7 @@ export default defineConfig(({ mode }) => {
                       completed: true
                     };
                   })
-                  .filter((item: any) => item.status !== "Update Received" || item.location !== "Logistics Hub");
+                  .filter(Boolean);
 
                 if (history.length === 0 && shipmentActivities.length > 0) {
                    const first = shipmentActivities[0];

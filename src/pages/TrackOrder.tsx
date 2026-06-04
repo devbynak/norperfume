@@ -342,7 +342,11 @@ const TrackOrder = () => {
                                 </div>
                               </div>
                               <p className="text-[13px] text-muted-foreground flex items-center gap-1.5 italic">
-                                <MapPin className="w-3 h-3 opacity-50" /> {item.location}
+                                {item.location && (
+                                  <>
+                                    <MapPin className="w-3 h-3 opacity-50" /> {item.location}
+                                  </>
+                                )}
                               </p>
                             </div>
                           </div>
