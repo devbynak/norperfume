@@ -239,13 +239,36 @@ export default defineConfig(({ mode }) => {
                   { id: 'delivered', label: 'Delivered', icon: 'check-circle', completed: statusLower.includes('delivered') }
                 ];
 
+                // Helper to format status and location strings
+                const formatLabel = (str: string) => {
+                  if (!str || str === "NA" || str === "N/A") return null;
+                  return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase()).trim();
+                };
+
                 // Map history activities with raw timestamps for client-side formatting
-                const history = shipmentActivities.map((activity: any) => ({
-                  status: activity.activity,
-                  location: activity.location || "Carrier Hub",
-                  timestamp: activity.date,
-                  completed: true
-                }));
+                const history = shipmentActivities
+                  .map((activity: any) => {
+                    const formattedStatus = formatLabel(activity.activity) || "Update Received";
+                    const formattedLocation = formatLabel(activity.location) || "Logistics Hub";
+                    
+                    return {
+                      status: formattedStatus,
+                      location: formattedLocation,
+                      timestamp: activity.date,
+                      completed: true
+                    };
+                  })
+                  .filter((item: any) => item.status !== "Update Received" || item.location !== "Logistics Hub");
+
+                if (history.length === 0 && shipmentActivities.length > 0) {
+                   const first = shipmentActivities[0];
+                   history.push({
+                     status: formatLabel(first.activity) || currentStatus,
+                     location: formatLabel(first.location) || "Processing Hub",
+                     timestamp: first.date,
+                     completed: true
+                   });
+                }
 
                 const mappedSteps = shipmentActivities.slice(0, 4).map((activity: any) => ({
                   status: activity.activity,
