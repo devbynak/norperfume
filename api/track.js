@@ -137,14 +137,17 @@ export default async function handler(req, res) {
         // Remove "Ready For Receive" and "Pickup Done" as requested
         return !statusLower.includes('ready for receive') && !statusLower.includes('pickup done');
       })
-      .filter((item, index, self) => 
-        // Deduplicate: remove if an entry with same status, location and timestamp already exists
-        index === self.findIndex((t) => (
+      .filter((item, index, self) => {
+        // Strict Deduplication: Remove repeating identical statuses regardless of timestamp 
+        // to show a clean unique journey (e.g., only one "Arrived At Carrier Facility" or "Departed" per hub)
+        const isDuplicate = self.findIndex((t, idx) => (
+          idx < index && // Check previous entries
           t.status === item.status && 
-          t.location === item.location && 
-          t.timestamp === item.timestamp
-        ))
-      );
+          t.location === item.location
+        )) !== -1;
+        
+        return !isDuplicate;
+      });
 
     // If history is empty after filtering, provide at least one meaningful entry
     if (history.length === 0 && shipmentActivities.length > 0) {

@@ -265,13 +265,14 @@ export default defineConfig(({ mode }) => {
                     const statusLower = item.status.toLowerCase();
                     return !statusLower.includes('ready for receive') && !statusLower.includes('pickup done');
                   })
-                  .filter((item: any, index: number, self: any[]) => 
-                    index === self.findIndex((t) => (
+                  .filter((item: any, index: number, self: any[]) => {
+                    const isDuplicate = self.findIndex((t, idx) => (
+                      idx < index &&
                       t.status === item.status && 
-                      t.location === item.location && 
-                      t.timestamp === item.timestamp
-                    ))
-                  );
+                      t.location === item.location
+                    )) !== -1;
+                    return !isDuplicate;
+                  });
 
                 if (history.length === 0 && shipmentActivities.length > 0) {
                    const first = shipmentActivities[0];
