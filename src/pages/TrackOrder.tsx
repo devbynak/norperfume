@@ -203,7 +203,16 @@ const TrackOrder = () => {
                       </div>
                       <div className="text-center md:text-right">
                         <p className="text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase mb-1">Estimated Delivery</p>
-                        <h3 className="text-2xl font-display text-foreground">{edd}</h3>
+                        <h3 className="text-2xl font-display text-foreground">
+                          {edd !== "Pending" ? (
+                            <>
+                              <span className="block">{new Date(edd).toLocaleDateString("en-GB", { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, ' / ')}</span>
+                              <span className="text-sm font-medium text-primary/70 uppercase tracking-widest mt-1 block">
+                                {new Date(edd).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', hour12: true })}
+                              </span>
+                            </>
+                          ) : "Pending"}
+                        </h3>
                       </div>
                     </div>
 
@@ -317,16 +326,17 @@ const TrackOrder = () => {
                                 </h5>
                                 <div className="flex items-center gap-3">
                                   <span className="text-[11px] font-bold text-muted-foreground bg-white/5 px-2.5 py-1 rounded-md uppercase tracking-wider">
-                                    {new Date(item.timestamp).toLocaleDateString("en-IN", { 
-                                      weekday: 'short', 
-                                      month: 'short', 
-                                      day: 'numeric' 
-                                    })}
+                                    {new Date(item.timestamp).toLocaleDateString("en-GB", { 
+                                      day: '2-digit', 
+                                      month: '2-digit', 
+                                      year: 'numeric' 
+                                    }).replace(/\//g, ' / ')}
                                   </span>
                                   <span className="text-[11px] font-bold text-primary/70 bg-primary/5 px-2.5 py-1 rounded-md uppercase tracking-wider">
-                                    {new Date(item.timestamp).toLocaleTimeString("en-IN", { 
+                                    {new Date(item.timestamp).toLocaleTimeString("en-US", { 
                                       hour: '2-digit', 
-                                      minute: '2-digit' 
+                                      minute: '2-digit',
+                                      hour12: true
                                     })}
                                   </span>
                                 </div>
