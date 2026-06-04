@@ -260,7 +260,14 @@ export default defineConfig(({ mode }) => {
                       completed: true
                     };
                   })
-                  .filter(Boolean);
+                  .filter(Boolean)
+                  .filter((item: any, index: number, self: any[]) => 
+                    index === self.findIndex((t) => (
+                      t.status === item.status && 
+                      t.location === item.location && 
+                      t.timestamp === item.timestamp
+                    ))
+                  );
 
                 if (history.length === 0 && shipmentActivities.length > 0) {
                    const first = shipmentActivities[0];

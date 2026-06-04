@@ -131,7 +131,15 @@ export default async function handler(req, res) {
           completed: true
         };
       })
-      .filter(Boolean); // Remove null entries
+      .filter(Boolean) // Remove null entries
+      .filter((item, index, self) => 
+        // Deduplicate: remove if an entry with same status, location and timestamp already exists
+        index === self.findIndex((t) => (
+          t.status === item.status && 
+          t.location === item.location && 
+          t.timestamp === item.timestamp
+        ))
+      );
 
     // If history is empty after filtering, provide at least one meaningful entry
     if (history.length === 0 && shipmentActivities.length > 0) {
