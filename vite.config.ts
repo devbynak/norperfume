@@ -223,14 +223,24 @@ export default defineConfig(({ mode }) => {
                   return;
                 }
 
-                const shipment = trackingData.shipment_track_activities || [];
-                const latestActivity = trackingData.shipment_track?.[0] || {};
-                const currentStatus = latestActivity.current_status || "In Processing";
-                const estimatedDelivery = latestActivity.edd || "Pending";
+                const shipmentActivities = trackingData.shipment_track_activities || [];
+                const latestTrack = trackingData.shipment_track?.[0] || {};
+                const currentStatus = latestTrack.current_status || "In Processing";
+                const estimatedDelivery = latestTrack.edd || "Pending";
+                const courierName = latestTrack.courier_name || "Luxury Courier Partner";
+                const trackingNumber = latestTrack.awb_code || awb;
 
-                const mappedSteps = shipment.map((activity: any) => ({
+                // Map history activities with raw timestamps for client-side formatting
+                const history = shipmentActivities.map((activity: any) => ({
                   status: activity.activity,
-                  date: new Date(activity.date).toLocaleDateString("en-IN", { month: "short", day: "numeric" }),
+                  location: activity.location || "Carrier Hub",
+                  timestamp: activity.date,
+                  completed: true
+                }));
+
+                const mappedSteps = shipmentActivities.slice(0, 4).map((activity: any) => ({
+                  status: activity.activity,
+                  date: activity.date,
                   desc: activity.location || "Carrier Hub",
                   completed: true,
                   current: false,
@@ -239,7 +249,7 @@ export default defineConfig(({ mode }) => {
                 if (mappedSteps.length === 0) {
                   mappedSteps.push({
                     status: currentStatus,
-                    date: "Today",
+                    date: new Date().toISOString(),
                     desc: "Shipment details received by carrier.",
                     completed: true,
                     current: true
@@ -251,10 +261,14 @@ export default defineConfig(({ mode }) => {
                 res.statusCode = 200;
                 res.end(JSON.stringify({
                   success: true,
+                  trackingNumber,
+                  courierName,
                   status: currentStatus,
+                  location: latestTrack.current_location || "Processing Hub",
                   edd: estimatedDelivery,
+                  history: history.reverse(),
                   steps: mappedSteps.reverse(),
-                  rawData: rawData // Include original tracking details
+                  rawData: rawData
                 }));
               } catch (err: any) {
                 res.statusCode = 500;

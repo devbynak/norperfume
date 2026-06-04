@@ -5,15 +5,8 @@ import { Button } from "@/components/ui/button";
 import { haptic } from "@/lib/haptics";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
-import { Package, Truck, CheckCircle2, Search, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Package, Truck, CheckCircle2, MapPin, Clock, ExternalLink } from "lucide-react";
 import { useState } from "react";
-
-const trackingSteps = [
-  { status: "Ordered", date: "Oct 12", desc: "Order confirmed and being prepared", completed: true, current: false },
-  { status: "Processing", date: "Oct 13", desc: "Quality check and premium packaging", completed: true, current: true },
-  { status: "Shipped", date: "Expected Oct 14", desc: "Handed over to our luxury courier partner", completed: false, current: false },
-  { status: "Delivered", date: "Expected Oct 16", desc: "Arriving at your doorstep", completed: false, current: false },
-];
 
 interface ShiprocketData {
   tracking_data?: {
@@ -29,13 +22,23 @@ interface ShiprocketData {
   };
 }
 
+interface TrackingHistory {
+  status: string;
+  location: string;
+  timestamp: string;
+  completed: boolean;
+}
+
 const TrackOrder = () => {
   const [orderId, setOrderId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [currentStatus, setCurrentStatus] = useState("In Processing");
-  const [edd, setEdd] = useState("Oct 16, 2026");
-  const [liveSteps, setLiveSteps] = useState<any[]>(trackingSteps);
+  const [edd, setEdd] = useState("Pending");
+  const [courierName, setCourierName] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [currentLocation, setCurrentLocation] = useState("");
+  const [history, setHistory] = useState<TrackingHistory[]>([]);
   const [rawTrackingData, setRawTrackingData] = useState<ShiprocketData | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -57,8 +60,11 @@ const TrackOrder = () => {
       haptic("success");
       setCurrentStatus(data.status);
       setEdd(data.edd);
-      setLiveSteps(data.steps);
-      setRawTrackingData(data.rawData); // Store original details
+      setCourierName(data.courierName);
+      setTrackingNumber(data.trackingNumber);
+      setCurrentLocation(data.location);
+      setHistory(data.history || []);
+      setRawTrackingData(data.rawData); 
       setShowResult(true);
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to retrieve tracking details.");
@@ -185,102 +191,100 @@ const TrackOrder = () => {
                     className="space-y-8"
                   >
                     {/* Status Header */}
-                    <div className="bg-primary/5 border border-primary/20 rounded-[32px] p-8 flex items-center justify-between gap-6">
-                      <div>
+                    <div className="bg-primary/5 border border-primary/20 rounded-[32px] p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                      <div className="text-center md:text-left">
                         <p className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-1">Current Status</p>
-                        <h3 className="text-2xl font-display text-foreground">{currentStatus}</h3>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase mb-1">Estimated Delivery</p>
-                        <h3 className="text-xl font-display text-foreground">{edd}</h3>
-                      </div>
-                    </div>
-
-                    {/* Timeline */}
-                    <div className="bg-card/20 border border-border/30 rounded-[40px] p-10 relative overflow-hidden">
-                      <div className="absolute top-0 right-0 p-8 opacity-5">
-                         <Truck className="w-40 h-40 text-primary" />
-                      </div>
-                      
-                      <div className="space-y-12 relative">
-                        {liveSteps.map((step, idx) => (
-                          <div key={idx} className="flex gap-6 group">
-                            <div className="flex flex-col items-center">
-                              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2 transition-colors duration-500 ${
-                                step.completed ? 'bg-primary border-primary' : 
-                                step.current ? 'bg-primary/10 border-primary' : 'bg-transparent border-border'
-                              }`}>
-                                {step.completed ? (
-                                  <CheckCircle2 className="w-5 h-5 text-primary-foreground" />
-                                ) : (
-                                  <div className={`w-2 h-2 rounded-full ${step.current ? 'bg-primary animate-pulse' : 'bg-border'}`} />
-                                )}
-                              </div>
-                              {idx !== liveSteps.length - 1 && (
-                                <div className={`w-0.5 h-12 my-2 rounded-full transition-colors duration-500 ${step.completed ? 'bg-primary' : 'bg-border/30'}`} />
-                              )}
-                            </div>
-                            <div className="pt-1 flex-1">
-                              <div className="flex items-center justify-between mb-1">
-                                <h4 className={`font-semibold text-lg transition-colors ${step.completed || step.current ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                  {step.status}
-                                </h4>
-                                <span className="text-xs font-medium text-muted-foreground bg-white/5 px-2 py-1 rounded-md">{step.date}</span>
-                              </div>
-                              <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-                                {step.desc}
-                              </p>
-                              {step.current && (
-                                <div className="mt-4 flex items-center gap-2 text-[11px] font-bold text-primary bg-primary/5 w-max px-3 py-1 rounded-full uppercase tracking-widest border border-primary/10">
-                                   <MapPin className="w-3 h-3" /> {rawTrackingData?.tracking_data?.shipment_track?.[0]?.current_location || "KOCHI STUDIO, KERALA"}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Original Tracking Details */}
-                    {rawTrackingData?.tracking_data?.shipment_track?.[0] && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-card/30 border border-border/30 rounded-[32px] p-8 overflow-hidden"
-                      >
-                        <h4 className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-6 flex items-center gap-2">
-                          <Package className="w-4 h-4" /> Shiprocket Tracking Details
-                        </h4>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                          <div>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Carrier</p>
-                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].courier_name || "Standard Carrier"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">AWB Code</p>
-                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].awb_code || "N/A"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Expected Delivery</p>
-                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].expected_date || "TBA"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Weight</p>
-                            <p className="text-sm font-medium text-foreground">{rawTrackingData.tracking_data.shipment_track[0].weight ? `${rawTrackingData.tracking_data.shipment_track[0].weight} kg` : "N/A"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Destination</p>
-                            <p className="text-sm font-medium text-foreground line-clamp-1">{rawTrackingData.tracking_data.shipment_track[0].destination || "India"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Current Status</p>
-                            <p className="text-sm font-medium text-primary">{rawTrackingData.tracking_data.shipment_track[0].current_status || "In Transit"}</p>
-                          </div>
+                        <h3 className="text-3xl font-display text-foreground">{currentStatus}</h3>
+                        <div className="mt-2 flex items-center justify-center md:justify-start gap-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                           <MapPin className="w-3 h-3" /> {currentLocation}
                         </div>
-                      </motion.div>
-                    )}
-                    
+                      </div>
+                      <div className="text-center md:text-right">
+                        <p className="text-[11px] font-bold tracking-[0.2em] text-muted-foreground uppercase mb-1">Estimated Delivery</p>
+                        <h3 className="text-2xl font-display text-foreground">{edd}</h3>
+                      </div>
+                    </div>
+
+                    {/* Shipment Summary Card */}
+                    <div className="bg-card/20 border border-border/30 rounded-[32px] p-8 overflow-hidden relative">
+                      <div className="absolute top-0 right-0 p-8 opacity-5">
+                         <Truck className="w-32 h-32 text-primary" />
+                      </div>
+                      <h4 className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-8 flex items-center gap-2">
+                        <Package className="w-4 h-4" /> Shipment Summary
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 relative z-10">
+                        <div>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] mb-1.5">Tracking Number</p>
+                          <p className="text-sm font-semibold text-foreground tracking-wider">{trackingNumber}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] mb-1.5">Delivery Partner</p>
+                          <p className="text-sm font-semibold text-foreground">{courierName}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] mb-1.5">Destination</p>
+                          <p className="text-sm font-semibold text-foreground">{rawTrackingData?.tracking_data?.shipment_track?.[0]?.destination || "India"}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tracking History */}
+                    <div className="bg-card/10 border border-border/20 rounded-[32px] p-8 md:p-10">
+                      <h4 className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-10 flex items-center gap-2">
+                        <Clock className="w-4 h-4" /> Tracking History
+                      </h4>
+                      
+                      <div className="space-y-10 relative">
+                        {/* Vertical Line */}
+                        <div className="absolute left-[19px] top-2 bottom-2 w-px bg-border/30" />
+                        
+                        {history.length > 0 ? history.map((item, idx) => (
+                          <div key={idx} className="flex gap-8 relative">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2 transition-all duration-500 z-10 ${
+                              idx === 0 ? 'bg-primary border-primary' : 'bg-background border-border/50'
+                            }`}>
+                              {idx === 0 ? (
+                                <CheckCircle2 className="w-5 h-5 text-primary-foreground" />
+                              ) : (
+                                <div className="w-2 h-2 rounded-full bg-border/50" />
+                              )}
+                            </div>
+                            
+                            <div className="flex-1 pb-2">
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                <h5 className={`font-semibold text-base tracking-tight ${idx === 0 ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                  {item.status}
+                                </h5>
+                                <div className="flex items-center gap-3">
+                                  <span className="text-[11px] font-bold text-muted-foreground bg-white/5 px-2.5 py-1 rounded-md uppercase tracking-wider">
+                                    {new Date(item.timestamp).toLocaleDateString("en-IN", { 
+                                      weekday: 'short', 
+                                      month: 'short', 
+                                      day: 'numeric' 
+                                    })}
+                                  </span>
+                                  <span className="text-[11px] font-bold text-primary/70 bg-primary/5 px-2.5 py-1 rounded-md uppercase tracking-wider">
+                                    {new Date(item.timestamp).toLocaleTimeString("en-IN", { 
+                                      hour: '2-digit', 
+                                      minute: '2-digit' 
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                              <p className="text-[13px] text-muted-foreground flex items-center gap-1.5 italic">
+                                <MapPin className="w-3 h-3 opacity-50" /> {item.location}
+                              </p>
+                            </div>
+                          </div>
+                        )) : (
+                          <div className="text-center py-10">
+                             <p className="text-muted-foreground text-sm italic">Waiting for carrier updates...</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Support Banner */}
                     <div className="bg-muted/10 border border-border/50 rounded-[32px] p-8 text-center sm:text-left flex flex-col sm:flex-row items-center gap-6">
                        <div className="flex -space-x-3 overflow-hidden shrink-0">

@@ -90,40 +90,54 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "No tracking records found for this AWB number. Please verify the number." });
     }
 
-    const shipment = trackingData.shipment_track_activities || [];
-    const latestActivity = trackingData.shipment_track?.[0] || {};
+    const shipmentActivities = trackingData.shipment_track_activities || [];
+    const latestTrack = trackingData.shipment_track?.[0] || {};
 
-    // 4. Step C: Map Shiprocket's raw structure to our premium timeline format
-    const currentStatus = latestActivity.current_status || "In Processing";
-    const estimatedDelivery = latestActivity.edd || "Pending";
+    // 4. Step C: Map Shiprocket's raw structure to our premium format
+    const currentStatus = latestTrack.current_status || "In Processing";
+    const estimatedDelivery = latestTrack.edd || "Pending";
+    const courierName = latestTrack.courier_name || "Luxury Courier Partner";
+    const trackingNumber = latestTrack.awb_code || awb;
 
-    const mappedSteps = shipment.map((activity) => ({
+    // Map history activities with raw timestamps for client-side formatting
+    const history = shipmentActivities.map((activity) => ({
       status: activity.activity,
-      date: new Date(activity.date).toLocaleDateString("en-IN", { month: "short", day: "numeric" }),
+      location: activity.location || "Carrier Hub",
+      timestamp: activity.date,
+      completed: true
+    }));
+
+    // Standard steps for the simplified timeline
+    const mappedSteps = shipmentActivities.slice(0, 4).map((activity) => ({
+      status: activity.activity,
+      date: activity.date, // Pass raw date for client formatting
       desc: activity.location || "Carrier Hub",
       completed: true,
       current: false,
     }));
 
-    // If empty, return a friendly starting state
     if (mappedSteps.length === 0) {
       mappedSteps.push({
         status: currentStatus,
-        date: "Today",
+        date: new Date().toISOString(),
         desc: "Shipment details received by carrier.",
         completed: true,
         current: true
       });
     } else {
-      // Set the latest step as active
       mappedSteps[0].current = true;
     }
 
     return res.status(200).json({
       success: true,
+      trackingNumber,
+      courierName,
       status: currentStatus,
+      location: latestTrack.current_location || "Processing Hub",
       edd: estimatedDelivery,
-      steps: mappedSteps.reverse() // Chronological order
+      history: history.reverse(), // Send chronological order from API
+      steps: mappedSteps.reverse(),
+      rawData: rawData
     });
 
   } catch (error) {
