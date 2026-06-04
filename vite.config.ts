@@ -261,6 +261,10 @@ export default defineConfig(({ mode }) => {
                     };
                   })
                   .filter(Boolean)
+                  .filter((item: any) => {
+                    const statusLower = item.status.toLowerCase();
+                    return !statusLower.includes('ready for receive') && !statusLower.includes('pickup done');
+                  })
                   .filter((item: any, index: number, self: any[]) => 
                     index === self.findIndex((t) => (
                       t.status === item.status && 

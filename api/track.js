@@ -132,6 +132,11 @@ export default async function handler(req, res) {
         };
       })
       .filter(Boolean) // Remove null entries
+      .filter((item) => {
+        const statusLower = item.status.toLowerCase();
+        // Remove "Ready For Receive" and "Pickup Done" as requested
+        return !statusLower.includes('ready for receive') && !statusLower.includes('pickup done');
+      })
       .filter((item, index, self) => 
         // Deduplicate: remove if an entry with same status, location and timestamp already exists
         index === self.findIndex((t) => (
