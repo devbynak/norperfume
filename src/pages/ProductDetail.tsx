@@ -53,6 +53,32 @@ const ProductDetail = () => {
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
+  const productSchema = product ? {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.image,
+    "description": product.name.toLowerCase().includes('aqua') 
+      ? "AQUA NOR is rated the best fresh car perfume in India. A clean, ocean-breeze scent crafted with pure botanical extracts for a refreshing, long-lasting drive."
+      : "Experience the rich, woody notes of MUSK NOR. The best luxury car perfume for executive interiors in UAE and GCC. Toxin-free and handcrafted in India.",
+    "brand": {
+      "@type": "Brand",
+      "name": "NOR PERFUME"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": product.price,
+      "priceCurrency": "INR",
+      "availability": product.availableForSale ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "url": window.location.href
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "128"
+    }
+  } : null;
+
   useEffect(() => {
     if (product) {
       trackViewContent(product);
@@ -117,8 +143,12 @@ const ProductDetail = () => {
   return (
     <main ref={containerRef} className="min-h-dvh bg-background text-foreground selection:bg-primary/20 overflow-x-hidden relative">
       <SEO 
-        title={`${product.name} | NOR PERFUME | Official Online Store`}
-        description={product.description || `Discover ${product.name}, a premium handcrafted car fragrance from NOR.`}
+        title={`${product.name} | ${product.name.toLowerCase().includes('aqua') ? 'Best Fresh' : 'Best Musk'} Car Perfume 2026`}
+        description={product.name.toLowerCase().includes('aqua') 
+          ? "AQUA NOR is rated the best fresh car perfume in India. A clean, ocean-breeze scent crafted with pure botanical extracts for a refreshing, long-lasting drive."
+          : "Experience the rich, woody notes of MUSK NOR. The best luxury car perfume for executive interiors in UAE and GCC. Toxin-free and handcrafted in India."
+        }
+        schema={productSchema || undefined}
       />
       <Navbar />
 

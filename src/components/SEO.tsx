@@ -7,7 +7,7 @@ interface SEOProps {
   ogImage?: string;
   ogType?: string;
   canonical?: string;
-  schema?: Record<string, unknown>;
+  schema?: any;
 }
 
 const SEO = ({

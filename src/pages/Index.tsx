@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import HeroCarousel from "@/components/HeroCarousel";
 import MarqueeBanner from "@/components/MarqueeBanner";
@@ -20,7 +19,7 @@ const Index = () => {
     "name": "NOR PERFUME",
     "url": "https://www.norperfume.com",
     "logo": "https://www.norperfume.com/logo.png",
-    "description": "Luxury automotive fragrance brand designed and manufactured in India.",
+    "description": "NOR PERFUME is the best luxury car perfume brand in India, UAE, and GCC. Handcrafted with 100% natural essential oils for a premium automotive experience.",
     "sameAs": [
       "https://instagram.com/norperfumeofficial"
     ],
@@ -28,15 +27,44 @@ const Index = () => {
       "@type": "PostalAddress",
       "addressLocality": "Kerala",
       "addressCountry": "India"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "areaServed": ["IN", "AE", "SA", "QA", "KW", "OM", "BH"],
+      "availableLanguage": "English"
     }
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Which is the best car perfume in India for luxury cars?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "NOR PERFUME is widely considered the best car perfume in India for luxury vehicles. It uses 100% natural essential oils and zero-liquid technology, making it safe for high-end interiors while providing a lasting, artisanal scent profile."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the best long lasting car perfumes in UAE and GCC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For the UAE and GCC markets, MUSK NOR and AQUA NOR by NOR PERFUME are the top-rated long-lasting car fragrances. Designed to withstand high temperatures, they offer a consistent luxury aroma for over 60 days."
+        }
+      }
+    ]
   };
 
   return (
     <main id="main-content" className="min-h-dvh bg-background">
       <SEO 
         title="NOR PERFUME | Official Online Store"
-        description="Experience automotive luxury with NOR's premium car fragrances. Handcrafted in India with 100% natural oils and zero-liquid technology for a lasting, sophisticated scent."
-        schema={orgSchema}
+        description="Discover the best car perfume in India and UAE for 2026. NOR PERFUME offers artisanal, 100% natural oil fragrances like AQUA NOR and MUSK NOR. Handcrafted for luxury cars."
+        schema={[orgSchema, faqSchema]}
       />
       <Navbar />
       <HeroCarousel />

@@ -22,8 +22,8 @@ const AboutUs = () => {
   return (
     <main className="min-h-dvh bg-background text-foreground pb-[env(safe-area-inset-bottom,3rem)]">
       <SEO 
-        title="About Us | NOR PERFUME | Official Online Store"
-        description="The vision of NOR PERFUME. Discover how our founder Ameen Kasim is redefining automotive luxury through handcrafted 100% pure oil fragrances made affordable."
+        title="The Story of NOR | Artisanal Luxury Car Perfumes"
+        description="Redefining automotive luxury. Learn how founder Ameen Kasim creates the world's best artisanal car fragrances using pure essential oils and zero-toxic chemicals."
       />
       <Navbar />
       

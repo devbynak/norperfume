@@ -259,10 +259,10 @@ const FAQ = () => {
   };
 
   return (
-    <main className="min-h-dvh bg-background text-foreground pb-[env(safe-area-inset-bottom,2rem)]">
+    <main className="min-h-dvh bg-background text-foreground pb-[env(safe-area-inset-bottom,3rem)]">
       <SEO 
-        title="FAQ | Support | NOR PERFUME"
-        description="Find answers to common questions about NOR car perfumes, delivery times, usage instructions, and return policies."
+        title="FAQ | Best Long Lasting Car Perfumes in India & UAE"
+        description="Have questions about NOR PERFUME? Find out why our fragrances are the top-rated long-lasting car perfumes in India and UAE. Safe, natural, and artisanal."
         schema={faqSchema}
       />
       <Navbar />

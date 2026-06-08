@@ -40,8 +40,8 @@ const Products = () => {
   return (
     <main className="min-h-dvh bg-background">
       <SEO 
-        title={`${heading} | NOR PERFUME | Official Online Store`}
-        description={description}
+        title={`Shop Luxury Car Fragrances | AQUA NOR & MUSK NOR`}
+        description="Browse our collection of premium car perfumes. Featuring zero-liquid technology and essential oil blends. The best car fragrance for UAE and global luxury interiors."
       />
       <Navbar />
       <section className="pt-28 md:pt-40 pb-20 px-4 relative overflow-hidden">
