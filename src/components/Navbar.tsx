@@ -54,7 +54,7 @@ const Navbar = () => {
   const menuItems = [
     { label: "Home", href: "/", external: false },
     { label: "Products", href: "/products", external: false },
-    { label: "Journal", href: "/journal", external: false },
+    { label: "Blogs", href: "/blogs", external: false },
     { label: "FAQ", href: "/faq", external: false },
     { label: "About Us", href: "/about", external: false },
     { label: "Track My Order", href: "/track-order", external: false },

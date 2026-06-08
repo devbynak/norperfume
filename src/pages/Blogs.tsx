@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Leaf, ShieldCheck, Droplet, Star, ArrowRight } from "lucide-react";
 import SEO from "@/components/SEO";
 
-const Journal = () => {
+const Blogs = () => {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -29,7 +29,7 @@ const Journal = () => {
   return (
     <main className="min-h-dvh bg-background text-foreground">
       <SEO 
-        title="Why Essential Oils for Luxury Car Perfumes | NOR Journal"
+        title="Why Essential Oils for Luxury Car Perfumes | NOR Blogs"
         description="Learn why pure essential oils are the superior choice for luxury car fragrances. Explore the health benefits and safety of natural car perfumes over synthetic chemicals."
         schema={articleSchema}
       />
@@ -46,7 +46,7 @@ const Journal = () => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-xl"
           >
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-black">Fragrance Journal</span>
+            <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-black">Fragrance Blogs</span>
           </motion.div>
           
           <motion.h1
@@ -177,4 +177,4 @@ const Journal = () => {
   );
 };
 
-export default Journal;
+export default Blogs;

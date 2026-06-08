@@ -30,7 +30,7 @@ const Login = lazy(() => import("./pages/Login.tsx"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback.tsx"));
 const Account = lazy(() => import("./pages/Account.tsx"));
 const Orders = lazy(() => import("./pages/Orders.tsx"));
-const Journal = lazy(() => import("./pages/Journal.tsx"));
+const Blogs = lazy(() => import("./pages/Blogs.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -58,7 +58,7 @@ const AppRoutes = () => {
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/account" element={<Account />} />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/journal" element={<Journal />} />
+            <Route path="/blogs" element={<Blogs />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

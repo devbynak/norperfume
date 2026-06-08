@@ -215,7 +215,7 @@ const Footer = () => {
             <h4 className="text-foreground/90 font-semibold text-xs tracking-[0.25em] uppercase mb-5">Company</h4>
             <ul className="space-y-4 text-muted-foreground/65 text-[13px] md:text-sm font-light">
               <li><Link to="/about" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">About Us</Link></li>
-              <li><Link to="/journal" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">Journal</Link></li>
+              <li><Link to="/blogs" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">Blogs</Link></li>
               <li><Link to="/faq" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">FAQ</Link></li>
               <li><Link to="/contact" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">Contact</Link></li>
               <li><Link to="/track-order" className="hover:text-primary hover:translate-x-1 transition-all duration-300 block">Track Order</Link></li>
