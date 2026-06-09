@@ -1,277 +1,272 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { motion, AnimatePresence } from "framer-motion";
-import { Leaf, Award, Globe, Heart, Droplet, ShieldCheck, Quote, Sparkles, Clock, Box, Truck, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Quote } from "lucide-react";
+import { useRef } from "react";
 import SEO from "@/components/SEO";
 
 const values = [
-  { icon: Leaf, title: "100% Natural Oils", desc: "We formulate exclusively with pure botanical extracts and organic essential oils. Zero toxins, zero synthetic chemicals." },
-  { icon: Award, title: "Artisanal Craftsmanship", desc: "Every NOR fragrance is meticulously blended and hand-poured by certified perfume artisans in India." },
-  { icon: Heart, title: "Interior Safety First", desc: "Our zero-liquid solid diffusion tag technology ensures absolutely zero risk of liquid spills or dashboard damage." },
-  { icon: Globe, title: "Worldwide Standard", desc: "We adhere strictly to global IFRA standards, delivering international luxury quality at locally affordable prices." },
+  { 
+    title: "Olfactory Architecture", 
+    desc: "We don't just blend scents; we architect atmosphere. Using 100% natural oil extracts, we engineer molecular stability for the demanding environment of the modern luxury cabin.",
+    image: "/Gemini_Generated_Image_q98tdsq98tdsq98t.jpg",
+    className: "lg:col-span-2 lg:row-span-2 h-[450px] sm:h-[600px] lg:h-auto"
+  },
+  { 
+    title: "Artisanal Studio", 
+    desc: "Every creation is hand-poured in our Kerala studio. This manual precision ensures the delicate integrity of botanical compounds remains undisturbed by industrial heat.",
+    image: "/Gemini_Generated_Image_rtu047rtu047rtu0.jpg",
+    className: "lg:col-span-2 lg:row-span-1 h-[350px] sm:h-[400px]"
+  },
+  { 
+    title: "Zero-Liquid Safety", 
+    desc: "Our pioneering solid-diffusion technology eliminates the risk of dashboard damage. A dry, molecular release system designed for high-end wood and leather interiors.",
+    image: "/Gemini_Generated_Image_3sq4ms3sq4ms3sq4.jpg",
+    className: "lg:col-span-1 lg:row-span-1 h-[350px] sm:h-[400px]"
+  },
+  { 
+    title: "Global Compliance", 
+    desc: "Operating at the intersection of Indian heritage and international IFRA standards, we deliver niche-quality fragrance profiles with uncompromising safety protocols.",
+    image: "/Gemini_Generated_Image_jolcprjolcprjolc.jpg",
+    className: "lg:col-span-1 lg:row-span-1 h-[350px] sm:h-[400px]"
+  },
 ];
 
 const AboutUs = () => {
-  const [openSection, setOpenSection] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  const toggleSection = (section: string) => {
-    setOpenSection(openSection === section ? null : section);
-  };
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.1]);
+  const titleY = useTransform(scrollYProgress, [0, 0.2], ["0%", "30%"]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   return (
-    <main className="min-h-dvh bg-background text-foreground pb-[env(safe-area-inset-bottom,3rem)]">
+    <main className="min-h-dvh bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-[#020202] text-foreground selection:bg-primary/30 overflow-x-hidden" ref={containerRef}>
       <SEO 
         title="The Story of NOR | Artisanal Luxury Car Perfumes"
         description="Redefining automotive luxury. Learn how founder Ameen Kasim creates the world's best artisanal car fragrances using pure essential oils and zero-toxic chemicals."
       />
       <Navbar />
       
-      {/* Hero Header Section */}
-      <section className="relative px-4 pt-32 pb-16 md:pt-48 md:pb-24 overflow-hidden">
-        {/* Ambient background glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[600px] h-[350px] md:h-[600px] rounded-full bg-primary/5 blur-[120px] pointer-events-none z-0" />
+      {/* Cinematic Hero Section */}
+      <section className="relative h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-[#0a0a0a]">
+        <motion.div 
+          style={{ scale: heroScale }}
+          className="absolute inset-0 z-0"
+        >
+          <img 
+            src="/Gemini_Generated_Image_3sq4ms3sq4ms3sq4.jpg" 
+            alt="Artisanal Heritage" 
+            className="w-full h-full object-cover brightness-[0.35] contrast-[1.1] saturate-[0.9]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/20 to-[#0a0a0a] z-10" />
+          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10" />
+        </motion.div>
+
+        {/* Background Texture/Grain */}
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-1 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         
-        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-6">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.02] border border-white/5 backdrop-blur-xl"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
-            <span className="text-[9px] tracking-[0.4em] uppercase text-primary font-bold">Our Heritage</span>
-          </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display text-4xl md:text-7xl text-foreground tracking-tighter uppercase mb-6"
-          >
-            The Story of NOR
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-white/80 text-base md:text-xl leading-relaxed max-w-3xl mx-auto font-light"
-          >
-            NOR was founded with a single, uncompromising belief: that the space inside your vehicle deserves a fragrance profile as sophisticated, safe, and premium as any luxury personal perfume. We are pioneering automotive olfactory art.
-          </motion.p>
-        </div>
-      </section>
-
-      {/* The Vision Section: Pure Essential Oils Made Affordable */}
-      <section className="px-4 py-16 md:py-24 bg-white/[0.01] border-y border-white/5">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 md:gap-16 items-center">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="md:col-span-6 space-y-6"
-          >
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <Droplet className="w-6 h-6 text-primary" />
-            </div>
-            <h2 className="font-display text-3xl md:text-4xl uppercase tracking-tight text-foreground">
-              Our Vision:<br />
-              <span className="text-white/60">Pure Luxury, Made Accessible</span>
-            </h2>
-            <p className="text-muted-foreground/80 leading-relaxed text-sm md:text-base font-light">
-              Historically, genuine 100% pure essential oil extracts were reserved exclusively for high-end personal fragrances costing premium fortunes. The automotive market, by contrast, was flooded with cheap, toxic, synthetic chemical gels and headache-inducing paper boards.
-            </p>
-            <p className="text-muted-foreground/80 leading-relaxed text-sm md:text-base font-light">
-              NOR's founding vision is to shatter this paradigm. By leveraging advanced zero-liquid solid diffusion tags and sourcing pure botanical extracts directly, we create premium, safe, all-natural automotive fragrances that are highly affordable. We believe luxury should be an everyday sensory indulgence.
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="md:col-span-6 bg-white/[0.02] border border-white/5 rounded-3xl p-8 space-y-6 relative overflow-hidden backdrop-blur-3xl"
-          >
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
-            <h3 className="font-display text-lg text-primary tracking-widest uppercase">The Trustable Guarantee</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-4">
-                <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-sm text-foreground">100% Non-Toxic Formulations</h4>
-                  <p className="text-xs text-muted-foreground/70 mt-1 leading-relaxed">Certified free from phthalates, parabens, and hazardous VOCs. Safe for children, pets, and pregnancy.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-4">
-                <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-sm text-foreground">Premium IFRA Compliance</h4>
-                  <p className="text-xs text-muted-foreground/70 mt-1 leading-relaxed">Formulated strictly in compliance with international safety guidelines set by the International Fragrance Association.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-4">
-                <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-sm text-foreground">Eco-Conscious Extraction</h4>
-                  <p className="text-xs text-muted-foreground/70 mt-1 leading-relaxed">Sourced from sustainable farming cooperatives, ensuring fair compensation and environment-friendly distillation.</p>
-                </div>
-              </li>
-            </ul>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Meet the Founder Section: Ameen Kasim */}
-      <section className="px-4 py-16 md:py-24">
-        <div className="max-w-4xl mx-auto bg-white/[0.01] border border-white/5 rounded-3xl p-8 md:p-12 relative overflow-hidden backdrop-blur-3xl shadow-2xl">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start relative z-10">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <Quote className="w-5 h-5 text-primary" />
-            </div>
+        <motion.div 
+          style={{ y: titleY, opacity: titleOpacity }}
+          className="text-center z-20 relative"
+        >
+          <div className="relative group flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="mb-8"
+            >
+              <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-black py-2 px-8 backdrop-blur-sm">
+                Our Heritage
+              </span>
+            </motion.div>
             
-            <div className="space-y-6">
-              <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-tight uppercase">Founder's Obsession</h2>
-              
-              <blockquote className="text-white/80 text-sm md:text-base leading-relaxed font-light italic">
-                "For years, car perfume was treated as an afterthought—an industrial chemical cocktail to mask odors, often causing headaches and damaging dashboards. My goal in establishing NOR was to change that completely. We are obsessed with botanical authenticity. By combining the absolute purest 100% natural oil extracts with innovative zero-liquid delivery, we've created a luxurious, non-toxic automotive scent profile that is accessible to every car enthusiast."
-              </blockquote>
-              
-              <div className="pt-2">
-                <p className="font-display text-sm text-primary tracking-widest uppercase font-bold">Ameen Kasim</p>
-                <p className="text-xs text-muted-foreground/60 uppercase tracking-[0.2em] font-medium mt-1">Founder, Owner &amp; Lead Curator</p>
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="font-display text-5xl sm:text-7xl md:text-[12rem] lg:text-[14rem] text-white leading-none tracking-tighter uppercase font-black drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+            >
+              The
+            </motion.span>
+            <motion.h1 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1], delay: 0.4 }}
+              className="font-display text-4xl sm:text-6xl md:text-[14rem] lg:text-[18rem] leading-[0.75] uppercase tracking-[0.1em] text-primary select-none mt-[-1vw] md:mt-[-3vw] drop-shadow-[0_20px_50px_rgba(212,175,55,0.2)]"
+            >
+              Story
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="mt-8 md:mt-12 text-white/40 font-display text-base md:text-2xl italic font-light lowercase tracking-tight max-w-2xl mx-auto px-6"
+            >
+              Transforming the automotive cabin into a sanctuary of botanical art and molecular precision.
+            </motion.p>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* The Alchemy of Vision Section */}
+      <section className="px-4 md:px-6 py-20 md:py-40 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-12 gap-8 md:gap-24 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-7 space-y-6 md:space-y-12"
+            >
+              <div className="space-y-4 md:space-y-6">
+                <span className="text-[10px] font-black text-primary uppercase tracking-[0.6em]">The Vision</span>
+                <h2 className="font-display text-3xl sm:text-5xl md:text-8xl text-white uppercase tracking-tighter leading-[0.8]">
+                  Pure Luxury <br /> <span className="text-primary italic font-light lowercase">Accessible</span>
+                </h2>
               </div>
-            </div>
+              
+              <div className="space-y-4 md:space-y-8 text-white/50 text-sm sm:text-base md:text-xl font-light leading-relaxed border-l border-primary/30 pl-4 md:pl-12">
+                <p>
+                  Historically, automotive fragrance was an industrial afterthought—a cocktail of synthetic hydrocarbons designed to mask rather than elevate. The world's most precious 100% natural oil extracts were reserved exclusively for niche personal perfumery.
+                </p>
+                <p>
+                  NOR was founded to bridge this divide. By leveraging advanced solid-state diffusion and direct botanical sourcing, we've created a new category: high-end automotive olfactory art that is as safe for the breath as it is sophisticated for the soul.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="lg:col-span-5 relative mt-12 lg:mt-0"
+            >
+              <div className="aspect-[4/5] rounded-[30px] md:rounded-[60px] overflow-hidden border border-white/10 relative group">
+                <img 
+                  src="/Gemini_Generated_Image_q98tdsq98tdsq98t.jpg" 
+                  alt="Botanical Extraction" 
+                  className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-110 transition-all duration-[2s]"
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-1000" />
+              </div>
+              {/* Floating Stat */}
+              <div className="absolute -bottom-4 -left-4 md:-bottom-10 md:-left-10 p-4 md:p-8 rounded-[20px] md:rounded-[40px] bg-primary/10 border border-primary/20 backdrop-blur-3xl shadow-2xl space-y-1 hidden sm:block">
+                <span className="text-2xl md:text-4xl font-display text-primary uppercase leading-none">100%</span>
+                <p className="text-[6px] md:text-[8px] uppercase tracking-[0.2em] font-black text-white/60">Natural Oil Extracts</p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* FAQ & Support Section (Bonus Trustproofs) */}
-      <section className="px-4 py-16 md:py-24 bg-white/[0.01] border-t border-white/5">
-        <div className="max-w-4xl mx-auto space-y-12">
-          <div className="text-center space-y-3">
-            <p className="text-xs tracking-[0.3em] uppercase text-primary font-semibold">Customer Assurance</p>
-            <h2 className="font-display text-3xl md:text-4xl text-foreground uppercase tracking-tight">Our Standards FAQ</h2>
-          </div>
+      {/* Founder's Studio Section */}
+      <section className="px-4 md:px-6 py-20 md:py-40 relative overflow-hidden">
+        <div className="absolute inset-0 bg-primary/[0.02] -skew-y-3" />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid lg:grid-cols-12 gap-8 md:gap-24 items-center">
+            <motion.div 
+              initial={{ opacity: 0, scale: 1.1 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="lg:col-span-6 lg:order-2"
+            >
+              <div className="relative aspect-square md:aspect-[4/5] rounded-[30px] md:rounded-[60px] overflow-hidden border border-white/10 group">
+                <img 
+                  src="/IMG_9413.jpg" 
+                  alt="NOORUL AMEEN KASIM" 
+                  className="w-full h-full object-cover grayscale brightness-75 contrast-[1.1] group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-[2s]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
+              </div>
+            </motion.div>
 
-          <div className="space-y-4 max-w-3xl mx-auto">
-            <div className="border border-white/5 rounded-3xl overflow-hidden bg-white/[0.01] backdrop-blur-3xl hover:bg-white/[0.03] transition-colors">
-              <button
-                onClick={() => toggleSection("pure")}
-                className="w-full px-6 py-5 flex items-center justify-between text-left group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Droplet className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Why 100% Pure Essential Oils?</span>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-muted-foreground/40 transition-transform duration-500 ${openSection === "pure" ? "rotate-180" : ""}`} />
-              </button>
-              <AnimatePresence>
-                {openSection === "pure" && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <div className="px-6 pb-6 pt-0 text-sm text-muted-foreground/70 leading-relaxed">
-                      Most generic car fresheners rely on synthetic hydrocarbons, parabens, and cheap chemical diffusers that release harmful gases. We extract our compounds directly from pure plants, flowers, and organic spices. This ensures a clean, therapeutic cabin atmosphere that doesn't trigger respiratory distress or headaches.
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-6 space-y-6 md:space-y-12 mt-12 lg:mt-0"
+            >
+              <div className="space-y-4 md:space-y-6">
+                <span className="text-[10px] font-black text-primary uppercase tracking-[0.6em]">The Curator</span>
+                <h2 className="font-display text-3xl sm:text-5xl md:text-8xl text-white uppercase tracking-tighter leading-[0.8]">
+                  Founder's <br /> <span className="text-primary italic font-light lowercase">Obsession</span>
+                </h2>
+              </div>
+              
+              <div className="relative">
+                <Quote className="absolute -top-6 -left-2 md:-top-12 md:-left-8 w-12 h-12 md:w-24 md:h-24 text-primary/5 -z-10" />
+                <p className="text-white/80 text-base md:text-2xl font-light italic leading-relaxed">
+                  "Car perfume should never be an afterthought. We are obsessed with botanical authenticity—treating every milliliter of essential oil with the reverence of a master jeweler. Our goal is to ensure the air you breathe is as luxurious as the car you drive."
+                </p>
+              </div>
 
-            <div className="border border-white/5 rounded-3xl overflow-hidden bg-white/[0.01] backdrop-blur-3xl hover:bg-white/[0.03] transition-colors">
-              <button
-                onClick={() => toggleSection("afford")}
-                className="w-full px-6 py-5 flex items-center justify-between text-left group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Box className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-[11px] font-bold tracking-[0.2em] uppercase">How is it affordable?</span>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-muted-foreground/40 transition-transform duration-500 ${openSection === "afford" ? "rotate-180" : ""}`} />
-              </button>
-              <AnimatePresence>
-                {openSection === "afford" && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <div className="px-6 pb-6 pt-0 text-sm text-muted-foreground/70 leading-relaxed">
-                      By cutting out standard premium middle-men, distributors, and unnecessary decorative glass bottling costs, and utilizing direct-to-consumer delivery, we transfer every single saved margin back to our buyers. Our investment goes entirely inside the formula, bringing international niche fragrance profiles directly to your car affordably.
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="border border-white/5 rounded-3xl overflow-hidden bg-white/[0.01] backdrop-blur-3xl hover:bg-white/[0.03] transition-colors">
-              <button
-                onClick={() => toggleSection("zero")}
-                className="w-full px-6 py-5 flex items-center justify-between text-left group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Truck className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-[11px] font-bold tracking-[0.2em] uppercase">What is Zero-Liquid Technology?</span>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-muted-foreground/40 transition-transform duration-500 ${openSection === "zero" ? "rotate-180" : ""}`} />
-              </button>
-              <AnimatePresence>
-                {openSection === "zero" && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <div className="px-6 pb-6 pt-0 text-sm text-muted-foreground/70 leading-relaxed">
-                      Instead of using high-risk liquid bottles that can leak, spill, or evaporate instantly when parked under direct sunlight, we infuse our essential oil complexes inside safe, advanced solid diffusion tags. This allows a sustained molecular release of scent for up to 45 days, remaining fully dry and safe for dashboard woods, plastics, and high-end leathers.
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+              <div className="space-y-1">
+                <p className="font-display text-lg md:text-2xl text-primary tracking-widest uppercase font-bold">NOORUL AMEEN KASIM (AK)</p>
+                <p className="text-[8px] md:text-[10px] text-white/40 uppercase tracking-[0.4em] font-medium">FOUNDER</p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Brand Core Pillars Grid */}
-      <section className="px-4 py-16 md:py-24 border-t border-white/5 bg-black/[0.15]">
-        <div className="max-w-5xl mx-auto space-y-12">
-          <div className="text-center space-y-3">
-            <p className="text-xs tracking-[0.3em] uppercase text-primary font-semibold">Quality Architecture</p>
-            <h2 className="font-display text-3xl md:text-4xl text-foreground uppercase tracking-tight">Our Four Pillars</h2>
+      <section className="px-6 py-24 md:py-40 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-16 md:space-y-24">
+          <div className="space-y-6 text-center">
+            <span className="text-[10px] font-black text-primary uppercase tracking-[0.6em]">Quality Architecture</span>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-8xl text-white uppercase tracking-tighter">The Four <span className="text-primary italic font-light lowercase">Pillars</span></h2>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 auto-rows-fr">
             {values.map((v, i) => (
               <motion.div
                 key={v.title}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center hover:border-primary/20 transition-all duration-500 hover:bg-white/[0.03]"
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.8 }}
+                className={`group relative overflow-hidden rounded-[40px] border border-white/10 ${v.className}`}
               >
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <v.icon className="w-5 h-5 text-primary" />
+                {/* Full-bleed Background Image */}
+                <div className="absolute inset-0 z-0">
+                  <img 
+                    src={v.image} 
+                    alt={v.title}
+                    className="w-full h-full object-cover grayscale brightness-[0.3] group-hover:grayscale-0 group-hover:brightness-50 group-hover:scale-110 transition-all duration-[2s] ease-out"
+                  />
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700" />
                 </div>
-                <h3 className="font-display text-foreground text-sm tracking-wide uppercase font-bold mb-2">{v.title}</h3>
-                <p className="text-muted-foreground/60 text-xs leading-relaxed font-light">{v.desc}</p>
+
+                {/* Glassmorphism Content Card */}
+                <div className="absolute inset-0 z-10 p-6 md:p-12 flex flex-col justify-end">
+                  <div className="space-y-4 md:space-y-6 translate-y-4 md:translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-out">
+                    <div className="space-y-1 md:space-y-2">
+                      <span className="text-[8px] md:text-[10px] font-black text-primary uppercase tracking-[0.4em] opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                        Pillar 0{i + 1}
+                      </span>
+                      <h3 className="font-display text-2xl sm:text-3xl md:text-5xl text-white uppercase tracking-tighter leading-none">
+                        {v.title.split(' ')[0]} <br />
+                        <span className="text-primary italic font-light lowercase">{v.title.split(' ').slice(1).join(' ')}</span>
+                      </h3>
+                    </div>
+                    
+                    <p className="text-white/60 text-xs sm:text-sm md:text-base font-light leading-relaxed max-w-md opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                      {v.desc}
+                    </p>
+                    
+                    <div className="pt-2 md:pt-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-300">
+                      <div className="w-12 h-px bg-primary lg:group-hover:w-full transition-all duration-1000" />
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>

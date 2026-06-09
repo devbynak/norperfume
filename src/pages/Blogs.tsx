@@ -1,173 +1,193 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { motion } from "framer-motion";
-import { Sparkles, Leaf, ShieldCheck, Droplet, Star, ArrowRight } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Clock, Star } from "lucide-react";
 import SEO from "@/components/SEO";
+import { Link } from "react-router-dom";
+import { blogPosts } from "@/data/blogs";
+import { useRef } from "react";
 
 const Blogs = () => {
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Why Essential Oils are Replacing Synthetic Car Fresheners in Luxury Vehicles",
-    "description": "Discover why luxury car owners in India and UAE are switching from synthetic car perfumes to natural essential oil fragrances for safety, health, and a premium scent profile.",
-    "author": {
-      "@type": "Person",
-      "name": "Ameen Kasim"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "NOR PERFUME",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.norperfume.com/logo.png"
-      }
-    },
-    "datePublished": "2026-06-08",
-    "image": "https://www.norperfume.com/Gemini_Generated_Image_3e8qdw3e8qdw3e8q.png"
-  };
+  const featuredPost = blogPosts.find(post => post.featured) || blogPosts[0];
+  const otherPosts = blogPosts.filter(post => post.id !== featuredPost.id);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const titleY = useTransform(scrollYProgress, [0, 0.2], ["0%", "30%"]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
+  const featuredY = useTransform(scrollYProgress, [0.1, 0.4], ["0%", "15%"]);
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <main className="min-h-dvh bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-[#020202] text-foreground selection:bg-primary/30 overflow-x-hidden" ref={containerRef}>
       <SEO 
-        title="Why Essential Oils for Luxury Car Perfumes | NOR Blogs"
-        description="Learn why pure essential oils are the superior choice for luxury car fragrances. Explore the health benefits and safety of natural car perfumes over synthetic chemicals."
-        schema={articleSchema}
+        title="The Journal | Luxury Car Fragrance & Scent Science | NOR PERFUME"
+        description="Explore the NOR Journal: A curated collection of insights into olfactory science, handcrafted luxury car perfumes, and the premium automotive lifestyle."
       />
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-16 md:pt-48 md:pb-32 px-4 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" />
+      {/* Cinematic Hero Section */}
+      <section className="relative h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-black">
+        {/* Background Image with Parallax and Overlay */}
+        <motion.div 
+          style={{ scale: heroScale }}
+          className="absolute inset-0 z-0"
+        >
+          <img 
+            src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&q=80&w=2000" 
+            alt="Elite Luxury Background" 
+            className="w-full h-full object-cover brightness-[0.25] contrast-[1.2] saturate-[0.8]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black z-10" />
+        </motion.div>
+
+        {/* Background Texture/Grain */}
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-1 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         
-        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8">
+        <motion.div 
+          style={{ y: titleY, opacity: titleOpacity }}
+          className="text-center z-20 relative"
+        >
+          <div className="relative group flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="mb-8"
+            >
+              <span className="text-[10px] tracking-[0.8em] uppercase text-primary font-black py-2 px-8 backdrop-blur-sm">
+                Elite Lifestyle
+              </span>
+            </motion.div>
+            
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="font-display text-6xl sm:text-7xl md:text-[12rem] lg:text-[14rem] text-white leading-none tracking-tighter uppercase font-black drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+            >
+              The
+            </motion.span>
+            <motion.h1 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1], delay: 0.4 }}
+              className="font-display text-5xl sm:text-6xl md:text-[14rem] lg:text-[18rem] leading-[0.75] uppercase tracking-[0.1em] text-primary select-none mt-[-2vw] md:mt-[-3vw] drop-shadow-[0_20px_50px_rgba(212,175,55,0.2)]"
+            >
+              Journal
+            </motion.h1>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Featured Masterpiece Section */}
+      <section className="px-4 md:px-6 py-12 md:py-40 relative z-10">
+        <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-xl"
+            style={{ y: featuredY }}
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative"
           >
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-black">Fragrance Blogs</span>
-          </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="font-display text-4xl md:text-6xl lg:text-7xl text-foreground tracking-tighter uppercase leading-[0.9]"
-          >
-            Why Essential Oils are Replacing Synthetic Car Fresheners in Luxury Vehicles
-          </motion.h1>
-          
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex items-center justify-center gap-6 text-[11px] uppercase tracking-[0.2em] text-muted-foreground font-bold"
-          >
-            <span>June 8, 2026</span>
-            <span className="w-1 h-1 rounded-full bg-primary/40" />
-            <span>6 Min Read</span>
+            <Link to={`/blogs/${featuredPost.id}`} className="block relative overflow-hidden rounded-[40px] md:rounded-[80px] aspect-[4/5] md:aspect-[21/9] border border-white/10">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 group-hover:via-black/10 transition-colors duration-1000" />
+              <motion.img 
+                src={featuredPost.image} 
+                alt={featuredPost.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3s] ease-out"
+              />
+              
+              <div className="absolute inset-0 z-20 p-8 md:p-24 flex flex-col justify-end">
+                <div className="grid md:grid-cols-12 gap-6 md:gap-12 items-end">
+                  <div className="md:col-span-8 space-y-4 md:space-y-8">
+                    <motion.div 
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      className="flex items-center gap-4 md:gap-6"
+                    >
+                      <span className="text-[8px] md:text-[10px] font-black text-primary uppercase tracking-[0.5em] px-4 md:px-6 py-1.5 md:py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-xl">
+                        Featured Issue
+                      </span>
+                      <span className="text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-[0.4em]">{featuredPost.date}</span>
+                    </motion.div>
+                    
+                    <h2 className="font-display text-3xl sm:text-4xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter leading-[0.8] group-hover:-translate-y-2 md:group-hover:-translate-y-4 transition-transform duration-1000">
+                      {featuredPost.title}
+                    </h2>
+                  </div>
+                  
+                  <div className="md:col-span-4 space-y-4 md:space-y-8 pb-4">
+                    <p className="text-white/50 text-base md:text-lg font-light leading-relaxed border-l border-primary/30 pl-6 md:pl-8 group-hover:text-white/80 transition-colors duration-700 line-clamp-2 md:line-clamp-none">
+                      {featuredPost.excerpt}
+                    </p>
+                    <div className="pl-6 md:pl-8">
+                      <span className="inline-flex items-center gap-4 md:gap-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.5em] text-primary group-hover:gap-6 md:group-hover:gap-10 transition-all duration-1000">
+                        Explore Story <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* Article Content */}
-      <section className="px-4 pb-24 relative">
-        <div className="max-w-3xl mx-auto">
-          <div className="prose prose-invert prose-gold max-w-none space-y-12">
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              <p className="text-xl md:text-2xl leading-relaxed text-white/90 font-light italic border-l-2 border-primary/30 pl-8">
-                "Your car is an extension of your personal space. In 2026, luxury is no longer just about what you see or touch—it's about the air you breathe."
-              </p>
-              <p className="text-muted-foreground leading-relaxed text-lg">
-                For decades, the "new car smell" was something we associated with luxury. But as we've become more conscious of our health and environment, we've discovered that most traditional car fresheners are little more than a cocktail of synthetic chemicals, phthalates, and VOCs (Volatile Organic Compounds).
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              <h2 className="font-display text-3xl uppercase text-foreground tracking-tight flex items-center gap-4">
-                <span className="w-8 h-[1px] bg-primary/50" />
-                The Problem with Synthetic Scent
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Standard car perfumes often rely on cheap, lab-created molecules to mimic scents like "Ocean Breeze" or "New Car." While these might smell pleasant initially, they frequently cause headaches, respiratory irritation, and can even damage your car's interior surfaces if they leak.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 space-y-3">
-                  <ShieldCheck className="w-6 h-6 text-red-400/70" />
-                  <h4 className="font-bold text-sm uppercase tracking-widest text-foreground">Synthetic Risks</h4>
-                  <p className="text-xs text-muted-foreground">Contains Phthalates and Benzenes which are known endocrine disruptors and respiratory irritants.</p>
-                </div>
-                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 space-y-3">
-                  <Droplet className="w-6 h-6 text-red-400/70" />
-                  <h4 className="font-bold text-sm uppercase tracking-widest text-foreground">Interior Damage</h4>
-                  <p className="text-xs text-muted-foreground">Liquid-based synthetic perfumes are notorious for leaking and melting dashboard plastics.</p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              <h2 className="font-display text-3xl uppercase text-foreground tracking-tight flex items-center gap-4">
-                <span className="w-8 h-[1px] bg-primary/50" />
-                The Essential Oil Revolution
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Luxury car owners in regions like India, UAE, and the GCC are now demanding artisanal alternatives. Pure essential oils, like those used in <strong>AQUA NOR</strong> and <strong>MUSK NOR</strong>, offer a multi-dimensional scent profile that synthetic perfumes simply cannot match.
-              </p>
-              <ul className="space-y-6 mt-8">
-                <li className="flex gap-4">
-                  <div className="mt-1"><Leaf className="w-5 h-5 text-primary" /></div>
-                  <div>
-                    <h4 className="font-bold text-foreground uppercase text-sm tracking-widest mb-1">True Aromatherapy</h4>
-                    <p className="text-sm text-muted-foreground">Essential oils like Bergamot and Sandalwood don't just smell good; they help reduce driving stress and improve focus.</p>
+      {/* Modern Editorial Grid */}
+      <section className="px-4 md:px-6 py-12 md:py-40 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-24">
+            {otherPosts.map((post, idx) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                className={`flex flex-col ${
+                  idx % 3 === 0 ? 'md:col-span-12' : 'md:col-span-6'
+                }`}
+              >
+                <Link to={`/blogs/${post.id}`} className="group relative block overflow-hidden rounded-[30px] md:rounded-[50px] bg-white/[0.02] border border-white/5 transition-all duration-700 hover:border-primary/20">
+                  <div className={`relative overflow-hidden ${
+                    idx % 3 === 0 ? 'aspect-[4/5] md:aspect-[21/9]' : 'aspect-square'
+                  }`}>
+                    <motion.img 
+                      src={post.image} 
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s] ease-out opacity-60 group-hover:opacity-100 transition-opacity"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-1000" />
                   </div>
-                </li>
-                <li className="flex gap-4">
-                  <div className="mt-1"><Star className="w-5 h-5 text-primary" /></div>
-                  <div>
-                    <h4 className="font-bold text-foreground uppercase text-sm tracking-widest mb-1">Sophisticated Aging</h4>
-                    <p className="text-sm text-muted-foreground">Natural oils evolve over time, revealing different notes as you drive, much like a high-end personal parfum.</p>
+                  
+                  <div className="absolute inset-0 p-6 md:p-16 flex flex-col justify-end">
+                    <div className="space-y-4 md:space-y-6 max-w-2xl">
+                      <div className="flex items-center gap-4 text-primary text-[8px] md:text-[9px] uppercase tracking-[0.4em] font-black">
+                        <span>{post.category}</span>
+                        <div className="flex items-center gap-2 text-white/40">
+                          <Clock className="w-3 h-3" /> {post.readTime}
+                        </div>
+                      </div>
+                      
+                      <h3 className={`font-display text-white uppercase tracking-tighter leading-none group-hover:text-primary transition-colors duration-700 ${
+                        idx % 3 === 0 ? 'text-3xl md:text-7xl' : 'text-2xl md:text-5xl'
+                      }`}>
+                        {post.title}
+                      </h3>
+                      
+                      <p className="text-white/40 font-light text-sm md:text-lg leading-relaxed line-clamp-2 max-w-lg group-hover:text-white/70 transition-colors duration-700">
+                        {post.excerpt}
+                      </p>
+                    </div>
                   </div>
-                </li>
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="p-10 rounded-[32px] bg-primary/5 border border-primary/20 space-y-6 text-center"
-            >
-              <h3 className="font-display text-2xl uppercase text-primary">Experience the Difference</h3>
-              <p className="text-muted-foreground max-w-xl mx-auto">
-                NOR PERFUME is pioneering this shift by combining 100% natural oil extracts with zero-liquid diffusion technology. Safe for your car, safe for your family.
-              </p>
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
-                <a href="/products" className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform inline-flex items-center gap-2">
-                  Shop AQUA NOR <ArrowRight className="w-4 h-4" />
-                </a>
-                <a href="/products" className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
-                  Discover MUSK NOR
-                </a>
-              </div>
-            </motion.div>
-
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -178,3 +198,4 @@ const Blogs = () => {
 };
 
 export default Blogs;
+

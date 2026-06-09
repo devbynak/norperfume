@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Instagram, Facebook, Mail, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { haptic } from "@/lib/haptics";
+import logo from "@/assets/logo.png";
 
 // Custom Threads SVG Icon matching the provided white icon
 const ThreadsIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -90,11 +91,14 @@ const Footer = () => {
           
           {/* Column 1: Brand Logo & Newsletter */}
           <div className="lg:col-span-2 space-y-8">
-            <Link to="/" aria-label="NOR home" className="inline-flex group">
+            <Link to="/" aria-label="NOR home" className="inline-flex group relative">
+              {/* Subtle Background Glow behind logo */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[140%] bg-primary/[0.08] rounded-full blur-[40px] pointer-events-none z-0 group-hover:bg-primary/[0.12] transition-colors duration-500" />
+              
               <img 
                 src="/5.png" 
-                alt="NOR" 
-                className="h-16 md:h-20 w-auto group-hover:scale-105 transition-transform duration-500 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
+                alt="NOR PERFUME" 
+                className="h-16 md:h-24 w-auto group-hover:scale-105 transition-transform duration-500 relative z-10" 
                 loading="lazy"
                 decoding="async"
               />

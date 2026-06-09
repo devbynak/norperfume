@@ -14,7 +14,7 @@ const SEO = ({
   title = "NOR PERFUME | Official Online Store",
   description = "Experience automotive luxury with NOR's premium car fragrances. Handcrafted in India with 100% natural oils and zero-liquid technology for a lasting, sophisticated scent.",
   keywords = "nor, norperfume,nor perfume, luxury car perfume, car perfume, luxury car fragrance, automotive scent, premium car freshener, natural oil car perfume, NOR car perfume, made in India car fragrance",
-  ogImage = "/og-image.jpg",
+  ogImage = "https://www.norperfume.com/logo.png",
   ogType = "website",
   canonical = "https://www.norperfume.com",
   schema

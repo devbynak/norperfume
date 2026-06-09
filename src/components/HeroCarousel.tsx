@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useHeroSlides } from "@/lib/shopify/hooks";
+import logo from "@/assets/logo.png";
 
 const HeroCarousel = () => {
   const [current, setCurrent] = useState(0);
