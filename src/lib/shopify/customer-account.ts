@@ -61,20 +61,18 @@ async function sha256(str: string) {
 }
 
 export function getRedirectUri() {
-  // NEW: Ensure we use the exact registered URI for production.
+  // Ensure we use the exact registered URI for production and preview environments.
   // Shopify Customer Account API requires an exact string match.
-  // We force 'https' and the 'www' version to match the most likely Shopify config.
+  // We force 'https' and the 'www' version to match the Shopify config unless testing locally.
   const hostname = window.location.hostname;
-  const isProduction = hostname === "norperfume.com" || hostname === "www.norperfume.com";
   
-  if (isProduction) {
-    return "https://www.norperfume.com/auth/callback";
+  // If we are on localhost, use the local origin. Otherwise, force the production callback
+  // because Shopify only allows explicitly whitelisted redirect URIs.
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return `${window.location.origin}/auth/callback`;
   }
   
-  const origin = window.location.origin;
-  const uri = `${origin}/auth/callback`;
-  console.log("📍 Computed Redirect URI:", uri);
-  return uri;
+  return "https://www.norperfume.com/auth/callback";
 }
 
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
@@ -82,10 +80,9 @@ export async function beginLogin(returnTo = window.location.pathname) {
   // Fix domain mismatch before starting:
   // Only redirect to www in production to avoid breaking localhost
   const hostname = window.location.hostname;
-  const isProduction = hostname === "norperfume.com" || hostname === "www.norperfume.com";
   
-  if (isProduction && hostname === "norperfume.com") {
-    console.log("🔄 Redirecting to www to ensure session persistence...");
+  if (hostname !== "localhost" && hostname !== "127.0.0.1" && hostname !== "www.norperfume.com") {
+    console.log("🔄 Redirecting to www to ensure session persistence and valid redirect URI...");
     const targetUrl = new URL(window.location.href);
     targetUrl.hostname = "www.norperfume.com";
     window.location.href = targetUrl.toString();
@@ -197,10 +194,22 @@ export async function handleCallback(search: string) {
   persistTokens(data);
 
   const savedReturnTo = sessionStorage.getItem(STORAGE.redirectAfter);
-  // Sanitize returnTo to prevent open redirects
   let returnTo = "/account";
-  if (savedReturnTo && (savedReturnTo.startsWith("/") || savedReturnTo.startsWith(window.location.origin))) {
-    returnTo = savedReturnTo;
+  
+  if (savedReturnTo) {
+    try {
+      // If it's a full URL, extract just the pathname + search
+      if (savedReturnTo.startsWith("http")) {
+        const url = new URL(savedReturnTo);
+        if (url.origin === window.location.origin) {
+          returnTo = url.pathname + url.search;
+        }
+      } else if (savedReturnTo.startsWith("/")) {
+        returnTo = savedReturnTo;
+      }
+    } catch (e) {
+      // Fallback to /account on parse error
+    }
   }
 
   sessionStorage.removeItem(STORAGE.verifier);
