@@ -12,7 +12,10 @@ const SHOP_ID = process.env.VITE_SHOPIFY_SHOP_ID || SHOPIFY_CONFIG.shopId;
  * Resolves a Customer GID from an access token using the Customer Account API.
  */
 export async function getCustomerIdFromToken(accessToken: string): Promise<string | null> {
+  console.log('🔑 getCustomerIdFromToken called with SHOP_ID:', SHOP_ID);
+  
   if (!SHOP_ID) {
+    console.error('❌ SHOP_ID is missing in admin-verify.ts');
     return null;
   }
 
@@ -25,7 +28,10 @@ export async function getCustomerIdFromToken(accessToken: string): Promise<strin
   `;
 
   try {
-    const response = await fetch(`https://shopify.com/${SHOP_ID}/account/customer/api/2024-10/graphql`, {
+    const url = `https://shopify.com/${SHOP_ID}/account/customer/api/2024-10/graphql`;
+    console.log('📡 Fetching from Shopify Account API:', url);
+    
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,9 +40,17 @@ export async function getCustomerIdFromToken(accessToken: string): Promise<strin
       body: JSON.stringify({ query }),
     });
 
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('❌ Shopify Account API error:', response.status, text);
+      return null;
+    }
+
     const result = await response.json();
+    console.log('✅ Shopify Account API result:', result);
     return result.data?.customer?.id || null;
   } catch (error) {
+    console.error('💥 Error in getCustomerIdFromToken:', error);
     return null;
   }
 }
