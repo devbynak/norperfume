@@ -1,0 +1,51 @@
+# NOR PERFUME | Luxury Car Fragrance Storefront
+
+NOR is a high-fidelity, production-ready storefront designed for a luxury automotive fragrance brand. This platform redefines automotive luxury by combining artisanal craftsmanship with modern technology.
+
+## 🏛️ Brand & Philosophy
+NOR Perfume focuses on "Olfactory Architecture," architecting atmospheres for modern luxury cabins.
+- **Artisanal Heritage**: Every fragrance is hand-poured in a studio in Kerala, India, ensuring the integrity of botanical compounds.
+- **Pure Ingredients**: Uses 100% natural oil extracts and zero-toxic chemicals.
+- **Zero-Liquid Technology**: Pioneering solid-diffusion technology eliminates the risk of dashboard damage, designed for high-end wood and leather interiors.
+- **Safety**: Complies with international IFRA standards and Indian heritage protocols.
+
+## 🛍️ Products & Collections
+The storefront features premium car perfumes designed for high-end interiors.
+- **AQUA NOR**: A fresh, breezy ocean-inspired scent designed for a clean and refreshing environment.
+- **MUSK NOR**: A sophisticated, warm, and woody musk scent for a luxury lounge feel.
+- **Niche Quality**: All products are engineered for molecular stability in demanding automotive environments.
+
+## 🛠️ Technical Architecture
+The storefront is built with a modern, high-performance stack:
+- **Frontend**: React 18, Vite, TypeScript, Tailwind CSS.
+- **State Management**: React Context (Cart, Auth), TanStack Query (Data fetching).
+- **Integrations**:
+  - **Shopify**: Deep integration for inventory, pricing, and checkout.
+  - **Supabase**: Backend support for reviews and other custom data.
+  - **Vercel**: Serverless functions for newsletter and tracking.
+  - **Meta Pixel**: Conversion tracking for events like 'ViewContent', 'AddToCart', and 'InitiateCheckout'.
+- **UX Features**:
+  - Sloped marquee banners.
+  - InterNumbers numeric font enforcement.
+  - High-contrast editorial design.
+  - Framer Motion for cinematic animations and smooth scrolling.
+- **SEO & Performance**:
+  - Full JSON-LD Schema (Product, Organization, FAQ).
+  - Optimized for Core Web Vitals.
+  - Progressive Web App (PWA) support.
+
+## 📄 Key Pages
+- **Home**: Cinematic hero carousels and featured collections.
+- **Shop**: Full range of products with hybrid Shopify data.
+- **Product Detail**: Deep dives into fragrance compositions, usage guides, and customer reviews.
+- **About Us**: The story of founder Ameen Kasim and the brand's artisanal roots.
+- **Track Order**: Real-time order tracking integration.
+- **Legal**: Comprehensive policies for Returns, Shipping, Privacy, and Terms of Service.
+
+## 🌍 Reach & Compliance
+- **Origin**: Kerala, India.
+- **Target**: Global luxury car owners, specifically targeting UAE and Indian markets.
+- **Standards**: IFRA compliant, safe for children and pets.
+
+---
+© 2025 NOR Perfume. Built with precision for the discerning driver.

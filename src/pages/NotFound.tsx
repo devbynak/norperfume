@@ -19,6 +19,7 @@ const NotFound = () => {
       <SEO 
         title="404 - Page Not Found | NOR PERFUME"
         description="The requested page could not be found. Return to the NOR PERFUME luxury experience."
+        noindex={true}
       />
 
       {/* Ambient background glow */}

@@ -61,23 +61,47 @@ const BlogDetail = () => {
     "image": post.image
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.norperfume.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Journal",
+        "item": "https://www.norperfume.com/blogs"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.title,
+        "item": window.location.href
+      }
+    ]
+  };
+
   return (
     <main className="min-h-dvh bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-[#020202] text-foreground selection:bg-primary/30" ref={containerRef}>
       <SEO 
         title={`${post.title} | Scent Science & Luxury Insights | NOR Journal`}
         description={post.excerpt}
-        schema={articleSchema}
+        schema={[articleSchema, breadcrumbSchema]}
       />
       <Navbar />
 
-      {/* Back Button */}
       <div className="fixed top-24 left-4 md:left-12 z-50">
         <Link 
           to="/blogs" 
-          className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/10 backdrop-blur-xl hover:bg-primary hover:border-primary transition-all"
+          className="group flex items-center gap-3 px-6 py-2.5 rounded-full bg-black border border-white/10 backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all shadow-2xl"
         >
-          <ChevronLeft className="w-4 h-4 group-hover:text-black transition-colors" />
-          <span className="text-[10px] tracking-[0.2em] uppercase font-black group-hover:text-black transition-colors">Back to Journal</span>
+          <ChevronLeft className="w-3.5 h-3.5 text-white" />
+          <span className="text-[9px] tracking-[0.2em] uppercase font-black text-white">Back to Journal</span>
         </Link>
       </div>
 
@@ -221,6 +245,7 @@ const BlogDetail = () => {
                         <img 
                           src={img} 
                           alt={`Related to ${post.title}`}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]"
                         />
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-1000" />
@@ -246,32 +271,43 @@ const BlogDetail = () => {
                 </blockquote>
               </motion.div>
 
-              {/* Call to Action Card */}
+              {/* Redesigned Small & Compact Call to Action Card */}
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="relative p-6 md:p-24 rounded-[30px] md:rounded-[60px] bg-white/[0.02] border border-white/5 space-y-8 md:space-y-12 text-center mt-16 md:mt-48 overflow-hidden group shadow-2xl"
+                className="relative p-8 md:p-16 rounded-[40px] md:rounded-[60px] bg-[#050505] border border-white/5 text-center mt-12 md:mt-24 overflow-hidden group shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] max-w-2xl mx-auto"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                
-                <div className="space-y-4 md:space-y-6 relative z-10">
-                  <span className="text-[8px] md:text-[10px] font-black text-primary uppercase tracking-[0.6em]">The Collection</span>
-                  <h3 className="font-display text-3xl md:text-7xl uppercase text-white tracking-tighter leading-none">
-                    Elevate Your <br /> <span className="text-primary italic font-light lowercase">Journey</span>
-                  </h3>
-                  <p className="text-white/40 max-w-2xl mx-auto text-sm md:text-xl font-light leading-relaxed px-2">
+                <div className="space-y-8 relative z-10">
+                  <span className="text-[8px] font-bold text-primary/60 uppercase tracking-[0.4em]">The Collection</span>
+                  
+                  <div className="space-y-1">
+                    <h3 className="font-display text-4xl md:text-7xl text-white font-bold tracking-tighter uppercase leading-[0.8] select-none">
+                      Elevate Your
+                    </h3>
+                    <p className="font-display text-4xl md:text-8xl text-primary font-bold tracking-tighter leading-[0.8] select-none lowercase">
+                      journey
+                    </p>
+                  </div>
+
+                  <p className="text-white/20 max-w-xs mx-auto text-[9px] md:text-[11px] font-light leading-relaxed">
                     Experience the future of automotive fragrance. Handcrafted with 100% natural oil extracts for the discerning driver.
                   </p>
-                </div>
 
-                <div className="pt-4 md:pt-8 flex flex-col md:flex-row justify-center gap-4 md:gap-8 relative z-10 px-4">
-                  <Link to="/products" className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 rounded-full bg-primary text-black font-black text-[9px] md:text-[10px] uppercase tracking-[0.4em] hover:scale-105 transition-all shadow-[0_0_40px_rgba(212,175,55,0.3)] inline-flex items-center justify-center gap-4">
-                    Shop The Collection <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-                  </Link>
-                  <Link to="/products" className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 rounded-full bg-white/[0.05] border border-white/10 text-white font-black text-[9px] md:text-[10px] uppercase tracking-[0.4em] hover:bg-white/10 transition-all backdrop-blur-xl inline-flex items-center justify-center">
-                    Discover Scent Science
-                  </Link>
+                  <div className="pt-4 flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-6 relative z-10 px-4">
+                    <Link 
+                      to="/products" 
+                      className="group/btn w-full sm:w-auto px-8 py-3.5 rounded-full bg-primary text-black font-bold text-[9px] md:text-[10px] uppercase tracking-[0.15em] hover:scale-105 transition-all shadow-[0_0_50px_rgba(212,175,55,0.25)] inline-flex items-center justify-center gap-3"
+                    >
+                      Shop The Collection <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </Link>
+                    <Link 
+                      to="/products" 
+                      className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-transparent border border-white/10 text-white font-bold text-[9px] md:text-[10px] uppercase tracking-[0.15em] hover:bg-white/5 transition-all inline-flex items-center justify-center"
+                    >
+                      Discover Scent Science
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -307,6 +343,7 @@ const BlogDetail = () => {
                     <img 
                       src={related.image} 
                       alt={related.title}
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                     />
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />

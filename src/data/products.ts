@@ -44,15 +44,7 @@ export interface CollectionCard {
   handle: string;
   image: string;
   description?: string;
-  products?: Array<{
-    id: string;
-    title: string;
-    handle: string;
-    heroImage?: string;
-    heroMobileImage?: string;
-    heroMobileVideo?: string;
-    heroDescription?: string;
-  }>;
+  products?: Product[];
   productHandles?: string[];
   heroImage?: string;
   heroMobileImage?: string;

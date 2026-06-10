@@ -23,8 +23,11 @@ export const blogPosts: BlogPost[] = [
     author: "Ameen Kasim",
     date: "June 12, 2026",
     readTime: "8 Min Read",
-    image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&q=80&w=2000",
+    image: "/Gemini_Generated_Image_kwi8j2kwi8j2kwi8.jpg",
     featured: true,
+    relatedImages: [
+      "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&q=80&w=1000"
+    ],
     content: `
       <p class="text-2xl md:text-4xl leading-[1.3] text-white/90 font-light tracking-tight italic border-l-4 border-primary pl-8 md:pl-16 mb-20 max-w-4xl">
         "True luxury is not found in the new, but in the enduring. It is the scent of a sun-drenched estate and the leather of a vintage convertible."
@@ -62,15 +65,15 @@ export const blogPosts: BlogPost[] = [
     author: "Ameen Kasim",
     date: "June 10, 2026",
     readTime: "5 Min Read",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000",
+    image: "/Gemini_Generated_Image_im7o6mim7o6mim7o.jpg",
     content: `
       <div class="space-y-16">
         <p class="text-white/60 leading-relaxed text-xl md:text-2xl font-light italic border-l-2 border-primary pl-8">
           The secret to a perfect scent lies in the pour. In our studio, we treat every milliliter of essential oil with the reverence of a master jeweler handling a diamond.
         </p>
         
-        <div class="aspect-[16/9] rounded-[40px] overflow-hidden my-20 relative group">
-          <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Handcrafted process" />
+        <div className="aspect-[16/9] rounded-[40px] overflow-hidden my-20 relative group">
+          <img src="/Gemini_Generated_Image_im7o6mim7o6mim7o.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Handcrafted process" />
         </div>
 
         <p class="text-white/40 text-lg font-light max-w-3xl">

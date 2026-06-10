@@ -98,7 +98,7 @@ const ExperienceSection = () => {
         >
           <img 
             src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop" 
-            alt="" 
+            alt="Luxury Car Interior Background" 
             className="w-full h-[120%] object-cover"
           />
         </motion.div>

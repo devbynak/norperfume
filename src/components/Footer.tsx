@@ -73,7 +73,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative bg-black/[0.02] backdrop-blur-2xl border-t border-white/[0.05] bg-gradient-to-b from-white/[0.02] to-transparent pt-16 pb-12 md:pt-24 md:pb-20 px-6 sm:px-8 md:px-16 mt-8 md:mt-24 overflow-hidden">
+    <footer className="relative bg-black/[0.02] backdrop-blur-2xl border-t border-white/[0.05] bg-gradient-to-b from-white/[0.02] to-transparent pt-16 pb-12 md:pt-24 md:pb-20 px-6 sm:px-8 md:px-16 overflow-hidden">
       {/* Top Blend Effect to merge with section above */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background via-background/50 to-transparent pointer-events-none z-10" />
       

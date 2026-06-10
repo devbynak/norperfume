@@ -42,6 +42,7 @@ const Products = () => {
       <SEO 
         title={`Shop Luxury Car Fragrances | AQUA NOR & MUSK NOR`}
         description="Browse our collection of premium car perfumes. Featuring zero-liquid technology and essential oil blends. The best car fragrance for UAE and global luxury interiors."
+        noindex={!isLoading && products.length === 0}
       />
       <Navbar />
       <section className="pt-28 md:pt-40 pb-20 px-4 relative overflow-hidden">
@@ -137,12 +138,26 @@ const Products = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-24 bg-white/[0.01] border border-white/5 border-dashed rounded-[3rem]">
+            <div className="text-center py-24 bg-white/[0.01] border border-white/5 border-dashed rounded-[3rem] space-y-8">
               <p className="text-muted-foreground font-light tracking-widest uppercase text-xs">
                 {collectionHandle
                   ? `No products found in the ${heading} collection.`
                   : "No products found."}
               </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button 
+                  onClick={() => navigate('/products')}
+                  className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white text-sm uppercase tracking-widest hover:bg-white/10 transition-all"
+                >
+                  View All Products
+                </button>
+                <button 
+                  onClick={() => navigate('/')}
+                  className="px-8 py-3 rounded-full bg-primary text-black text-sm uppercase tracking-widest font-bold hover:scale-105 transition-all"
+                >
+                  Back to Home
+                </button>
+              </div>
             </div>
           )}
         </div>

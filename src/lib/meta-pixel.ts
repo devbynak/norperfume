@@ -13,20 +13,11 @@ declare global {
 import { Product } from "@/data/products";
 import { CartItem } from "@/context/CartContext";
 
-// Get Pixel ID from env var or use placeholder
-const getEnvVar = (key: string) => {
-  const meta = (import.meta as any);
-  if (typeof meta !== 'undefined' && meta.env && meta.env[key]) {
-    return meta.env[key];
-  }
-  return undefined;
-};
-
-export const PIXEL_ID = getEnvVar('VITE_META_PIXEL_ID') || "1006383931833299"; 
+export const PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || "1006383931833299"; 
 
 const isProduction = typeof window !== 'undefined' && 
   (window.location.hostname === 'www.norperfume.com' || window.location.hostname === 'norperfume.com') &&
-  getEnvVar('VITE_ENABLE_META_PIXEL') === 'true';
+  import.meta.env.VITE_ENABLE_META_PIXEL === 'true';
 
 const canTrack = () => typeof window !== 'undefined' && typeof window.fbq === "function" && isProduction;
 

@@ -1,25 +1,17 @@
 const DEFAULT_SHOPIFY_CONFIG = {
-  domain: "nor-perfume-4.myshopify.com",
+  domain: "",
   apiVersion: "2024-10",
-  accessToken: "fc29a36d6125e84571622102bbf55564",
-  publicClientId: "31bf33fe-e658-4481-a8ff-3f48984f836d",
-  shopId: "81366548706",
-};
-
-const getEnvVar = (key: string) => {
-  const meta = (import.meta as any);
-  if (typeof meta !== 'undefined' && meta.env && meta.env[key]) {
-    return meta.env[key];
-  }
-  return undefined;
+  accessToken: "",
+  publicClientId: "",
+  shopId: "",
 };
 
 export const SHOPIFY_CONFIG = {
-  domain: getEnvVar('VITE_SHOPIFY_DOMAIN') || DEFAULT_SHOPIFY_CONFIG.domain,
-  apiVersion: getEnvVar('VITE_SHOPIFY_API_VERSION') || DEFAULT_SHOPIFY_CONFIG.apiVersion,
-  accessToken: getEnvVar('VITE_SHOPIFY_ACCESS_TOKEN') || DEFAULT_SHOPIFY_CONFIG.accessToken,
-  publicClientId: getEnvVar('VITE_SHOPIFY_PUBLIC_CLIENT_ID') || DEFAULT_SHOPIFY_CONFIG.publicClientId,
-  shopId: getEnvVar('VITE_SHOPIFY_SHOP_ID') || DEFAULT_SHOPIFY_CONFIG.shopId,
+  domain: import.meta.env.VITE_SHOPIFY_DOMAIN || DEFAULT_SHOPIFY_CONFIG.domain,
+  apiVersion: import.meta.env.VITE_SHOPIFY_API_VERSION || DEFAULT_SHOPIFY_CONFIG.apiVersion,
+  accessToken: import.meta.env.VITE_SHOPIFY_ACCESS_TOKEN || DEFAULT_SHOPIFY_CONFIG.accessToken,
+  publicClientId: import.meta.env.VITE_SHOPIFY_PUBLIC_CLIENT_ID || DEFAULT_SHOPIFY_CONFIG.publicClientId,
+  shopId: import.meta.env.VITE_SHOPIFY_SHOP_ID || DEFAULT_SHOPIFY_CONFIG.shopId,
 };
 
 export const SHOPIFY_STORE_URL = `https://${SHOPIFY_CONFIG.domain}`;

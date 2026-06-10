@@ -13,8 +13,8 @@ const MarqueeBanner = ({ items, className = "" }: { items: string[]; className?:
   );
 
   return (
-    <div className={`overflow-hidden py-3 bg-white ${className} w-full flex select-none`}>
-      <div className="animate-marquee flex whitespace-nowrap">
+    <div className={`overflow-visible py-3 bg-white ${className} w-full flex select-none items-center`}>
+      <div className="animate-marquee flex whitespace-nowrap items-center">
         {content}
         {content}
         {content}

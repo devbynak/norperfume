@@ -8,6 +8,7 @@ interface SEOProps {
   ogType?: string;
   canonical?: string;
   schema?: any;
+  noindex?: boolean;
 }
 
 const SEO = ({
@@ -16,10 +17,14 @@ const SEO = ({
   keywords = "nor, norperfume,nor perfume, luxury car perfume, car perfume, luxury car fragrance, automotive scent, premium car freshener, natural oil car perfume, NOR car perfume, made in India car fragrance",
   ogImage = "https://www.norperfume.com/logo.png",
   ogType = "website",
-  canonical = "https://www.norperfume.com",
-  schema
+  canonical,
+  schema,
+  noindex = false
 }: SEOProps) => {
   useEffect(() => {
+    const currentUrl = window.location.origin + window.location.pathname;
+    const finalCanonical = canonical || currentUrl;
+
     // Basic Meta Tags
     document.title = title;
 
@@ -35,6 +40,17 @@ const SEO = ({
 
     updateMeta("description", description);
     updateMeta("keywords", keywords);
+
+    // Robots noindex
+    if (noindex) {
+      updateMeta("robots", "noindex, nofollow");
+    } else {
+      // If it exists but we don't want it, we can either remove or set to index
+      const robotsMeta = document.querySelector('meta[name="robots"]');
+      if (robotsMeta) {
+        robotsMeta.setAttribute("content", "index, follow");
+      }
+    }
 
     // Open Graph
     updateMeta("og:title", title, "property");
@@ -57,7 +73,7 @@ const SEO = ({
       linkCanonical.setAttribute("rel", "canonical");
       document.head.appendChild(linkCanonical);
     }
-    linkCanonical.setAttribute("href", canonical || window.location.href);
+    linkCanonical.setAttribute("href", finalCanonical);
 
     // Schema.org (JSON-LD)
     if (schema) {
@@ -78,7 +94,7 @@ const SEO = ({
         // We keep it or clear it depending on page transitions
       }
     };
-  }, [title, description, keywords, ogImage, ogType, canonical, schema]);
+  }, [title, description, keywords, ogImage, ogType, canonical, schema, noindex]);
 
   return null;
 };

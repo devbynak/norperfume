@@ -79,6 +79,31 @@ const ProductDetail = () => {
     }
   } : null;
 
+  const breadcrumbSchema = product ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.norperfume.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Products",
+        "item": "https://www.norperfume.com/products"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.name,
+        "item": window.location.href
+      }
+    ]
+  } : null;
+
   useEffect(() => {
     if (product) {
       trackViewContent(product);
@@ -119,6 +144,11 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <main className="min-h-dvh bg-background">
+        <SEO 
+          title="Product Not Found | NOR PERFUME"
+          description="The requested luxury fragrance could not be found. Explore our full collection of premium car perfumes."
+          noindex={true}
+        />
         <Navbar />
         <div className="pt-32 text-center px-4">
           <h1 className="font-display text-3xl text-foreground">Product Not Found</h1>
@@ -148,7 +178,7 @@ const ProductDetail = () => {
           ? "AQUA NOR is rated the best fresh car perfume in India. A clean, ocean-breeze scent crafted with pure botanical extracts for a refreshing, long-lasting drive."
           : "Experience the rich, woody notes of MUSK NOR. The best luxury car perfume for executive interiors in UAE and GCC. Toxin-free and handcrafted in India."
         }
-        schema={productSchema || undefined}
+        schema={[productSchema, breadcrumbSchema].filter(Boolean)}
       />
       <Navbar />
 
@@ -229,7 +259,7 @@ const ProductDetail = () => {
                           : "border-white/5 opacity-40 hover:opacity-100 hover:border-white/20"
                       )}
                     >
-                      <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+                      <img src={img} alt={`${product.name} - view ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
                     </button>
                   ))}
                 </div>

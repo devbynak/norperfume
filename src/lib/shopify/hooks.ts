@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { buildHeroSlides, fetchHybridCollections, fetchHybridProduct, fetchHybridProducts } from "./shopify";
+import { buildHeroSlides, fetchHybridCollection, fetchHybridCollections, fetchHybridProduct, fetchHybridProducts } from "./shopify";
 
 const SHOPIFY_STALE_TIME = 1000 * 60 * 60 * 4; // 4 hours
 const SHOPIFY_GC_TIME = 1000 * 60 * 60 * 24; // 24 hours
@@ -32,6 +32,18 @@ export function useHybridCollections(limit = 20) {
   });
 }
 
+export function useHybridCollection(handle: string) {
+  return useQuery({
+    queryKey: ["shopify", "collection", handle],
+    queryFn: () => fetchHybridCollection(handle),
+    enabled: Boolean(handle),
+    staleTime: SHOPIFY_STALE_TIME,
+    gcTime: SHOPIFY_GC_TIME,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+}
+
 export function useHybridProduct(idOrHandle?: string) {
   return useQuery({
     queryKey: ["shopify", "product", idOrHandle],
@@ -55,24 +67,12 @@ export function useHeroSlides() {
 }
 
 export function useCollectionProducts(handle: string) {
-  const productsQuery = useHybridProducts();
   const collectionsQuery = useHybridCollections();
-
-  const products = productsQuery.data || [];
-  const collections = collectionsQuery.data || [];
-  const collection = collections.find((item) => item.handle === handle);
-  const productMap = new Map(products.map((product) => [product.shopifyHandle, product]));
-
-  const data =
-    collection?.productHandles?.length
-      ? collection.productHandles
-          .map((productHandle) => productMap.get(productHandle))
-          .filter((product): product is (typeof products)[number] => Boolean(product))
-      : [];
+  const collection = collectionsQuery.data?.find((item) => item.handle === handle);
 
   return {
-    data,
-    isLoading: productsQuery.isLoading || collectionsQuery.isLoading,
-    isError: productsQuery.isError || collectionsQuery.isError,
+    data: collection?.products || [],
+    isLoading: collectionsQuery.isLoading,
+    isError: collectionsQuery.isError,
   };
 }

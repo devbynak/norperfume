@@ -1,6 +1,6 @@
 [project]
 domains = []
-name = "norperfume"
+name = "nor-perfume"
 
 [crawler]
 max_pages = 100

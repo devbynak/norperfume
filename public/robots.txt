@@ -1,9 +1,20 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /account/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /auth/callback/
 
 # AI Bots and Search Engines
 User-agent: Googlebot
 Allow: /
+Disallow: /api/
+Disallow: /account/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /orders/
 
 User-agent: Bingbot
 Allow: /

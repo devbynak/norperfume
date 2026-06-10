@@ -361,8 +361,8 @@ const TrackOrder = () => {
                     {/* Support Banner */}
                     <div className="bg-muted/10 border border-border/50 rounded-[32px] p-8 text-center sm:text-left flex flex-col sm:flex-row items-center gap-6">
                        <div className="flex -space-x-3 overflow-hidden shrink-0">
-                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" className="inline-block h-10 w-10 rounded-full ring-2 ring-background object-cover" />
-                          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" className="inline-block h-10 w-10 rounded-full ring-2 ring-background object-cover" />
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Support Member 1" className="inline-block h-10 w-10 rounded-full ring-2 ring-background object-cover" />
+                          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" alt="Support Member 2" className="inline-block h-10 w-10 rounded-full ring-2 ring-background object-cover" />
                        </div>
                        <div className="flex-1">
                          <p className="text-sm text-muted-foreground">Our support team is live and ready to help if you have questions about your delivery.</p>

@@ -213,10 +213,7 @@ const COLLECTION_FIELDS = `
   products(first: 12) {
     edges {
       node {
-        id
-        title
-        handle
-        ${HERO_METAFIELDS}
+        ${PRODUCT_FIELDS}
       }
     }
   }
@@ -251,6 +248,14 @@ const GET_COLLECTIONS_QUERY = `
           ${COLLECTION_FIELDS}
         }
       }
+    }
+  }
+`;
+
+const GET_COLLECTION_BY_HANDLE_QUERY = `
+  query GetCollectionByHandle($handle: String!) {
+    collection(handle: $handle) {
+      ${COLLECTION_FIELDS}
     }
   }
 `;
@@ -402,21 +407,7 @@ function mapCollection(node: ShopifyCollectionNode): CollectionCard {
       heroMobileImage?.reference?.image?.url ||
       "",
     description: node.description || parseMetafieldText(heroDescription?.value),
-    products: node.products.edges.map((edge) => {
-      let title = edge.node.title;
-      if (title.toLowerCase() === "musk") title = "MUSK NOR";
-      if (title.toLowerCase() === "aqua") title = "AQUA NOR";
-
-      return {
-        id: edge.node.id,
-        title,
-        handle: edge.node.handle,
-        heroImage: resolveImageMetafield(edge.node.heroImage),
-        heroMobileImage: resolveImageMetafield(edge.node.heroMobileImage),
-        heroDescription: parseMetafieldText(edge.node.heroDescription?.value),
-        heroMobileVideo: resolveVideoMetafield(edge.node.heroMobileVideo),
-      };
-    }),
+    products: node.products.edges.map((edge) => mapProduct(edge.node as ShopifyProductNode)),
     productHandles: node.products.edges.map((edge) => edge.node.handle),
     heroImage: resolveImageMetafield(heroImage),
     heroMobileImage: resolveImageMetafield(heroMobileImage),
@@ -436,6 +427,18 @@ export async function fetchHybridCollections(limit = 20) {
   });
 
   return data.collections.edges.map(({ node }) => mapCollection(node));
+}
+
+export async function fetchHybridCollection(handle: string) {
+  if (!handle) return undefined;
+  
+  const data = await shopifyQuery<{ collection: Nullable<ShopifyCollectionNode> }>(
+    GET_COLLECTION_BY_HANDLE_QUERY,
+    { handle }
+  );
+
+  if (!data.collection) return undefined;
+  return mapCollection(data.collection);
 }
 
 export async function fetchHybridProduct(idOrHandle: string) {
@@ -475,9 +478,12 @@ export function buildHeroSlides(_products: Product[], collections: CollectionCar
 
   return heroSlidesSource
     .map((product) => {
+      const handle = "shopifyHandle" in product ? product.shopifyHandle : product.handle;
+      const title = "name" in product ? product.name : product.title;
+
       return {
-        id: product.handle,
-        title: product.title,
+        id: handle,
+        title: title,
         subtitle: heroCollection.title,
         image:
           product.heroImage || heroCollection.heroImage || defaultHeroImage,
@@ -490,8 +496,8 @@ export function buildHeroSlides(_products: Product[], collections: CollectionCar
         mobileVideo: product.heroMobileVideo || heroCollection.heroMobileVideo,
         description: product.heroDescription || heroCollection.heroDescription,
         ctaHref:
-          product.handle && product.handle !== heroCollection.handle
-            ? `/product/${product.handle}`
+          handle && handle !== heroCollection.handle
+            ? `/product/${handle}`
             : "/products",
       } satisfies HeroSlide;
     })

@@ -10,25 +10,25 @@ const values = [
     title: "Olfactory Architecture", 
     desc: "We don't just blend scents; we architect atmosphere. Using 100% natural oil extracts, we engineer molecular stability for the demanding environment of the modern luxury cabin.",
     image: "/Gemini_Generated_Image_q98tdsq98tdsq98t.jpg",
-    className: "lg:col-span-2 lg:row-span-2 h-[450px] sm:h-[600px] lg:h-auto"
+    className: "md:col-span-2 lg:col-span-2 lg:row-span-2 h-[450px] sm:h-[600px] lg:h-auto"
   },
   { 
     title: "Artisanal Studio", 
     desc: "Every creation is hand-poured in our Kerala studio. This manual precision ensures the delicate integrity of botanical compounds remains undisturbed by industrial heat.",
     image: "/Gemini_Generated_Image_rtu047rtu047rtu0.jpg",
-    className: "lg:col-span-2 lg:row-span-1 h-[350px] sm:h-[400px]"
+    className: "md:col-span-2 lg:col-span-2 lg:row-span-1 h-[350px] sm:h-[400px]"
   },
   { 
     title: "Zero-Liquid Safety", 
     desc: "Our pioneering solid-diffusion technology eliminates the risk of dashboard damage. A dry, molecular release system designed for high-end wood and leather interiors.",
     image: "/Gemini_Generated_Image_3sq4ms3sq4ms3sq4.jpg",
-    className: "lg:col-span-1 lg:row-span-1 h-[350px] sm:h-[400px]"
+    className: "md:col-span-1 lg:col-span-1 lg:row-span-1 h-[350px] sm:h-[400px]"
   },
   { 
     title: "Global Compliance", 
     desc: "Operating at the intersection of Indian heritage and international IFRA standards, we deliver niche-quality fragrance profiles with uncompromising safety protocols.",
     image: "/Gemini_Generated_Image_jolcprjolcprjolc.jpg",
-    className: "lg:col-span-1 lg:row-span-1 h-[350px] sm:h-[400px]"
+    className: "md:col-span-1 lg:col-span-1 lg:row-span-1 h-[350px] sm:h-[400px]"
   },
 ];
 
@@ -202,14 +202,26 @@ const AboutUs = () => {
               
               <div className="relative">
                 <Quote className="absolute -top-6 -left-2 md:-top-12 md:-left-8 w-12 h-12 md:w-24 md:h-24 text-primary/5 -z-10" />
-                <p className="text-white/80 text-base md:text-2xl font-light italic leading-relaxed">
-                  "Car perfume should never be an afterthought. We are obsessed with botanical authenticity—treating every milliliter of essential oil with the reverence of a master jeweler. Our goal is to ensure the air you breathe is as luxurious as the car you drive."
-                </p>
-              </div>
+                <div className="space-y-12">
+                  <div className="space-y-6">
+                    <p className="text-white text-3xl md:text-6xl lg:text-7xl font-display uppercase tracking-tighter leading-[1.1]">
+                      "Luxury is no longer just about what you <span className="text-white/30">see</span>... it's about the <span className="text-primary italic font-light lowercase">air you breathe</span>."
+                    </p>
+                  </div>
 
-              <div className="space-y-1">
-                <p className="font-display text-lg md:text-2xl text-primary tracking-widest uppercase font-bold">NOORUL AMEEN KASIM (AK)</p>
-                <p className="text-[8px] md:text-[10px] text-white/40 uppercase tracking-[0.4em] font-medium">FOUNDER</p>
+                  <div className="max-w-xl space-y-8">
+                    <p className="text-white/60 text-base md:text-xl font-light leading-relaxed pl-8 italic">
+                      "Car perfume should never be an afterthought. We are obsessed with botanical authenticity—treating every milliliter of essential oil with the reverence of a master jeweler. Our goal is to ensure the air you breathe is as luxurious as the car you drive."
+                    </p>
+                    
+                    <div className="flex items-center gap-6">
+                      <div className="space-y-1">
+                        <p className="font-display text-sm md:text-xl text-primary tracking-[0.3em] uppercase font-bold">NOORUL AMEEN KASIM (AK)</p>
+                        <p className="text-[8px] md:text-[10px] text-white/40 uppercase tracking-[0.4em] font-medium">FOUNDER</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -224,7 +236,7 @@ const AboutUs = () => {
             <h2 className="font-display text-4xl sm:text-5xl md:text-8xl text-white uppercase tracking-tighter">The Four <span className="text-primary italic font-light lowercase">Pillars</span></h2>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 auto-rows-fr">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
             {values.map((v, i) => (
               <motion.div
                 key={v.title}
@@ -239,6 +251,7 @@ const AboutUs = () => {
                   <img 
                     src={v.image} 
                     alt={v.title}
+                    loading="lazy"
                     className="w-full h-full object-cover grayscale brightness-[0.3] group-hover:grayscale-0 group-hover:brightness-50 group-hover:scale-110 transition-all duration-[2s] ease-out"
                   />
                   {/* Gradient Overlay */}
