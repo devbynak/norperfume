@@ -67,18 +67,7 @@ const AuthCallback = () => {
             </button>
           </div>
         </div>
-      ) : (
-        <div className="space-y-6">
-          <div className="relative">
-            <div className="w-20 h-20 mx-auto border-[1px] border-primary/20 rounded-full" />
-            <div className="absolute inset-0 w-20 h-20 mx-auto border-t-2 border-primary rounded-full animate-spin" />
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-[10px] uppercase tracking-[0.5em] text-primary font-bold">Authenticating</h2>
-            <p className="text-sm text-white/30 tracking-widest font-light italic">Finalizing your secure session…</p>
-          </div>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };

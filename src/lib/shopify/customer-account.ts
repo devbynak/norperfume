@@ -64,7 +64,8 @@ export function getRedirectUri() {
   // NEW: Ensure we use the exact registered URI for production.
   // Shopify Customer Account API requires an exact string match.
   // We force 'https' and the 'www' version to match the most likely Shopify config.
-  const isProduction = window.location.hostname.includes("norperfume.com");
+  const hostname = window.location.hostname;
+  const isProduction = hostname === "norperfume.com" || hostname === "www.norperfume.com";
   
   if (isProduction) {
     return "https://www.norperfume.com/auth/callback";
@@ -79,11 +80,15 @@ export function getRedirectUri() {
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
 export async function beginLogin(returnTo = window.location.pathname) {
   // Fix domain mismatch before starting:
-  // If user is on norperfume.com, redirect them to www.norperfume.com/login 
-  // to ensure sessionStorage is preserved when Shopify redirects back to 'www'.
-  if (window.location.hostname === "norperfume.com") {
+  // Only redirect to www in production to avoid breaking localhost
+  const hostname = window.location.hostname;
+  const isProduction = hostname === "norperfume.com" || hostname === "www.norperfume.com";
+  
+  if (isProduction && hostname === "norperfume.com") {
     console.log("🔄 Redirecting to www to ensure session persistence...");
-    window.location.href = `https://www.norperfume.com/login?returnTo=${encodeURIComponent(returnTo)}`;
+    const targetUrl = new URL(window.location.href);
+    targetUrl.hostname = "www.norperfume.com";
+    window.location.href = targetUrl.toString();
     return;
   }
 
@@ -176,8 +181,14 @@ export async function handleCallback(search: string) {
     const txt = await res.text();
     console.error("❌ Token Exchange Failed:", {
       status: res.status,
-      body: txt
+      body: txt,
     });
+    
+    // Clear storage on failure to prevent stale state issues
+    sessionStorage.removeItem(STORAGE.verifier);
+    sessionStorage.removeItem(STORAGE.state);
+    sessionStorage.removeItem(STORAGE.redirectAfter);
+    
     throw new Error(`Token exchange failed (${res.status}): ${txt}`);
   }
 
@@ -185,7 +196,13 @@ export async function handleCallback(search: string) {
   console.log("✅ Token Exchange Successful");
   persistTokens(data);
 
-  const returnTo = sessionStorage.getItem(STORAGE.redirectAfter) || "/account";
+  const savedReturnTo = sessionStorage.getItem(STORAGE.redirectAfter);
+  // Sanitize returnTo to prevent open redirects
+  let returnTo = "/account";
+  if (savedReturnTo && (savedReturnTo.startsWith("/") || savedReturnTo.startsWith(window.location.origin))) {
+    returnTo = savedReturnTo;
+  }
+
   sessionStorage.removeItem(STORAGE.verifier);
   sessionStorage.removeItem(STORAGE.state);
   sessionStorage.removeItem(STORAGE.redirectAfter);
@@ -217,8 +234,14 @@ export function getAccessToken() {
 
 export function isAuthenticated() {
   const t = getAccessToken();
-  const exp = Number(localStorage.getItem(STORAGE.expiresAt) || 0);
-  const isValid = Boolean(t) && Date.now() < exp;
+  const expStr = localStorage.getItem(STORAGE.expiresAt);
+  if (!t || !expStr) return false;
+  
+  const exp = Number(expStr);
+  const isValid = Date.now() < exp;
+  
+  // If token is expired but we have a refresh token, we technically still have a session
+  // that can be revived. However, for UI state, we treat it as unauthenticated until refreshed.
   return isValid;
 }
 
