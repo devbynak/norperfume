@@ -6,12 +6,32 @@ const DEFAULT_SHOPIFY_CONFIG = {
   shopId: "",
 };
 
+// Helper to get environment variables safely across Browser (Vite) and Node (Vercel)
+const getEnv = (key: string): string => {
+  const meta = (import.meta as any);
+  if (typeof meta !== 'undefined' && meta.env && meta.env[key]) {
+    return meta.env[key];
+  }
+  
+  try {
+    // @ts-ignore
+    if (typeof process !== 'undefined' && process.env && process.env[key]) {
+      // @ts-ignore
+      return process.env[key];
+    }
+  } catch (e) {
+    // Fallback for environments where process might be restricted
+  }
+  
+  return "";
+};
+
 export const SHOPIFY_CONFIG = {
-  domain: import.meta.env.VITE_SHOPIFY_DOMAIN || DEFAULT_SHOPIFY_CONFIG.domain,
-  apiVersion: import.meta.env.VITE_SHOPIFY_API_VERSION || DEFAULT_SHOPIFY_CONFIG.apiVersion,
-  accessToken: import.meta.env.VITE_SHOPIFY_ACCESS_TOKEN || DEFAULT_SHOPIFY_CONFIG.accessToken,
-  publicClientId: import.meta.env.VITE_SHOPIFY_PUBLIC_CLIENT_ID || DEFAULT_SHOPIFY_CONFIG.publicClientId,
-  shopId: import.meta.env.VITE_SHOPIFY_SHOP_ID || DEFAULT_SHOPIFY_CONFIG.shopId,
+  domain: getEnv('VITE_SHOPIFY_DOMAIN') || DEFAULT_SHOPIFY_CONFIG.domain,
+  apiVersion: getEnv('VITE_SHOPIFY_API_VERSION') || DEFAULT_SHOPIFY_CONFIG.apiVersion,
+  accessToken: getEnv('VITE_SHOPIFY_ACCESS_TOKEN') || DEFAULT_SHOPIFY_CONFIG.accessToken,
+  publicClientId: getEnv('VITE_SHOPIFY_PUBLIC_CLIENT_ID') || DEFAULT_SHOPIFY_CONFIG.publicClientId,
+  shopId: getEnv('VITE_SHOPIFY_SHOP_ID') || DEFAULT_SHOPIFY_CONFIG.shopId,
 };
 
 export const SHOPIFY_STORE_URL = `https://${SHOPIFY_CONFIG.domain}`;
