@@ -173,7 +173,6 @@ const BlogDetail = () => {
               className="flex flex-wrap items-center justify-center gap-x-8 md:gap-x-16 gap-y-4 text-[8px] md:text-[9px] uppercase tracking-[0.4em] md:tracking-[0.5em] text-white/40 font-bold pt-8 md:pt-12"
             >
               <div className="group flex items-center gap-2 md:gap-3">
-                <div className="w-6 md:w-8 h-[1px] bg-primary/30 group-hover:w-12 transition-all" />
                 <span>By {post.author}</span>
               </div>
               <div className="flex items-center gap-2 md:gap-3">

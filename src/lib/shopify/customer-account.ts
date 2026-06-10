@@ -62,7 +62,10 @@ async function sha256(str: string) {
 export function getRedirectUri() {
   // NEW: Ensure we use the exact registered URI for production.
   // Shopify Customer Account API requires an exact string match.
-  if (window.location.hostname === "www.norperfume.com" || window.location.hostname === "norperfume.com") {
+  // We force 'https' and the 'www' version to match the most likely Shopify config.
+  const isProduction = window.location.hostname.includes("norperfume.com");
+  
+  if (isProduction) {
     return "https://www.norperfume.com/auth/callback";
   }
   
@@ -74,6 +77,15 @@ export function getRedirectUri() {
 
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
 export async function beginLogin(returnTo = window.location.pathname) {
+  // Fix domain mismatch before starting:
+  // If user is on norperfume.com, redirect them to www.norperfume.com/login 
+  // to ensure sessionStorage is preserved when Shopify redirects back to 'www'.
+  if (window.location.hostname === "norperfume.com") {
+    console.log("🔄 Redirecting to www to ensure session persistence...");
+    window.location.href = `https://www.norperfume.com/login?returnTo=${encodeURIComponent(returnTo)}`;
+    return;
+  }
+
   if (!SHOP_ID) {
     console.error("❌ Auth Error: SHOP_ID is missing in configuration.");
     alert("System configuration error: Shop ID is missing. Please check your environment variables.");
