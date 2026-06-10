@@ -1,9 +1,9 @@
 const DEFAULT_SHOPIFY_CONFIG = {
-  domain: "",
+  domain: "nor-perfume-4.myshopify.com",
   apiVersion: "2024-10",
-  accessToken: "",
-  publicClientId: "",
-  shopId: "",
+  accessToken: "fc29a36d6125e84571622102bbf55564",
+  publicClientId: "31bf33fe-e658-4481-a8ff-3f48984f836d",
+  shopId: "81366548706",
 };
 
 // Helper to get environment variables safely across Browser (Vite) and Node (Vercel)
