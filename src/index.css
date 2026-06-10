@@ -7,21 +7,21 @@
   /* Lovelo Font Integration */
   @font-face {
     font-family: 'Lovelo';
-    src: url('https://cdn.jsdelivr.net/gh/webfont-free/lovelo@master/fonts/LoveloLineLight.woff2') format('woff2');
+    src: url('https://cdn.jsdelivr.net/gh/lorenz/lovelo-fontface@master/fonts/lovelo_line_light-webfont.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
     font-family: 'Lovelo';
-    src: url('https://cdn.jsdelivr.net/gh/webfont-free/lovelo@master/fonts/LoveloLineBold.woff2') format('woff2');
+    src: url('https://cdn.jsdelivr.net/gh/lorenz/lovelo-fontface@master/fonts/lovelo_line_bold-webfont.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
     font-family: 'Lovelo';
-    src: url('https://cdn.jsdelivr.net/gh/webfont-free/lovelo@master/fonts/LoveloBlack.woff2') format('woff2');
+    src: url('https://cdn.jsdelivr.net/gh/lorenz/lovelo-fontface@master/fonts/lovelo_black-webfont.woff2') format('woff2');
     font-weight: 900;
     font-style: normal;
     font-display: swap;
