@@ -9,6 +9,14 @@ const DEFAULT_SHOPIFY_CONFIG = {
 // Helper to get environment variables safely across Browser (Vite) and Node (Vercel)
 const getEnv = (key: string): string => {
   const meta = (import.meta as any);
+  
+  // Static access for common keys to ensure Vite replaces them at build time
+  if (key === 'VITE_SHOPIFY_DOMAIN') return import.meta.env.VITE_SHOPIFY_DOMAIN || "";
+  if (key === 'VITE_SHOPIFY_API_VERSION') return import.meta.env.VITE_SHOPIFY_API_VERSION || "";
+  if (key === 'VITE_SHOPIFY_ACCESS_TOKEN') return import.meta.env.VITE_SHOPIFY_ACCESS_TOKEN || "";
+  if (key === 'VITE_SHOPIFY_PUBLIC_CLIENT_ID') return import.meta.env.VITE_SHOPIFY_PUBLIC_CLIENT_ID || "";
+  if (key === 'VITE_SHOPIFY_SHOP_ID') return import.meta.env.VITE_SHOPIFY_SHOP_ID || "";
+
   if (typeof meta !== 'undefined' && meta.env && meta.env[key]) {
     return meta.env[key];
   }
@@ -27,11 +35,11 @@ const getEnv = (key: string): string => {
 };
 
 export const SHOPIFY_CONFIG = {
-  domain: import.meta.env.VITE_SHOPIFY_DOMAIN || getEnv('VITE_SHOPIFY_DOMAIN') || DEFAULT_SHOPIFY_CONFIG.domain,
-  apiVersion: import.meta.env.VITE_SHOPIFY_API_VERSION || getEnv('VITE_SHOPIFY_API_VERSION') || DEFAULT_SHOPIFY_CONFIG.apiVersion,
-  accessToken: import.meta.env.VITE_SHOPIFY_ACCESS_TOKEN || getEnv('VITE_SHOPIFY_ACCESS_TOKEN') || DEFAULT_SHOPIFY_CONFIG.accessToken,
-  publicClientId: import.meta.env.VITE_SHOPIFY_PUBLIC_CLIENT_ID || getEnv('VITE_SHOPIFY_PUBLIC_CLIENT_ID') || DEFAULT_SHOPIFY_CONFIG.publicClientId,
-  shopId: import.meta.env.VITE_SHOPIFY_SHOP_ID || getEnv('VITE_SHOPIFY_SHOP_ID') || DEFAULT_SHOPIFY_CONFIG.shopId,
+  domain: getEnv('VITE_SHOPIFY_DOMAIN') || DEFAULT_SHOPIFY_CONFIG.domain,
+  apiVersion: getEnv('VITE_SHOPIFY_API_VERSION') || DEFAULT_SHOPIFY_CONFIG.apiVersion,
+  accessToken: getEnv('VITE_SHOPIFY_ACCESS_TOKEN') || DEFAULT_SHOPIFY_CONFIG.accessToken,
+  publicClientId: getEnv('VITE_SHOPIFY_PUBLIC_CLIENT_ID') || DEFAULT_SHOPIFY_CONFIG.publicClientId,
+  shopId: getEnv('VITE_SHOPIFY_SHOP_ID') || DEFAULT_SHOPIFY_CONFIG.shopId,
 };
 
 // Runtime validation for production connection
