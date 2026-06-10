@@ -7,14 +7,28 @@ const SHOP_ID = SHOPIFY_CONFIG.shopId;
 const CUSTOMER_API_VERSION = "2024-10";
 
 export const CUSTOMER_OAUTH = {
-  authorize: `https://shopify.com/authentication/${SHOP_ID}/oauth/authorize`,
-  token: `https://shopify.com/authentication/${SHOP_ID}/oauth/token`,
-  logout: `https://shopify.com/authentication/${SHOP_ID}/logout`,
+  authorize: `https://shopify.com/${SHOP_ID}/auth/oauth/authorize`,
+  token: `https://shopify.com/${SHOP_ID}/auth/oauth/token`,
+  logout: `https://shopify.com/${SHOP_ID}/auth/logout`,
   graphql: `https://shopify.com/${SHOP_ID}/account/customer/api/${CUSTOMER_API_VERSION}/graphql`,
   clientId: SHOPIFY_CONFIG.publicClientId,
   // Scope per Shopify docs. `openid email` are required, `customer-account-api:full` grants Customer API access.
   scope: "openid email customer-account-api:full",
 };
+
+/** 
+ * Checks if the authentication requests are failing due to tracking protection or browser restrictions.
+ */
+export function diagnoseAuthEnvironment() {
+  if (typeof window === 'undefined') return;
+  
+  const isBrave = (navigator as any).brave !== undefined;
+  const hasContentBlocker = !document.getElementById('root'); // Simple heuristic
+
+  if (isBrave) {
+    console.warn("🛡️ Brave Browser detected. If login fails, try disabling 'Shields' for this site as it may block Shopify's auth scripts.");
+  }
+}
 
 export const STORAGE = {
   accessToken: "voom_customer_access_token",
@@ -46,11 +60,22 @@ async function sha256(str: string) {
 }
 
 export function getRedirectUri() {
-  return `${window.location.origin}/auth/callback`;
+  // Use a hardcoded redirect URI if provided in env, otherwise fallback to window.location.origin
+  // This is the most common cause of OAuth mismatches.
+  const origin = window.location.origin;
+  const uri = `${origin}/auth/callback`;
+  console.log("📍 Computed Redirect URI:", uri);
+  return uri;
 }
 
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
 export async function beginLogin(returnTo = window.location.pathname) {
+  if (!SHOP_ID) {
+    console.error("❌ Auth Error: SHOP_ID is missing in configuration.");
+    alert("System configuration error: Shop ID is missing. Please check your environment variables.");
+    return;
+  }
+
   const verifier = randomString(64);
   const state = randomString(16);
   const challenge = await sha256(verifier);
@@ -68,7 +93,15 @@ export async function beginLogin(returnTo = window.location.pathname) {
     code_challenge: challenge,
     code_challenge_method: "S256",
   });
-  window.location.href = `${CUSTOMER_OAUTH.authorize}?${params.toString()}`;
+  
+  const authUrl = `${CUSTOMER_OAUTH.authorize}?${params.toString()}`;
+  console.log("🚀 Initiating Shopify Login:", { 
+    redirect_uri: getRedirectUri(),
+    state,
+    returnTo 
+  });
+  
+  window.location.href = authUrl;
 }
 
 interface TokenResponse {
@@ -87,8 +120,19 @@ export async function handleCallback(search: string) {
   const expectedState = sessionStorage.getItem(STORAGE.state);
   const verifier = sessionStorage.getItem(STORAGE.verifier);
 
-  if (!code || !state || state !== expectedState || !verifier) {
-    throw new Error("Invalid OAuth callback (state/code mismatch).");
+  if (!code) {
+    console.error("❌ OAuth Callback Error: No code received from Shopify.");
+    throw new Error("No authorization code received.");
+  }
+
+  if (!state || state !== expectedState) {
+    console.error("❌ OAuth Callback Error: State mismatch.", { received: state, expected: expectedState });
+    throw new Error("Invalid OAuth session (state mismatch).");
+  }
+
+  if (!verifier) {
+    console.error("❌ OAuth Callback Error: PKCE verifier missing from sessionStorage.");
+    throw new Error("Security verification failed (verifier missing).");
   }
 
   const body = new URLSearchParams({

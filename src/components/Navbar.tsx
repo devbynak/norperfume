@@ -58,6 +58,7 @@ const Navbar = () => {
     { label: "FAQ", href: "/faq", external: false },
     { label: "About Us", href: "/about", external: false },
     { label: "Track My Order", href: "/track-order", external: false },
+    { label: "My Account", href: "/account", external: false },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -143,7 +144,7 @@ const Navbar = () => {
                 />
                 <button
                   onClick={goToAccount}
-                  className="hidden sm:block outline-none"
+                  className="outline-none"
                   aria-label={isAuthenticated ? "Open account" : "Login"}
                 >
                   <User className={`w-5 h-5 transition-colors ${isAuthenticated ? "text-primary" : "text-foreground/70 hover:text-foreground"}`} />

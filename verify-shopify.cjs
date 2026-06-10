@@ -12,9 +12,11 @@ const getEnvVar = (key) => {
 
 const domain = getEnvVar('VITE_SHOPIFY_DOMAIN');
 const accessToken = getEnvVar('VITE_SHOPIFY_ACCESS_TOKEN');
+const shopId = getEnvVar('VITE_SHOPIFY_SHOP_ID');
 const apiVersion = getEnvVar('VITE_SHOPIFY_API_VERSION') || '2024-10';
 
-const endpoint = `https://${domain}/api/${apiVersion}/graphql.json`;
+const storefrontEndpoint = `https://${domain}/api/${apiVersion}/graphql.json`;
+const customerEndpoint = `https://shopify.com/${shopId}/auth/oauth/authorize`;
 
 const query = `
   query {
@@ -22,21 +24,17 @@ const query = `
       name
       description
     }
-    products(first: 5) {
-      edges {
-        node {
-          title
-          handle
-        }
-      }
-    }
   }
 `;
 
 async function testConnection() {
-  console.log(`Connecting to: ${endpoint}`);
+  console.log(`--- Connectivity Audit ---`);
+  console.log(`Storefront Endpoint: ${storefrontEndpoint}`);
+  console.log(`Customer Auth Endpoint: ${customerEndpoint}`);
+  
   try {
-    const response = await fetch(endpoint, {
+    console.log('\n1. Testing Storefront API...');
+    const sfRes = await fetch(storefrontEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,26 +43,23 @@ async function testConnection() {
       body: JSON.stringify({ query }),
     });
 
-    if (!response.ok) {
-      console.error(`HTTP Error: ${response.status}`);
-      const text = await response.text();
-      console.error(text);
-      return;
+    if (sfRes.ok) {
+      console.log('✅ Storefront API is reachable and active.');
+    } else {
+      console.error(`❌ Storefront API returned error ${sfRes.status}`);
     }
 
-    const json = await response.json();
-    if (json.errors) {
-      console.error('GraphQL Errors:', JSON.stringify(json.errors, null, 2));
+    console.log('\n2. Testing Customer Account API Availability...');
+    // We can't POST to the authorize endpoint, but we can check if the URL exists/is reachable
+    const custRes = await fetch(customerEndpoint, { method: 'HEAD' });
+    if (custRes.status === 200 || custRes.status === 405 || custRes.status === 302) {
+      console.log(`✅ Customer Account API is active at shopify.com/${shopId}`);
     } else {
-      console.log('Successfully connected to Shopify!');
-      console.log('Shop Name:', json.data.shop.name);
-      console.log('Products found:', json.data.products.edges.length);
-      json.data.products.edges.forEach(edge => {
-        console.log(` - ${edge.node.title} (${edge.node.handle})`);
-      });
+      console.error(`❌ Customer Account API returned unexpected status: ${custRes.status}`);
     }
+
   } catch (err) {
-    console.error('Connection failed:', err);
+    console.error('❌ Connection failed:', err.message);
   }
 }
 

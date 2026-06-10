@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Leaf, ShieldCheck, Droplet, Star, ArrowRight, Clock, User, Share2, ChevronLeft, Check } from "lucide-react";
+import { ArrowRight, Clock, Share2, ChevronLeft, Check } from "lucide-react";
 import SEO from "@/components/SEO";
 import { useRef, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
@@ -36,10 +36,6 @@ const BlogDetail = () => {
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.1]);
 
   if (!post) return <Navigate to="/blogs" replace />;
-
-  const relatedPosts = blogPosts
-    .filter(p => p.id !== post.id)
-    .slice(0, 2);
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -184,17 +180,6 @@ const BlogDetail = () => {
             </motion.div>
           </motion.div>
         </div>
-        
-        {/* Scroll Indicator */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-4 z-20"
-        >
-          <span className="text-[7px] md:text-[8px] tracking-[0.4em] uppercase text-white/20 font-bold">Explore Story</span>
-          <div className="w-[1px] h-8 md:h-12 bg-gradient-to-b from-primary/40 to-transparent" />
-        </motion.div>
       </section>
 
       {/* Article Content Layout */}
@@ -296,21 +281,15 @@ const BlogDetail = () => {
                 className="relative py-16 md:py-48 overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-primary/[0.02] scale-x-0 group-hover:scale-x-100 transition-transform duration-[2s] origin-left" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 md:h-24 bg-gradient-to-b from-transparent to-primary/20" />
                 
                 <blockquote className="relative z-10 text-center space-y-8 md:space-y-16 px-4">
                   <p className="font-display text-[clamp(1.5rem,6vw,5rem)] md:text-7xl lg:text-8xl text-white uppercase tracking-tighter leading-[1] md:leading-[0.9] italic max-w-4xl mx-auto">
                     "Luxury is no longer just about what you see... it's about the <span className="text-primary italic font-light lowercase">air you breathe</span>."
                   </p>
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-primary/20 p-1">
-                      <img src="/logo.png" alt="NOR Logo" className="w-full h-full object-contain opacity-50" />
-                    </div>
                     <cite className="block text-[8px] md:text-[9px] uppercase tracking-[0.5em] md:tracking-[0.6em] text-primary/60 font-bold not-italic">— Ameen Kasim, Founder</cite>
                   </div>
                 </blockquote>
-
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 md:h-24 bg-gradient-to-t from-transparent to-primary/20" />
               </motion.div>
 
               {/* Redesigned Ultra-Premium CTA Card */}

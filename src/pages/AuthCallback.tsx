@@ -18,7 +18,8 @@ const AuthCallback = () => {
         navigate(returnTo || "/account", { replace: true });
       })
       .catch((e) => {
-        setError("Unable to complete sign-in. Please try again.");
+        console.error("Auth Callback Failed:", e);
+        setError(e.message || "Unable to complete sign-in. Please try again.");
       });
   }, [navigate, signalAuthenticated]);
 

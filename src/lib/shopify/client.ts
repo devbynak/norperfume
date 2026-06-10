@@ -43,9 +43,10 @@ if (typeof window !== 'undefined' && !SHOPIFY_CONFIG.domain) {
 
 export const SHOPIFY_STORE_URL = `https://${SHOPIFY_CONFIG.domain}`;
 export const SHOPIFY_ENDPOINT = `${SHOPIFY_STORE_URL}/api/${SHOPIFY_CONFIG.apiVersion}/graphql.json`;
-export const SHOPIFY_ACCOUNT_URL = `${SHOPIFY_STORE_URL}/account`;
-export const SHOPIFY_ORDERS_URL = `${SHOPIFY_STORE_URL}/account/orders`;
-export const SHOPIFY_LOGIN_URL = `${SHOPIFY_STORE_URL}/account/login`;
+// New Customer Accounts are hosted on shopify.com/SHOP_ID/account
+export const SHOPIFY_ACCOUNT_URL = `https://shopify.com/${SHOPIFY_CONFIG.shopId}/account`;
+export const SHOPIFY_ORDERS_URL = `${SHOPIFY_ACCOUNT_URL}/orders`;
+export const SHOPIFY_LOGIN_URL = `https://shopify.com/${SHOPIFY_CONFIG.shopId}/auth/login`;
 
 
 interface ShopifyGraphQLResponse<T> {
