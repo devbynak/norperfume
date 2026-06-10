@@ -12,8 +12,9 @@ export const CUSTOMER_OAUTH = {
   logout: `https://shopify.com/${SHOP_ID}/auth/logout`,
   graphql: `https://shopify.com/${SHOP_ID}/account/customer/api/${CUSTOMER_API_VERSION}/graphql`,
   clientId: SHOPIFY_CONFIG.publicClientId,
-  // Scope per Shopify docs. `openid email` are required, `customer-account-api:full` grants Customer API access.
-  scope: "openid email customer-account-api:full",
+  // Scope: Only request 'openid email' to avoid "invalid scope" errors.
+  // API access is usually granted automatically to the client ID in Shopify Admin.
+  scope: "openid email",
 };
 
 /** 
