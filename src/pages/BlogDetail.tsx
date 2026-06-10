@@ -37,6 +37,8 @@ const BlogDetail = () => {
 
   if (!post) return <Navigate to="/blogs" replace />;
 
+  const nextPost = blogPosts[blogPosts.indexOf(post) + 1] || blogPosts[0];
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -90,6 +92,7 @@ const BlogDetail = () => {
         description={post.excerpt}
         schema={[articleSchema, breadcrumbSchema]}
       />
+      
       <Navbar />
 
       <motion.div 
@@ -143,7 +146,7 @@ const BlogDetail = () => {
                 initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="font-display text-[clamp(2.5rem,10vw,11rem)] text-white tracking-[-0.05em] uppercase leading-[0.9] md:leading-[0.75] italic px-2 mix-blend-difference"
+                className="font-display text-[clamp(2.5rem,10vw,8rem)] text-white tracking-[-0.05em] uppercase leading-[0.9] md:leading-[0.75] italic px-2 mix-blend-difference"
               >
                 {post.title.split(' ').map((word, i) => (
                   <span key={i} className={i % 2 === 1 ? "text-primary italic font-light lowercase" : ""}>
@@ -297,31 +300,31 @@ const BlogDetail = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                className="relative p-8 sm:p-12 md:p-24 rounded-[40px] sm:rounded-[60px] md:rounded-[80px] bg-[#050505] border border-white/5 text-center mt-16 md:mt-48 overflow-hidden group shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] max-w-4xl mx-auto"
+                className="relative p-8 sm:p-12 md:p-16 rounded-[40px] sm:rounded-[60px] md:rounded-[80px] bg-[#050505] border border-white/5 text-center mt-16 md:mt-32 overflow-hidden group shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] max-w-4xl mx-auto"
               >
                 {/* Decorative Background Elements */}
                 <div className="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-primary/10 rounded-full blur-[80px] md:blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-primary/20 transition-colors duration-1000" />
                 <div className="absolute bottom-0 left-0 w-64 md:w-96 h-64 md:h-96 bg-primary/5 rounded-full blur-[80px] md:blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
                 
-                <div className="space-y-8 md:space-y-16 relative z-10">
+                <div className="space-y-6 md:space-y-10 relative z-10">
                   <div className="space-y-4">
                     <span className="text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.5em] md:tracking-[0.6em]">The Artisan Collection</span>
                     <div className="space-y-2">
-                      <h3 className="font-display text-4xl sm:text-6xl md:text-[9rem] text-white font-bold tracking-tighter uppercase leading-[0.8] select-none">
+                      <h3 className="font-display text-3xl sm:text-5xl md:text-7xl text-white font-bold tracking-tighter uppercase leading-[0.8] select-none">
                         Elevate Your <span className="text-primary italic font-light lowercase">Journey</span>
                       </h3>
                     </div>
                   </div>
 
-                  <p className="text-white/40 max-w-md mx-auto text-[10px] sm:text-xs md:text-lg font-light leading-relaxed tracking-wide px-2 italic">
+                  <p className="text-white/40 max-w-md mx-auto text-[10px] sm:text-xs md:text-base font-light leading-relaxed tracking-wide px-2 italic">
                     Experience the future of automotive fragrance. Handcrafted with 100% natural oil extracts for the discerning driver.
                   </p>
 
-                  <div className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 relative z-10 px-4">
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-6 relative z-10 px-4">
                     <Link 
                       to="/products" 
                       onClick={() => { haptic("medium"); window.scrollTo(0, 0); }}
-                      className="group/btn relative w-full sm:w-auto px-8 md:px-12 py-4 md:py-5 rounded-full bg-primary text-black font-bold text-[9px] md:text-[11px] uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-[0_0_60px_rgba(212,175,55,0.3)] inline-flex items-center justify-center gap-3 md:gap-4 overflow-hidden"
+                      className="group/btn relative w-full sm:w-auto px-6 md:px-10 py-3 md:py-4 rounded-full bg-primary text-black font-bold text-[9px] md:text-[11px] uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-[0_0_60px_rgba(212,175,55,0.3)] inline-flex items-center justify-center gap-3 md:gap-4 overflow-hidden"
                     >
                       <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
                       <span className="relative z-10">Shop Collection</span> 
@@ -330,7 +333,7 @@ const BlogDetail = () => {
                     <Link 
                       to="/products" 
                       onClick={() => { haptic("light"); window.scrollTo(0, 0); }}
-                      className="group/btn-alt w-full sm:w-auto px-8 md:px-12 py-4 md:py-5 rounded-full bg-transparent border border-white/10 text-white font-bold text-[9px] md:text-[11px] uppercase tracking-[0.2em] hover:bg-white/5 hover:border-white/20 transition-all inline-flex items-center justify-center gap-3"
+                      className="group/btn-alt w-full sm:w-auto px-6 md:px-10 py-3 md:py-4 rounded-full bg-transparent border border-white/10 text-white font-bold text-[9px] md:text-[11px] uppercase tracking-[0.2em] hover:bg-white/5 hover:border-white/20 transition-all inline-flex items-center justify-center gap-3"
                     >
                       Explore Science
                     </Link>

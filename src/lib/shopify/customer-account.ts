@@ -60,8 +60,12 @@ async function sha256(str: string) {
 }
 
 export function getRedirectUri() {
-  // Use a hardcoded redirect URI if provided in env, otherwise fallback to window.location.origin
-  // This is the most common cause of OAuth mismatches.
+  // NEW: Ensure we use the exact registered URI for production.
+  // Shopify Customer Account API requires an exact string match.
+  if (window.location.hostname === "www.norperfume.com" || window.location.hostname === "norperfume.com") {
+    return "https://www.norperfume.com/auth/callback";
+  }
+  
   const origin = window.location.origin;
   const uri = `${origin}/auth/callback`;
   console.log("📍 Computed Redirect URI:", uri);
@@ -143,6 +147,12 @@ export async function handleCallback(search: string) {
     code_verifier: verifier,
   });
 
+  console.log("🎟️ Exchanging code for token...", {
+    tokenUrl: CUSTOMER_OAUTH.token,
+    redirect_uri: getRedirectUri(),
+    codeLength: code.length
+  });
+
   const res = await fetch(CUSTOMER_OAUTH.token, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -151,10 +161,15 @@ export async function handleCallback(search: string) {
 
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`Token exchange failed (${res.status})`);
+    console.error("❌ Token Exchange Failed:", {
+      status: res.status,
+      body: txt
+    });
+    throw new Error(`Token exchange failed (${res.status}): ${txt}`);
   }
 
   const data = (await res.json()) as TokenResponse;
+  console.log("✅ Token Exchange Successful");
   persistTokens(data);
 
   const returnTo = sessionStorage.getItem(STORAGE.redirectAfter) || "/account";
