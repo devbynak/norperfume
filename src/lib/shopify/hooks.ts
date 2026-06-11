@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { buildHeroSlides, fetchHybridCollection, fetchHybridCollections, fetchHybridProduct, fetchHybridProducts } from "./shopify";
 
-const SHOPIFY_STALE_TIME = 1000 * 60 * 60 * 4; // 4 hours
-const SHOPIFY_GC_TIME = 1000 * 60 * 60 * 24; // 24 hours
+const SHOPIFY_STALE_TIME = 1000 * 60 * 60 * 24; // 24 hours
+const SHOPIFY_GC_TIME = 1000 * 60 * 60 * 48; // 48 hours
 
 // React Query layer: extra safety net on top of client-level retries.
 // Exponential backoff capped at 8s, 2 outer retries.

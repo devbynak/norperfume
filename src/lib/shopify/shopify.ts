@@ -2,6 +2,9 @@ import { type CollectionCard, type HeroSlide, type Product } from "@/data/produc
 import defaultHeroImage from "@/assets/hero-mask.jpg";
 import { shopifyQuery } from "./client";
 
+const SHOPIFY_STALE_TIME = 1000 * 60 * 60 * 24; // 24 hours
+const SHOPIFY_GC_TIME = 1000 * 60 * 60 * 48; // 48 hours
+
 type Nullable<T> = T | null;
 
 interface ShopifyImageNode {

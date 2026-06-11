@@ -19,6 +19,15 @@ export default defineConfig(({ mode }) => {
     build: {
       target: 'esnext',
       reportCompressedSize: false, // Speed up build
+      cssCodeSplit: true,
+      sourcemap: false,
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: mode === 'production',
+          drop_debugger: mode === 'production',
+        },
+      },
       rollupOptions: {
         output: {
           manualChunks(id) {
@@ -31,6 +40,9 @@ export default defineConfig(({ mode }) => {
               }
               if (id.includes('lucide-react') || id.includes('sonner') || id.includes('clsx')) {
                 return 'vendor-ui';
+              }
+              if (id.includes('@tanstack') || id.includes('axios')) {
+                return 'vendor-data';
               }
               return 'vendor';
             }
