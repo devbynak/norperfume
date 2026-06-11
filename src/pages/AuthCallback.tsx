@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleCallback, clearTokens } from "@/lib/shopify/customer-account";
+import { handleCallback, clearTokens, validateOAuthState } from "@/lib/shopify/customer-account";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { Button } from "@/components/ui/button";
 
@@ -12,11 +12,27 @@ const AuthCallback = () => {
   const ran = useRef(false);
 
   useEffect(() => {
-    console.log("📍 AuthCallback reached with params:", window.location.search);
+    const search = window.location.search;
+    console.log("📍 AuthCallback reached with params:", search);
     if (ran.current) return;
+    
+    // Immediate state check before async processing
+    const params = new URLSearchParams(search);
+    const receivedState = params.get("state");
+    
+    if (!validateOAuthState(receivedState)) {
+      setError("Invalid OAuth session (state mismatch).");
+      const expectedState = sessionStorage.getItem("voom_oauth_state");
+      setDetails(
+        `Security check failed. Received: ${receivedState || "none"}, Expected: ${expectedState || "none"}. ` +
+        `This often happens when using different subdomains (e.g., norperfume.com vs www.norperfume.com) or multiple browser tabs.`
+      );
+      return;
+    }
+
     ran.current = true;
     
-    handleCallback(window.location.search)
+    handleCallback(search)
       .then((returnTo) => {
         signalAuthenticated();
         navigate(returnTo || "/account", { replace: true });

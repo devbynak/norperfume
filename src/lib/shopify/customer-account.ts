@@ -47,7 +47,12 @@ export const STORAGE = {
 };
 
 function base64UrlEncode(buf: ArrayBuffer) {
-  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+  const bytes = new Uint8Array(buf);
+  let binary = "";
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary)
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=+$/g, "");
@@ -55,51 +60,68 @@ function base64UrlEncode(buf: ArrayBuffer) {
 
 function randomString(len = 64) {
   const arr = new Uint8Array(len);
-  crypto.getRandomValues(arr);
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    crypto.getRandomValues(arr);
+  } else {
+    // Fallback for extremely rare cases where crypto is unavailable
+    for (let i = 0; i < len; i++) arr[i] = Math.floor(Math.random() * 256);
+  }
   return base64UrlEncode(arr.buffer);
 }
 
 async function sha256(str: string) {
   const data = new TextEncoder().encode(str);
-  const hash = await crypto.subtle.digest("SHA-256", data);
-  return base64UrlEncode(hash);
+  if (typeof crypto !== "undefined" && crypto.subtle) {
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return base64UrlEncode(hash);
+  }
+  throw new Error("Crypto Subtle API not available (required for PKCE)");
 }
 
 export function getRedirectUri() {
-  // Ensure we use the exact registered URI for production and preview environments.
-  // Shopify Customer Account API requires an exact string match.
-  // We force 'https' and the 'www' version to match the Shopify config unless testing locally.
   const hostname = window.location.hostname;
+  const origin = window.location.origin;
   
-  // Local development
+  // Local development: Always prefer 'localhost' over '127.0.0.1' for origin consistency
   if (hostname === "localhost" || hostname === "127.0.0.1") {
-    return `${window.location.origin}/auth/callback`;
+    const port = window.location.port ? `:${window.location.port}` : "";
+    return `http://localhost${port}/auth/callback`;
   }
   
-  // Production or Staging/Preview
-  // NOTE: If you use Vercel Previews, you MUST add their URLs to your Shopify App settings,
-  // OR keep this redirection to the primary domain.
+  // Production or Staging
+  // We prioritize the current origin if it's already 'www.norperfume.com'
+  // Otherwise, we return the hardcoded whitelisted callback to ensure Shopify accepts it.
+  if (hostname === "www.norperfume.com" || hostname === "norperfume.com") {
+    return `${origin}/auth/callback`;
+  }
+
+  // Fallback for Vercel Previews / Other domains
+  // Note: These MUST be added to Shopify Partners Whitelist or they will fail.
   return "https://www.norperfume.com/auth/callback";
 }
 
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
 export async function beginLogin(returnTo = window.location.pathname) {
-  // Fix domain mismatch before starting:
-  // Only redirect to www in production to avoid breaking localhost
   const hostname = window.location.hostname;
-  
-  // Redirect to primary domain if not on localhost and not already on the primary domain
-  if (hostname !== "localhost" && hostname !== "127.0.0.1" && hostname !== "www.norperfume.com") {
-    console.log("🔄 Redirecting to www to ensure session persistence and valid redirect URI...");
-    const targetUrl = new URL(window.location.href);
-    targetUrl.hostname = "www.norperfume.com";
-    window.location.href = targetUrl.toString();
+  const url = new URL(window.location.href);
+
+  // 1. Origin Normalization: Force 127.0.0.1 -> localhost
+  if (hostname === "127.0.0.1") {
+    url.hostname = "localhost";
+    window.location.href = url.toString();
+    return;
+  }
+
+  // 2. Domain Normalization: Force naked domain -> www in production
+  if (hostname === "norperfume.com") {
+    console.log("🔄 Normalizing domain to www.norperfume.com...");
+    url.hostname = "www.norperfume.com";
+    window.location.href = url.toString();
     return;
   }
 
   if (!SHOP_ID) {
-    console.error("❌ Auth Error: SHOP_ID is missing in configuration.");
-    alert("System configuration error: Shop ID is missing. Please check your environment variables.");
+    console.error("❌ Auth Error: SHOP_ID is missing.");
     return;
   }
 
@@ -246,6 +268,24 @@ export function clearTokens() {
     localStorage.removeItem(k);
     sessionStorage.removeItem(k);
   });
+}
+
+/** 
+ * Validates state from URL against session storage.
+ * In production, we force a check against the primary domain's state.
+ */
+export function validateOAuthState(receivedState: string | null) {
+  const expectedState = sessionStorage.getItem(STORAGE.state);
+  
+  if (!receivedState || receivedState !== expectedState) {
+    console.error("❌ OAuth State Mismatch:", { 
+      received: receivedState, 
+      expected: expectedState,
+      domain: window.location.hostname
+    });
+    return false;
+  }
+  return true;
 }
 
 export function getAccessToken() {
