@@ -133,6 +133,11 @@ const ProductDetail = () => {
     }
   }, [currentImageIndex]);
 
+  const toggleSection = useCallback((section: string) => {
+    haptic("light");
+    setOpenSection((prev) => (prev === section ? null : section));
+  }, []);
+
   if (!product && productQuery.isLoading) {
     return (
       <main className="min-h-dvh bg-background flex items-center justify-center">
@@ -167,11 +172,6 @@ const ProductDetail = () => {
       haptic("success");
     }
   };
-
-  const toggleSection = useCallback((section: string) => {
-    haptic("light");
-    setOpenSection((prev) => (prev === section ? null : section));
-  }, []);
 
   return (
     <main ref={containerRef} className="min-h-dvh bg-background text-foreground selection:bg-primary/20 overflow-x-hidden relative">
