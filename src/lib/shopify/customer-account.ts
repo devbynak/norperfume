@@ -44,6 +44,7 @@ export const STORAGE = {
   verifier: "voom_pkce_verifier",
   state: "voom_oauth_state",
   redirectAfter: "voom_redirect_after_login",
+  loginLock: "voom_login_lock",
 };
 
 function base64UrlEncode(buf: ArrayBuffer) {
@@ -125,13 +126,21 @@ export async function beginLogin(returnTo = window.location.pathname) {
     return;
   }
 
-  const verifier = randomString(64);
-  const state = randomString(16);
+  const lockRaw = sessionStorage.getItem(STORAGE.loginLock);
+  const lockTs = lockRaw ? Number(lockRaw) : 0;
+  const lockValid = Number.isFinite(lockTs) && Date.now() - lockTs < 15_000;
+
+  const existingVerifier = sessionStorage.getItem(STORAGE.verifier);
+  const existingState = sessionStorage.getItem(STORAGE.state);
+
+  const verifier = lockValid && existingVerifier ? existingVerifier : randomString(64);
+  const state = lockValid && existingState ? existingState : randomString(16);
   const challenge = await sha256(verifier);
 
   sessionStorage.setItem(STORAGE.verifier, verifier);
   sessionStorage.setItem(STORAGE.state, state);
   sessionStorage.setItem(STORAGE.redirectAfter, returnTo);
+  sessionStorage.setItem(STORAGE.loginLock, String(Date.now()));
 
   const params = new URLSearchParams({
     scope: CUSTOMER_OAUTH.scope,
@@ -215,6 +224,7 @@ export async function handleCallback(search: string) {
     sessionStorage.removeItem(STORAGE.verifier);
     sessionStorage.removeItem(STORAGE.state);
     sessionStorage.removeItem(STORAGE.redirectAfter);
+    sessionStorage.removeItem(STORAGE.loginLock);
     
     throw new Error(`Token exchange failed (${res.status}): ${txt}`);
   }
@@ -248,6 +258,7 @@ export async function handleCallback(search: string) {
   sessionStorage.removeItem(STORAGE.verifier);
   sessionStorage.removeItem(STORAGE.state);
   sessionStorage.removeItem(STORAGE.redirectAfter);
+  sessionStorage.removeItem(STORAGE.loginLock);
   return returnTo;
 }
 

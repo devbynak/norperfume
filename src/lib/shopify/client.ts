@@ -22,9 +22,9 @@ const getEnv = (key: string): string => {
   }
   
   try {
-    // @ts-ignore
+    // @ts-expect-error process may be unavailable in browser
     if (typeof process !== 'undefined' && process.env && process.env[key]) {
-      // @ts-ignore
+      // @ts-expect-error process may be unavailable in browser
       return process.env[key];
     }
   } catch (e) {
