@@ -94,7 +94,6 @@ export async function beginLogin(returnTo = window.location.pathname) {
   // If user is on norperfume.com, redirect them to www.norperfume.com/login 
   // to ensure sessionStorage is preserved when Shopify redirects back to 'www'.
   if (window.location.hostname === "norperfume.com") {
-    console.log("🔄 Redirecting to www to ensure session persistence...");
     window.location.href = `https://www.norperfume.com/login?returnTo=${encodeURIComponent(returnTo)}`;
     return;
   }
@@ -124,12 +123,6 @@ export async function beginLogin(returnTo = window.location.pathname) {
   });
   
   const authUrl = `${CUSTOMER_OAUTH.authorize}?${params.toString()}`;
-  console.log("🚀 Initiating Shopify Login:", { 
-    redirect_uri: getRedirectUri(),
-    state,
-    returnTo 
-  });
-  
   window.location.href = authUrl;
 }
 
@@ -175,12 +168,6 @@ export async function handleCallback(search: string) {
     code_verifier: verifier,
   });
 
-  console.log("🎟️ Exchanging code for token...", {
-    tokenUrl: CUSTOMER_OAUTH.token,
-    redirect_uri: getRedirectUri(),
-    codeLength: code.length
-  });
-
   const res = await fetch(CUSTOMER_OAUTH.token, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -200,7 +187,6 @@ export async function handleCallback(search: string) {
   }
 
   const data = (await res.json()) as TokenResponse;
-  console.log("✅ Token Exchange Successful");
   persistTokens(data);
 
   const returnTo = sessionStorage.getItem(STORAGE.redirectAfter) || "/account";

@@ -129,7 +129,7 @@ const HeroCarousel = () => {
                   width={1080}
                   height={1440}
                   loading={current === 0 ? "eager" : "lazy"}
-                  {...({ fetchpriority: current === 0 ? "high" : "auto" } as any)}
+                  {...({ fetchPriority: current === 0 ? "high" : "auto" } as any)}
                   decoding="async"
                 />
               )
@@ -141,7 +141,7 @@ const HeroCarousel = () => {
                 width={1920}
                 height={1080}
                 loading={current === 0 ? "eager" : "lazy"}
-                {...({ fetchpriority: current === 0 ? "high" : "auto" } as any)}
+                {...({ fetchPriority: current === 0 ? "high" : "auto" } as any)}
                 decoding="async"
               />
             )}

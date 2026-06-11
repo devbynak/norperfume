@@ -122,7 +122,7 @@ const BlogDetail = () => {
  alt={post.title} 
  className="w-full h-full object-cover brightness-[0.5] contrast-[1.1] scale-105"
  loading="eager"
- {...({ fetchpriority: "high" } as any)}
+ {...({ fetchPriority: "high" } as any)}
  decoding="async"
  sizes="100vw"
  />

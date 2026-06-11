@@ -162,13 +162,16 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = async () => {
-    await addItem(product, qty);
+    if (product) {
+      await addItem(product, qty);
+      haptic("success");
+    }
   };
 
-  const toggleSection = (section: string) => {
+  const toggleSection = useCallback((section: string) => {
     haptic("light");
-    setOpenSection(openSection === section ? null : section);
-  };
+    setOpenSection((prev) => (prev === section ? null : section));
+  }, []);
 
   return (
     <main ref={containerRef} className="min-h-dvh bg-background text-foreground selection:bg-primary/20 overflow-x-hidden relative">
@@ -214,7 +217,7 @@ const ProductDetail = () => {
                         alt={`${product.name} - view ${i + 1}`}
                         className="w-full h-full object-cover select-none pointer-events-none"
                         loading={i === 0 ? "eager" : "lazy"}
-                        {...({ fetchpriority: i === 0 ? "high" : "auto" } as any)}
+                        {...({ fetchPriority: i === 0 ? "high" : "auto" } as any)}
                       />
                     </motion.div>
                   ))}
@@ -437,7 +440,7 @@ const ProductDetail = () => {
                           </span>
                         </div>
                         <ChevronDown className={cn(
-                          "w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/20 transition-all duration-700 ease-&lsqb;0.16,1,0.3,1&rsqb;", 
+                          "w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/20 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]", 
                           openSection === section.id && "rotate-180 text-primary scale-125"
                         )} />
                       </button>
@@ -513,7 +516,7 @@ const ProductDetail = () => {
                   <img 
                     src={item.image} 
                     alt={item.name} 
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-105" 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform [transition-duration:3s] group-hover:scale-110" 
                     loading="lazy"
                   />
 

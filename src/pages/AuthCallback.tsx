@@ -13,7 +13,6 @@ const AuthCallback = () => {
 
   useEffect(() => {
     const search = window.location.search;
-    console.log("📍 AuthCallback reached with params:", search);
     
     if (ran.current) return;
     ran.current = true;

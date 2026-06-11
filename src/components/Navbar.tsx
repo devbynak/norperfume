@@ -125,7 +125,7 @@ const Navbar = () => {
                   src={logo} 
                   alt="NOR" 
                   className="h-9 w-auto sm:h-11 md:h-12 lg:h-14 object-contain transition-all duration-300 group-hover:scale-110 group-active:scale-95 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" 
-                  {...({ fetchpriority: "high" } as any)}
+                  {...({ fetchPriority: "high" } as any)}
                 />
               </Link>
 
