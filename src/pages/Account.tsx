@@ -68,13 +68,28 @@ const Account = () => {
 
   useEffect(() => {
     if (authLoading) return;
+    
+    // If not authenticated, we'll let the component render the "null" state
+    // which effectively hides the account details.
+    // We don't want to auto-redirect here because it can cause loops 
+    // during the logout process.
     if (!isAuthenticated) {
-      login("/account");
       return;
     }
+    
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, authLoading]);
+
+  const handleLogout = () => {
+    haptic("medium");
+    try {
+      logout();
+    } catch (e) {
+      console.error("Logout failed:", e);
+      navigate("/", { replace: true });
+    }
+  };
 
   const saveProfile = async () => {
     setSavingProfile(true);
@@ -150,8 +165,46 @@ const Account = () => {
     }
   };
 
-  if (authLoading || !isAuthenticated || loading) {
+  if (authLoading) {
     return null;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-dvh bg-background text-foreground flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center px-5 pt-32 pb-24">
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <User className="w-8 h-8 text-primary" />
+            </div>
+            <h1 className="text-3xl font-serif tracking-tight">Your Session</h1>
+            <p className="text-muted-foreground">
+              Please sign in to view your orders, profile, and addresses.
+            </p>
+            <button
+              onClick={() => login("/account")}
+              className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-primary text-primary-foreground font-medium transition-transform hover:scale-105"
+            >
+              Sign In
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-dvh bg-background text-foreground flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   const inputCls =
@@ -384,10 +437,7 @@ const Account = () => {
         </div>
 
         <button
-          onClick={() => {
-            logout();
-            navigate("/", { replace: true });
-          }}
+          onClick={handleLogout}
           className="inline-flex items-center gap-2 h-11 px-5 rounded-full border border-white/15 hover:bg-white/5 text-sm tracking-wide"
         >
           <LogOut className="w-4 h-4" />

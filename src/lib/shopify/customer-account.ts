@@ -219,7 +219,14 @@ function persistTokens(data: TokenResponse) {
 }
 
 function getLogoutRedirectUri() {
-  return `${window.location.origin}/`;
+  // Use current origin, but normalize norperfume.com to www.norperfume.com
+  // to match whitelisted redirect URIs in Shopify and ensure Vercel 
+  // correctly handles the landing page.
+  // We remove the trailing slash to stay consistent with vercel.json "trailingSlash": false
+  if (window.location.hostname === "norperfume.com") {
+    return "https://www.norperfume.com";
+  }
+  return window.location.origin;
 }
 
 export function clearTokens() {
@@ -278,7 +285,12 @@ export function logout() {
   const idToken = localStorage.getItem(STORAGE.idToken);
   clearTokens();
   if (!idToken) {
-    window.location.assign("/");
+    // Redirect to home with domain normalization
+    if (window.location.hostname === "norperfume.com") {
+      window.location.assign("https://www.norperfume.com");
+    } else {
+      window.location.assign("/");
+    }
     return;
   }
 
