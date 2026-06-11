@@ -54,7 +54,6 @@ const Navbar = () => {
   const menuItems = [
     { label: "Home", href: "/", external: false },
     { label: "Products", href: "/products", external: false },
-    { label: "Blogs", href: "/blogs", external: false },
     { label: "FAQ", href: "/faq", external: false },
     { label: "About Us", href: "/about", external: false },
     { label: "Track My Order", href: "/track-order", external: false },
@@ -144,7 +143,7 @@ const Navbar = () => {
                 />
                 <button
                   onClick={goToAccount}
-                  className="outline-none"
+                  className="hidden sm:block outline-none"
                   aria-label={isAuthenticated ? "Open account" : "Login"}
                 >
                   <User className={`w-5 h-5 transition-colors ${isAuthenticated ? "text-primary" : "text-foreground/70 hover:text-foreground"}`} />

@@ -79,6 +79,17 @@ export function getRedirectUri() {
 
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
 export async function beginLogin(returnTo = window.location.pathname) {
+  // Clear any existing partial/old session before starting new login
+  sessionStorage.removeItem(STORAGE.verifier);
+  sessionStorage.removeItem(STORAGE.state);
+  sessionStorage.removeItem(STORAGE.redirectAfter);
+
+  // Add preconnect to Shopify auth domain immediately
+  const preconnect = document.createElement('link');
+  preconnect.rel = 'preconnect';
+  preconnect.href = 'https://shopify.com';
+  document.head.appendChild(preconnect);
+
   // Fix domain mismatch before starting:
   // If user is on norperfume.com, redirect them to www.norperfume.com/login 
   // to ensure sessionStorage is preserved when Shopify redirects back to 'www'.
@@ -145,6 +156,9 @@ export async function handleCallback(search: string) {
 
   if (!state || state !== expectedState) {
     console.error("❌ OAuth Callback Error: State mismatch.", { received: state, expected: expectedState });
+    // Clean up to allow retry
+    sessionStorage.removeItem(STORAGE.state);
+    sessionStorage.removeItem(STORAGE.verifier);
     throw new Error("Invalid OAuth session (state mismatch).");
   }
 
@@ -179,6 +193,9 @@ export async function handleCallback(search: string) {
       status: res.status,
       body: txt
     });
+    // Clean up to allow retry
+    sessionStorage.removeItem(STORAGE.state);
+    sessionStorage.removeItem(STORAGE.verifier);
     throw new Error(`Token exchange failed (${res.status}): ${txt}`);
   }
 
@@ -206,10 +223,15 @@ function getLogoutRedirectUri() {
 }
 
 export function clearTokens() {
+  if (typeof window === 'undefined') return;
+  // Clear all storage keys defined in STORAGE
   Object.values(STORAGE).forEach((k) => {
     localStorage.removeItem(k);
     sessionStorage.removeItem(k);
   });
+  // Clear any legacy keys just in case
+  localStorage.removeItem("customer_token");
+  localStorage.removeItem("customer_refresh_token");
 }
 
 export function getAccessToken() {
@@ -217,9 +239,14 @@ export function getAccessToken() {
 }
 
 export function isAuthenticated() {
+  if (typeof window === 'undefined') return false;
   const t = getAccessToken();
-  const exp = Number(localStorage.getItem(STORAGE.expiresAt) || 0);
-  const isValid = Boolean(t) && Date.now() < exp;
+  const expStr = localStorage.getItem(STORAGE.expiresAt);
+  if (!t || !expStr) return false;
+  
+  const exp = Number(expStr);
+  const isValid = Date.now() < exp;
+  
   return isValid;
 }
 

@@ -30,26 +30,39 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setIsAuthenticated(checkAuth());
-    setAccessToken(getAccessToken());
-    setIsLoading(false);
+  const refreshState = useCallback(() => {
+    const authed = checkAuth();
+    const token = getAccessToken();
+    setIsAuthenticated(authed);
+    setAccessToken(token);
+    return { authed, token };
   }, []);
+
+  useEffect(() => {
+    refreshState();
+    setIsLoading(false);
+
+    // Listen for storage changes (e.g. from other tabs or manual cleanup)
+    const handleStorage = () => refreshState();
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [refreshState]);
 
   const login = useCallback((returnTo?: string) => {
     void beginLogin(returnTo || window.location.pathname);
   }, []);
 
   const logout = useCallback(() => {
+    // Optimistic UI update
     setIsAuthenticated(false);
     setAccessToken(null);
+    // Trigger real logout
     oauthLogout();
   }, []);
 
   const signalAuthenticated = useCallback(() => {
-    setIsAuthenticated(checkAuth());
-    setAccessToken(getAccessToken());
-  }, []);
+    refreshState();
+  }, [refreshState]);
 
   return (
     <CustomerAuthContext.Provider
