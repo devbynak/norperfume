@@ -41,15 +41,28 @@ const AuthCallback = () => {
       })
       .catch((e) => {
         console.error("❌ Auth Callback Failed:", e);
+        // Added diagnostic info for debugging on mobile devices
+        const diag = {
+          storageType: localStorage.getItem("voom_oauth_state") ? 'localStorage' : 'sessionStorage',
+          hasVerifier: !!(localStorage.getItem("voom_pkce_verifier") || sessionStorage.getItem("voom_pkce_verifier")),
+          hasState: !!(localStorage.getItem("voom_oauth_state") || sessionStorage.getItem("voom_oauth_state")),
+          hostname: window.location.hostname
+        };
+        console.info("🔍 Auth Diagnostic:", diag);
+        
         setError("Unable to complete sign-in");
-        setDetails(e.message || "Unknown error occurred during authentication.");
+        setDetails(`${e.message || "Unknown error"}. (Diag: ${diag.storageType}/${diag.hasVerifier ? 'V' : 'v'}/${diag.hasState ? 'S' : 's'})`);
       });
   }, [navigate, signalAuthenticated]);
 
  const handleRetry = () => {
- clearTokens();
- sessionStorage.clear();
- navigate("/login", { replace: true });
+   clearTokens();
+   // Clear any stuck PKCE state from both storages
+   localStorage.removeItem("voom_pkce_verifier");
+   localStorage.removeItem("voom_oauth_state");
+   sessionStorage.removeItem("voom_pkce_verifier");
+   sessionStorage.removeItem("voom_oauth_state");
+   navigate("/login", { replace: true });
  };
 
  return (

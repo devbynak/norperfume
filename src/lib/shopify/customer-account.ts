@@ -80,9 +80,12 @@ export function getRedirectUri() {
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
 export async function beginLogin(returnTo = window.location.pathname) {
   // Clear any existing partial/old session before starting new login
-  sessionStorage.removeItem(STORAGE.verifier);
-  sessionStorage.removeItem(STORAGE.state);
-  sessionStorage.removeItem(STORAGE.redirectAfter);
+  // We use localStorage instead of sessionStorage for PKCE state to improve 
+  // reliability on mobile browsers (like iPhone Google App) where 
+  // sessionStorage might be cleared during redirects.
+  localStorage.removeItem(STORAGE.verifier);
+  localStorage.removeItem(STORAGE.state);
+  localStorage.removeItem(STORAGE.redirectAfter);
 
   // Add preconnect to Shopify auth domain immediately
   const preconnect = document.createElement('link');
@@ -92,7 +95,7 @@ export async function beginLogin(returnTo = window.location.pathname) {
 
   // Fix domain mismatch before starting:
   // If user is on norperfume.com, redirect them to www.norperfume.com/login 
-  // to ensure sessionStorage is preserved when Shopify redirects back to 'www'.
+  // to ensure state is preserved when Shopify redirects back to 'www'.
   if (window.location.hostname === "norperfume.com") {
     window.location.href = `https://www.norperfume.com/login?returnTo=${encodeURIComponent(returnTo)}`;
     return;
@@ -104,13 +107,20 @@ export async function beginLogin(returnTo = window.location.pathname) {
     return;
   }
 
+  // Check for crypto.subtle support (required for PKCE)
+  if (!window.crypto || !window.crypto.subtle) {
+    console.error("❌ Auth Error: window.crypto.subtle is not available.");
+    alert("Your browser security settings or version do not support secure login. Please try using Safari or Chrome directly.");
+    return;
+  }
+
   const verifier = randomString(64);
   const state = randomString(16);
   const challenge = await sha256(verifier);
 
-  sessionStorage.setItem(STORAGE.verifier, verifier);
-  sessionStorage.setItem(STORAGE.state, state);
-  sessionStorage.setItem(STORAGE.redirectAfter, returnTo);
+  localStorage.setItem(STORAGE.verifier, verifier);
+  localStorage.setItem(STORAGE.state, state);
+  localStorage.setItem(STORAGE.redirectAfter, returnTo);
 
   const params = new URLSearchParams({
     scope: CUSTOMER_OAUTH.scope,
@@ -139,8 +149,14 @@ export async function handleCallback(search: string) {
   const params = new URLSearchParams(search);
   const code = params.get("code");
   const state = params.get("state");
-  const expectedState = sessionStorage.getItem(STORAGE.state);
-  const verifier = sessionStorage.getItem(STORAGE.verifier);
+  
+  // Try reading from localStorage first (new robust way)
+  let expectedState = localStorage.getItem(STORAGE.state);
+  let verifier = localStorage.getItem(STORAGE.verifier);
+  
+  // Fallback to sessionStorage for backward compatibility during transition
+  if (!expectedState) expectedState = sessionStorage.getItem(STORAGE.state);
+  if (!verifier) verifier = sessionStorage.getItem(STORAGE.verifier);
 
   if (!code) {
     console.error("❌ OAuth Callback Error: No code received from Shopify.");
@@ -148,15 +164,21 @@ export async function handleCallback(search: string) {
   }
 
   if (!state || state !== expectedState) {
-    console.error("❌ OAuth Callback Error: State mismatch.", { received: state, expected: expectedState });
+    console.error("❌ OAuth Callback Error: State mismatch.", { 
+      received: state, 
+      expected: expectedState,
+      source: localStorage.getItem(STORAGE.state) ? 'localStorage' : 'sessionStorage'
+    });
     // Clean up to allow retry
+    localStorage.removeItem(STORAGE.state);
+    localStorage.removeItem(STORAGE.verifier);
     sessionStorage.removeItem(STORAGE.state);
     sessionStorage.removeItem(STORAGE.verifier);
-    throw new Error("Invalid OAuth session (state mismatch).");
+    throw new Error("Invalid OAuth session (state mismatch). This can happen if the browser session was reset or if cookies are restricted.");
   }
 
   if (!verifier) {
-    console.error("❌ OAuth Callback Error: PKCE verifier missing from sessionStorage.");
+    console.error("❌ OAuth Callback Error: PKCE verifier missing.");
     throw new Error("Security verification failed (verifier missing).");
   }
 
@@ -181,18 +203,24 @@ export async function handleCallback(search: string) {
       body: txt
     });
     // Clean up to allow retry
-    sessionStorage.removeItem(STORAGE.state);
-    sessionStorage.removeItem(STORAGE.verifier);
-    throw new Error(`Token exchange failed (${res.status}): ${txt}`);
+    localStorage.removeItem(STORAGE.state);
+    localStorage.removeItem(STORAGE.verifier);
+    throw new Error(`Token exchange failed (${res.status}). Please try logging in again.`);
   }
 
   const data = (await res.json()) as TokenResponse;
   persistTokens(data);
 
-  const returnTo = sessionStorage.getItem(STORAGE.redirectAfter) || "/account";
+  const returnTo = localStorage.getItem(STORAGE.redirectAfter) || sessionStorage.getItem(STORAGE.redirectAfter) || "/account";
+  
+  // Clean up PKCE state
+  localStorage.removeItem(STORAGE.verifier);
+  localStorage.removeItem(STORAGE.state);
+  localStorage.removeItem(STORAGE.redirectAfter);
   sessionStorage.removeItem(STORAGE.verifier);
   sessionStorage.removeItem(STORAGE.state);
   sessionStorage.removeItem(STORAGE.redirectAfter);
+  
   return returnTo;
 }
 

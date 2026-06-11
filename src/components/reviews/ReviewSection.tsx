@@ -64,72 +64,72 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
     if (signal?.aborted) return;
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/reviews?product_id=${encodeURIComponent(productId)}&page=${page}`, { signal });
-      if (signal?.aborted) return;
+      // Improved Local Detection: Check for localhost, 127.0.0.1, or private network IPs
+      const isLocalDev = 
+        window.location.hostname === 'localhost' || 
+        window.location.hostname === '127.0.0.1' || 
+        /^192\.168\./.test(window.location.hostname) ||
+        /^10\./.test(window.location.hostname) ||
+        window.location.port === '8082';
       
-      let apiData = { reviews: [], stats: { averageRating: 0, totalReviews: 0 }, pagination: { page: 1, pages: 1 } };
-      
-      if (res.ok) {
-        const contentType = res.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          apiData = await res.json();
-        } else {
-          // Silent fallback for non-JSON (likely HTML error pages in local dev)
+      let allCombined: Review[] = [];
+
+      if (!isLocalDev) {
+        try {
+          const res = await fetch(`/api/reviews?product_id=${encodeURIComponent(productId)}&page=${page}`, { signal });
+          if (signal?.aborted) return;
+          
+          if (res.ok) {
+            const contentType = res.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+              const apiData = await res.json();
+              const apiReviews = apiData.reviews || [];
+              const realApiReviews = apiReviews.filter((r: any) => !r.id.startsWith('mock-'));
+              allCombined = [...realApiReviews];
+            }
+          }
+        } catch (e) {
+          console.warn("Review API failed, using mocks:", e);
         }
       }
 
-      // 2. Get mock reviews from local data
+      // Always include local mocks
       const localMockReviews = getMockReviewsForProduct(productId);
-
-      // 3. Combine and sort (if API failed, we just use local mocks)
-      // Note: If API worked, it already has mocks in the current implementation, 
-      // but we'll merge them here to be safe and ensure they show up in local dev.
-      const apiReviews = apiData.reviews || [];
-      
-      // Filter out mocks from API to avoid double-counting if API is already including them
-      const realApiReviews = apiReviews.filter((r: any) => !r.id.startsWith('mock-'));
-      
-      const allCombined = [...realApiReviews, ...localMockReviews].sort(
+      allCombined = [...allCombined, ...localMockReviews].sort(
         (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
-
-      // 4. Update stats based on combined data
-      const total = allCombined.length;
-      const avg = total > 0 
-        ? (allCombined.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1) 
-        : 0;
-
-      // 5. Apply frontend pagination for now to ensure local dev works perfectly
-      const limit = 10;
-      const pCount = Math.ceil(total / limit);
-      const paginated = allCombined.slice((page - 1) * limit, page * limit);
-
-      setReviews(paginated);
-      const newStats = {
-        averageRating: parseFloat(avg as string),
-        totalReviews: total
-      };
-      setStats(newStats);
-      onStatsChange?.(newStats);
-      setPagination({
-        page,
-        pages: pCount
-      });
+      
+      updateStateWithReviews(allCombined, page);
     } catch (error) {
       if ((error as Error).name === 'AbortError') return;
-      // Fallback to only mock reviews if API fails completely
       const localMockReviews = getMockReviewsForProduct(productId);
-      const total = localMockReviews.length;
-      const avg = total > 0 ? (localMockReviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1) : 0;
-      
-      const fallbackStats = { averageRating: parseFloat(avg as string), totalReviews: total };
-      setReviews(localMockReviews.slice(0, 10));
-      setStats(fallbackStats);
-      onStatsChange?.(fallbackStats);
-      setPagination({ page: 1, pages: Math.ceil(total / 10) });
+      updateStateWithReviews(localMockReviews, page);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const updateStateWithReviews = (allReviews: Review[], page: number) => {
+    const total = allReviews.length;
+    const avg = total > 0 
+      ? (allReviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1) 
+      : 0;
+
+    const limit = 10;
+    const pCount = Math.ceil(total / limit);
+    const paginated = allReviews.slice((page - 1) * limit, page * limit);
+
+    setReviews(paginated);
+    const newStats = {
+      averageRating: parseFloat(avg as string),
+      totalReviews: total
+    };
+    setStats(newStats);
+    onStatsChange?.(newStats);
+    setPagination({
+      page,
+      pages: pCount
+    });
   };
 
   const checkEligibility = async (signal?: AbortSignal) => {
@@ -143,6 +143,21 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
 
     setIsCheckingEligibility(true);
     try {
+      // Improved Local Detection: Check for localhost, 127.0.0.1, or private network IPs
+      const isLocalDev = 
+        window.location.hostname === 'localhost' || 
+        window.location.hostname === '127.0.0.1' || 
+        /^192\.168\./.test(window.location.hostname) ||
+        /^10\./.test(window.location.hostname) ||
+        window.location.port === '8082';
+
+      if (isLocalDev) {
+        setIsEligible(false);
+        setHasReviewed(false);
+        setResolvedCustomerId(null);
+        return;
+      }
+
       const res = await fetch(`/api/review/eligibility?product_id=${encodeURIComponent(productId)}&customer_id=${encodeURIComponent(customerId)}`, { signal });
       if (signal?.aborted) return;
       const data = await res.json();
