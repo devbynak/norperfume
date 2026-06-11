@@ -24,10 +24,15 @@ export function diagnoseAuthEnvironment() {
   if (typeof window === 'undefined') return;
   
   const isBrave = (navigator as any).brave !== undefined;
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const hasContentBlocker = !document.getElementById('root'); // Simple heuristic
 
   if (isBrave) {
     console.warn("🛡️ Brave Browser detected. If login fails, try disabling 'Shields' for this site as it may block Shopify's auth scripts.");
+  }
+
+  if (isSafari) {
+    console.warn("🛡️ Safari detected. If login fails, ensure 'Prevent Cross-Site Tracking' is disabled or try a different browser.");
   }
 }
 
@@ -66,12 +71,14 @@ export function getRedirectUri() {
   // We force 'https' and the 'www' version to match the Shopify config unless testing locally.
   const hostname = window.location.hostname;
   
-  // If we are on localhost, use the local origin. Otherwise, force the production callback
-  // because Shopify only allows explicitly whitelisted redirect URIs.
+  // Local development
   if (hostname === "localhost" || hostname === "127.0.0.1") {
     return `${window.location.origin}/auth/callback`;
   }
   
+  // Production or Staging/Preview
+  // NOTE: If you use Vercel Previews, you MUST add their URLs to your Shopify App settings,
+  // OR keep this redirection to the primary domain.
   return "https://www.norperfume.com/auth/callback";
 }
 
@@ -81,6 +88,7 @@ export async function beginLogin(returnTo = window.location.pathname) {
   // Only redirect to www in production to avoid breaking localhost
   const hostname = window.location.hostname;
   
+  // Redirect to primary domain if not on localhost and not already on the primary domain
   if (hostname !== "localhost" && hostname !== "127.0.0.1" && hostname !== "www.norperfume.com") {
     console.log("🔄 Redirecting to www to ensure session persistence and valid redirect URI...");
     const targetUrl = new URL(window.location.href);
@@ -201,14 +209,17 @@ export async function handleCallback(search: string) {
       // If it's a full URL, extract just the pathname + search
       if (savedReturnTo.startsWith("http")) {
         const url = new URL(savedReturnTo);
+        // Only allow redirection to the same origin for security
         if (url.origin === window.location.origin) {
           returnTo = url.pathname + url.search;
+        } else {
+          console.warn("🛡️ Sanitizing external redirect URL:", savedReturnTo);
         }
       } else if (savedReturnTo.startsWith("/")) {
         returnTo = savedReturnTo;
       }
     } catch (e) {
-      // Fallback to /account on parse error
+      console.error("❌ Failed to parse returnTo URL:", e);
     }
   }
 
