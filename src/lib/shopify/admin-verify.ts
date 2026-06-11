@@ -4,9 +4,9 @@
 
 import { SHOPIFY_CONFIG } from './client.js';
 
-const SHOP = process.env.VITE_SHOPIFY_DOMAIN || process.env.SHOP || SHOPIFY_CONFIG.domain;
-const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN;
-const SHOP_ID = process.env.VITE_SHOPIFY_SHOP_ID || SHOPIFY_CONFIG.shopId;
+const SHOP = SHOPIFY_CONFIG.domain;
+const SHOP_ID = SHOPIFY_CONFIG.shopId;
+const ADMIN_API_TOKEN = (typeof globalThis !== 'undefined' ? (globalThis as any).process?.env?.ADMIN_API_TOKEN : undefined);
 
 /**
  * Resolves a Customer GID from an access token using the Customer Account API.

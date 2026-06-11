@@ -8,27 +8,22 @@ const DEFAULT_SHOPIFY_CONFIG = {
 
 // Helper to get environment variables safely across Browser (Vite) and Node (Vercel)
 const getEnv = (key: string): string => {
-  const meta = (import.meta as any);
-  
-  // Static access for common keys to ensure Vite replaces them at build time
+  // Use import.meta.env for Vite build-time replacement
   if (key === 'VITE_SHOPIFY_DOMAIN') return import.meta.env.VITE_SHOPIFY_DOMAIN || "";
   if (key === 'VITE_SHOPIFY_API_VERSION') return import.meta.env.VITE_SHOPIFY_API_VERSION || "";
   if (key === 'VITE_SHOPIFY_ACCESS_TOKEN') return import.meta.env.VITE_SHOPIFY_ACCESS_TOKEN || "";
   if (key === 'VITE_SHOPIFY_PUBLIC_CLIENT_ID') return import.meta.env.VITE_SHOPIFY_PUBLIC_CLIENT_ID || "";
   if (key === 'VITE_SHOPIFY_SHOP_ID') return import.meta.env.VITE_SHOPIFY_SHOP_ID || "";
 
-  if (typeof meta !== 'undefined' && meta.env && meta.env[key]) {
-    return meta.env[key];
-  }
-  
+  // Fallback to process.env for Node/Vercel environments
   try {
-    // @ts-expect-error process may be unavailable in browser
-    if (typeof process !== 'undefined' && process.env && process.env[key]) {
-      // @ts-expect-error process may be unavailable in browser
-      return process.env[key];
+    const globalEnv = (typeof globalThis !== 'undefined' ? globalThis : {}) as any;
+    const processEnv = globalEnv.process?.env;
+    if (processEnv && processEnv[key]) {
+      return processEnv[key];
     }
   } catch (e) {
-    // Fallback for environments where process might be restricted
+    // Ignore errors
   }
   
   return "";

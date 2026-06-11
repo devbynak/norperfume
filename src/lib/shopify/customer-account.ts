@@ -12,9 +12,10 @@ export const CUSTOMER_OAUTH = {
   logout: `https://shopify.com/${SHOP_ID}/auth/logout`,
   graphql: `https://shopify.com/${SHOP_ID}/account/customer/api/${CUSTOMER_API_VERSION}/graphql`,
   clientId: SHOPIFY_CONFIG.publicClientId,
-  // Scope: Only request 'openid email' to avoid "invalid scope" errors.
-  // API access is usually granted automatically to the client ID in Shopify Admin.
-  scope: "openid email",
+  // Required scopes for Customer Account API:
+  //  - openid + email: identity
+  //  - https://api.customers.com/auth/customer.graphql: GraphQL access to /account/customer/api
+  scope: "openid email https://api.customers.com/auth/customer.graphql",
 };
 
 /** 
@@ -24,15 +25,10 @@ export function diagnoseAuthEnvironment() {
   if (typeof window === 'undefined') return;
   
   const isBrave = (navigator as any).brave !== undefined;
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const hasContentBlocker = !document.getElementById('root'); // Simple heuristic
 
   if (isBrave) {
     console.warn("🛡️ Brave Browser detected. If login fails, try disabling 'Shields' for this site as it may block Shopify's auth scripts.");
-  }
-
-  if (isSafari) {
-    console.warn("🛡️ Safari detected. If login fails, ensure 'Prevent Cross-Site Tracking' is disabled or try a different browser.");
   }
 }
 
@@ -44,7 +40,6 @@ export const STORAGE = {
   verifier: "voom_pkce_verifier",
   state: "voom_oauth_state",
   redirectAfter: "voom_redirect_after_login",
-  loginLock: "voom_login_lock",
 };
 
 function base64UrlEncode(buf: ArrayBuffer) {
@@ -61,86 +56,51 @@ function base64UrlEncode(buf: ArrayBuffer) {
 
 function randomString(len = 64) {
   const arr = new Uint8Array(len);
-  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
-    crypto.getRandomValues(arr);
-  } else {
-    // Fallback for extremely rare cases where crypto is unavailable
-    for (let i = 0; i < len; i++) arr[i] = Math.floor(Math.random() * 256);
-  }
+  crypto.getRandomValues(arr);
   return base64UrlEncode(arr.buffer);
 }
 
 async function sha256(str: string) {
   const data = new TextEncoder().encode(str);
-  if (typeof crypto !== "undefined" && crypto.subtle) {
-    const hash = await crypto.subtle.digest("SHA-256", data);
-    return base64UrlEncode(hash);
-  }
-  throw new Error("Crypto Subtle API not available (required for PKCE)");
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return base64UrlEncode(hash);
 }
 
 export function getRedirectUri() {
-  const hostname = window.location.hostname;
-  const origin = window.location.origin;
-  
-  // Local development: Always prefer 'localhost' over '127.0.0.1' for origin consistency
-  if (hostname === "localhost" || hostname === "127.0.0.1") {
-    const port = window.location.port ? `:${window.location.port}` : "";
-    return `http://localhost${port}/auth/callback`;
+  // Always use the current origin so previews, staging, and production
+  // all work as long as each origin is registered in the Shopify app.
+  // For the apex production domain, normalise to www to match the
+  // single registered redirect URI.
+  if (window.location.hostname === "norperfume.com") {
+    return "https://www.norperfume.com/auth/callback";
   }
-  
-  // Production or Staging
-  // We prioritize the current origin if it's already 'www.norperfume.com'
-  // Otherwise, we return the hardcoded whitelisted callback to ensure Shopify accepts it.
-  if (hostname === "www.norperfume.com" || hostname === "norperfume.com") {
-    return `${origin}/auth/callback`;
-  }
-
-  // Fallback for Vercel Previews / Other domains
-  // Note: These MUST be added to Shopify Partners Whitelist or they will fail.
-  return "https://www.norperfume.com/auth/callback";
+  return `${window.location.origin}/auth/callback`;
 }
 
 /** Begin login: build PKCE pair, persist verifier + state, redirect to Shopify. */
 export async function beginLogin(returnTo = window.location.pathname) {
-  const hostname = window.location.hostname;
-  const url = new URL(window.location.href);
-
-  // 1. Origin Normalization: Force 127.0.0.1 -> localhost
-  if (hostname === "127.0.0.1") {
-    url.hostname = "localhost";
-    window.location.href = url.toString();
-    return;
-  }
-
-  // 2. Domain Normalization: Force naked domain -> www in production
-  if (hostname === "norperfume.com") {
-    console.log("🔄 Normalizing domain to www.norperfume.com...");
-    url.hostname = "www.norperfume.com";
-    window.location.href = url.toString();
+  // Fix domain mismatch before starting:
+  // If user is on norperfume.com, redirect them to www.norperfume.com/login 
+  // to ensure sessionStorage is preserved when Shopify redirects back to 'www'.
+  if (window.location.hostname === "norperfume.com") {
+    console.log("🔄 Redirecting to www to ensure session persistence...");
+    window.location.href = `https://www.norperfume.com/login?returnTo=${encodeURIComponent(returnTo)}`;
     return;
   }
 
   if (!SHOP_ID) {
-    console.error("❌ Auth Error: SHOP_ID is missing.");
+    console.error("❌ Auth Error: SHOP_ID is missing in configuration.");
+    alert("System configuration error: Shop ID is missing. Please check your environment variables.");
     return;
   }
 
-  const lockRaw = sessionStorage.getItem(STORAGE.loginLock);
-  const lockTs = lockRaw ? Number(lockRaw) : 0;
-  const lockValid = Number.isFinite(lockTs) && Date.now() - lockTs < 15_000;
-
-  const existingVerifier = sessionStorage.getItem(STORAGE.verifier);
-  const existingState = sessionStorage.getItem(STORAGE.state);
-
-  const verifier = lockValid && existingVerifier ? existingVerifier : randomString(64);
-  const state = lockValid && existingState ? existingState : randomString(16);
+  const verifier = randomString(64);
+  const state = randomString(16);
   const challenge = await sha256(verifier);
 
   sessionStorage.setItem(STORAGE.verifier, verifier);
   sessionStorage.setItem(STORAGE.state, state);
   sessionStorage.setItem(STORAGE.redirectAfter, returnTo);
-  sessionStorage.setItem(STORAGE.loginLock, String(Date.now()));
 
   const params = new URLSearchParams({
     scope: CUSTOMER_OAUTH.scope,
@@ -217,15 +177,8 @@ export async function handleCallback(search: string) {
     const txt = await res.text();
     console.error("❌ Token Exchange Failed:", {
       status: res.status,
-      body: txt,
+      body: txt
     });
-    
-    // Clear storage on failure to prevent stale state issues
-    sessionStorage.removeItem(STORAGE.verifier);
-    sessionStorage.removeItem(STORAGE.state);
-    sessionStorage.removeItem(STORAGE.redirectAfter);
-    sessionStorage.removeItem(STORAGE.loginLock);
-    
     throw new Error(`Token exchange failed (${res.status}): ${txt}`);
   }
 
@@ -233,32 +186,10 @@ export async function handleCallback(search: string) {
   console.log("✅ Token Exchange Successful");
   persistTokens(data);
 
-  const savedReturnTo = sessionStorage.getItem(STORAGE.redirectAfter);
-  let returnTo = "/account";
-  
-  if (savedReturnTo) {
-    try {
-      // If it's a full URL, extract just the pathname + search
-      if (savedReturnTo.startsWith("http")) {
-        const url = new URL(savedReturnTo);
-        // Only allow redirection to the same origin for security
-        if (url.origin === window.location.origin) {
-          returnTo = url.pathname + url.search;
-        } else {
-          console.warn("🛡️ Sanitizing external redirect URL:", savedReturnTo);
-        }
-      } else if (savedReturnTo.startsWith("/")) {
-        returnTo = savedReturnTo;
-      }
-    } catch (e) {
-      console.error("❌ Failed to parse returnTo URL:", e);
-    }
-  }
-
+  const returnTo = sessionStorage.getItem(STORAGE.redirectAfter) || "/account";
   sessionStorage.removeItem(STORAGE.verifier);
   sessionStorage.removeItem(STORAGE.state);
   sessionStorage.removeItem(STORAGE.redirectAfter);
-  sessionStorage.removeItem(STORAGE.loginLock);
   return returnTo;
 }
 
@@ -281,38 +212,14 @@ export function clearTokens() {
   });
 }
 
-/** 
- * Validates state from URL against session storage.
- * In production, we force a check against the primary domain's state.
- */
-export function validateOAuthState(receivedState: string | null) {
-  const expectedState = sessionStorage.getItem(STORAGE.state);
-  
-  if (!receivedState || receivedState !== expectedState) {
-    console.error("❌ OAuth State Mismatch:", { 
-      received: receivedState, 
-      expected: expectedState,
-      domain: window.location.hostname
-    });
-    return false;
-  }
-  return true;
-}
-
 export function getAccessToken() {
   return localStorage.getItem(STORAGE.accessToken);
 }
 
 export function isAuthenticated() {
   const t = getAccessToken();
-  const expStr = localStorage.getItem(STORAGE.expiresAt);
-  if (!t || !expStr) return false;
-  
-  const exp = Number(expStr);
-  const isValid = Date.now() < exp;
-  
-  // If token is expired but we have a refresh token, we technically still have a session
-  // that can be revived. However, for UI state, we treat it as unauthenticated until refreshed.
+  const exp = Number(localStorage.getItem(STORAGE.expiresAt) || 0);
+  const isValid = Boolean(t) && Date.now() < exp;
   return isValid;
 }
 
