@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import type { CollectionCard as ShopifyCollectionCard } from "@/data/products";
@@ -47,7 +48,7 @@ function CollectionTile({
       >
         <img
           src={collection.image}
-          alt={collection.title}
+          alt={`Explore ${collection.title} collection of car perfumes`}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />

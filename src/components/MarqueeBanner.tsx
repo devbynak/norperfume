@@ -1,3 +1,5 @@
+import React from "react";
+
 const MarqueeBanner = ({ items, className = "" }: { items: string[]; className?: string }) => {
   const content = (
     <div className="flex items-center shrink-0">

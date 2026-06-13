@@ -29,7 +29,7 @@ import { haptic } from "@/lib/haptics";
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
   const { accessToken } = useCustomerAuth();
   const [qty, setQty] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -43,6 +43,17 @@ const ProductDetail = () => {
   const product = productQuery.data;
   const catalog = catalogQuery.data || [];
   const recommended = catalog.filter((item) => item.id !== product?.id).slice(0, 3);
+
+  const cartItem = items.find((item) => item.product.id === product?.id);
+  const inCartQty = cartItem?.quantity || 0;
+
+  // Reset quantity and state when navigating between different products
+  useEffect(() => {
+    setQty(1);
+    setCurrentImageIndex(0);
+    setOpenSection(null);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [id]);
 
   const allImages = product?.images?.length ? product.images : (product?.image ? [product.image] : []);
 
@@ -214,7 +225,7 @@ const ProductDetail = () => {
                     >
                       <img
                         src={img}
-                        alt={`${product.name} - view ${i + 1}`}
+                        alt={`${product.name} luxury car perfume - view ${i + 1}`}
                         className="w-full h-full object-cover select-none pointer-events-none"
                         loading={i === 0 ? "eager" : "lazy"}
                         {...({ fetchPriority: i === 0 ? "high" : "auto" } as any)}
@@ -294,7 +305,18 @@ const ProductDetail = () => {
                   </div>
                   
                   <div className="space-y-2 sm:space-y-3">
-                    <p className="text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-primary font-bold ml-0.5">The NOR Signature</p>
+                    <div className="flex items-center gap-3">
+                      <p className="text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-primary font-bold ml-0.5">The NOR Signature</p>
+                      {inCartQty > 0 && (
+                        <motion.span 
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[8px] tracking-widest text-primary font-bold uppercase"
+                        >
+                          {inCartQty} in cart
+                        </motion.span>
+                      )}
+                    </div>
                     <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[0.85] sm:leading-[0.8] tracking-tighter uppercase italic break-words">
                       {product.name}
                     </h1>
@@ -314,32 +336,32 @@ const ProductDetail = () => {
                     )}
                   </div>
 
-                  <div className="flex flex-row gap-3 sm:gap-5 items-center w-full">
+                  <div className="flex flex-row gap-2 sm:gap-5 items-center w-full">
                     {/* Quantity: Responsive width */}
-                    <div className="flex items-center justify-between bg-white/[0.03] border border-white/10 rounded-full px-3 sm:px-6 h-14 sm:h-16 w-[40%] sm:w-[30%] shrink-0 backdrop-blur-xl transition-all hover:bg-white/[0.05]">
+                    <div className="flex items-center justify-between bg-white/[0.03] border border-white/10 rounded-full px-2 sm:px-6 h-12 sm:h-16 w-[35%] sm:w-[30%] shrink-0 backdrop-blur-xl transition-all hover:bg-white/[0.05]">
                       <button 
                         aria-label="Decrease quantity"
                         onClick={() => { haptic("light"); setQty(Math.max(1, qty - 1)); }} 
-                        className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center text-white/40 hover:text-primary transition-colors active:scale-90"
+                        className="w-7 sm:w-10 h-7 sm:h-10 flex items-center justify-center text-white/40 hover:text-primary transition-colors active:scale-90"
                       >
-                        <Minus className="w-4 h-4" />
+                        <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </button>
-                      <span className="font-numbers-inter font-bold text-sm sm:text-xl tabular-nums">{qty}</span>
+                      <span className="font-numbers-inter font-bold text-xs sm:text-xl tabular-nums">{qty}</span>
                       <button 
                         aria-label="Increase quantity"
                         onClick={() => { haptic("light"); setQty(qty + 1); }} 
-                        className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center text-white/40 hover:text-primary transition-colors active:scale-90"
+                        className="w-7 sm:w-10 h-7 sm:h-10 flex items-center justify-center text-white/40 hover:text-primary transition-colors active:scale-90"
                       >
-                        <Plus className="w-4 h-4" />
+                        <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </button>
                     </div>
                     {/* Add to Cart: Remaining width */}
                     <Button
                       onClick={() => { haptic("success"); handleAddToCart(); }}
                       disabled={!product.availableForSale}
-                      className="flex-1 h-14 sm:h-16 gradient-gold text-primary-foreground font-bold text-[10px] sm:text-xs tracking-[0.3em] rounded-full hover:scale-[1.01] transition-all active:scale-[0.98] gap-3 sm:gap-4 shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.3)]"
+                      className="flex-1 h-12 sm:h-16 gradient-gold text-primary-foreground font-bold text-[8px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] rounded-full hover:scale-[1.01] transition-all active:scale-[0.98] gap-2 sm:gap-4 shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.3)]"
                     >
-                      <ShoppingBag className="w-5 h-5" />
+                      <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
                       <span className="truncate">
                         {product.availableForSale ? "ADD TO CART" : "OUT OF STOCK"}
                       </span>
@@ -501,7 +523,7 @@ const ProductDetail = () => {
               <h2 className="font-display text-3xl sm:text-6xl md:text-7xl text-white tracking-tight italic uppercase">Recommended</h2>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 md:gap-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-12 md:gap-16">
               {recommended.slice(0, 2).map((item, idx) => (
                 <motion.div
                   key={item.id}
@@ -509,7 +531,7 @@ const ProductDetail = () => {
                   whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   viewport={{ once: true, margin: "-10%" }}
                   transition={{ delay: idx * 0.1, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="group relative aspect-square md:aspect-[4/3] rounded-[2rem] md:rounded-[3.5rem] overflow-hidden cursor-pointer shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] w-full transition-all duration-700 border border-white/5 hover:border-primary/20"
+                  className="group relative aspect-[4/5] sm:aspect-square md:aspect-[4/3] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] overflow-hidden cursor-pointer shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] w-full transition-all duration-700 border border-white/5 hover:border-primary/20"
                   onClick={() => { haptic("medium"); navigate(`/product/${item.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 >
                   {/* Background Image */}
@@ -525,23 +547,23 @@ const ProductDetail = () => {
 
                   {/* Gold Discount Badge (Top Right) */}
                   {item.discount && (
-                    <div className="absolute top-6 right-6 z-10 bg-primary text-black text-[10px] sm:text-xs font-bold px-4 py-2 rounded-full shadow-lg backdrop-blur-md">
+                    <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 bg-primary text-black text-[9px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg backdrop-blur-md">
                       {item.discount}% OFF
                     </div>
                   )}
 
                   {/* Content Overlay (Bottom Left & Right) */}
-                  <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 flex items-end justify-between gap-6 z-20">
-                    <div className="space-y-2">
-                      <h3 className="font-display text-2xl sm:text-4xl md:text-5xl text-white font-bold tracking-widest uppercase leading-tight">
+                  <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 md:p-12 flex items-end justify-between gap-4 sm:gap-6 z-20">
+                    <div className="space-y-1 sm:space-y-2">
+                      <h3 className="font-display text-xl sm:text-4xl md:text-5xl text-white font-bold tracking-widest uppercase leading-tight">
                         {item.name}
                       </h3>
-                      <div className="flex items-baseline gap-4">
-                        <span className="text-white font-bold text-xl sm:text-3xl md:text-4xl font-numbers-inter">
+                      <div className="flex items-baseline gap-3 sm:gap-4">
+                        <span className="text-white font-bold text-lg sm:text-3xl md:text-4xl font-numbers-inter">
                           {formatCurrency(item.price, item.currencyCode)}
                         </span>
                         {item.originalPrice && (
-                          <span className="text-white/20 line-through text-xs sm:text-lg md:text-xl font-light font-numbers-inter">
+                          <span className="text-white/20 line-through text-[10px] sm:text-lg md:text-xl font-light font-numbers-inter">
                             {formatCurrency(item.originalPrice, item.currencyCode)}
                           </span>
                         )}
@@ -554,10 +576,10 @@ const ProductDetail = () => {
                         haptic("success");
                         void addItem(item);
                       }}
-                      className="w-12 h-12 sm:w-16 sm:h-20 rounded-full bg-primary text-black flex items-center justify-center shadow-2xl hover:scale-110 transition-all duration-500 active:scale-95 shrink-0 group/btn"
+                      className="w-10 h-10 sm:w-16 sm:h-20 rounded-full bg-primary text-black flex items-center justify-center shadow-2xl hover:scale-110 transition-all duration-500 active:scale-95 shrink-0 group/btn"
                       aria-label="Add to cart"
                     >
-                      <ShoppingBag className="w-6 h-6 sm:w-8 sm:h-10 group-hover/btn:rotate-12 transition-transform" />
+                      <ShoppingBag className="w-5 h-5 sm:w-8 sm:h-10 group-hover/btn:rotate-12 transition-transform" />
                     </button>
                   </div>
                 </motion.div>

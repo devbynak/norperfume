@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { useLocation } from "react-router-dom";
 import { trackPageView } from "@/lib/meta-pixel";

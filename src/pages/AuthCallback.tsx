@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleCallback, clearTokens } from "@/lib/shopify/customer-account";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
@@ -37,15 +37,19 @@ const AuthCallback = () => {
           returnTo.startsWith("/auth/callback")
             ? "/account"
             : returnTo;
-        navigate(safe, { replace: true });
+        
+        // Force a small delay to ensure React state has settled before navigating on mobile
+        setTimeout(() => {
+          navigate(safe, { replace: true });
+        }, 100);
       })
       .catch((e) => {
         console.error("❌ Auth Callback Failed:", e);
         // Added diagnostic info for debugging on mobile devices
         const diag = {
-          storageType: localStorage.getItem("voom_oauth_state") ? 'localStorage' : 'sessionStorage',
-          hasVerifier: !!(localStorage.getItem("voom_pkce_verifier") || sessionStorage.getItem("voom_pkce_verifier")),
-          hasState: !!(localStorage.getItem("voom_oauth_state") || sessionStorage.getItem("voom_oauth_state")),
+          storageType: localStorage.getItem("nor_oauth_state") ? 'localStorage' : 'sessionStorage',
+          hasVerifier: !!(localStorage.getItem("nor_pkce_verifier") || sessionStorage.getItem("nor_pkce_verifier")),
+          hasState: !!(localStorage.getItem("nor_oauth_state") || sessionStorage.getItem("nor_oauth_state")),
           hostname: window.location.hostname
         };
         console.info("🔍 Auth Diagnostic:", diag);
@@ -58,10 +62,10 @@ const AuthCallback = () => {
  const handleRetry = () => {
    clearTokens();
    // Clear any stuck PKCE state from both storages
-   localStorage.removeItem("voom_pkce_verifier");
-   localStorage.removeItem("voom_oauth_state");
-   sessionStorage.removeItem("voom_pkce_verifier");
-   sessionStorage.removeItem("voom_oauth_state");
+   localStorage.removeItem("nor_pkce_verifier");
+   localStorage.removeItem("nor_oauth_state");
+   sessionStorage.removeItem("nor_pkce_verifier");
+   sessionStorage.removeItem("nor_oauth_state");
    navigate("/login", { replace: true });
  };
 

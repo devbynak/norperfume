@@ -1,6 +1,6 @@
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useTransform, animate, useInView, useScroll } from "framer-motion";
 import { FlaskConical, Timer } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 const SprayIcon = ({ className }: { className?: string }) => (
   <svg 
@@ -98,8 +98,9 @@ const ExperienceSection = () => {
         >
           <img 
             src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop" 
-            alt="Luxury Car Interior Background" 
-            className="w-full h-[120%] object-cover"
+            alt="Luxury car interior featuring premium craftsmanship"
+            loading="lazy"
+            className="w-full h-full object-cover"
           />
         </motion.div>
 
@@ -117,7 +118,7 @@ const ExperienceSection = () => {
               <p className="text-[9px] tracking-[0.4em] uppercase text-primary font-bold">The Experience</p>
             </div>
             
-            <h2 className="font-display text-6xl md:text-8xl text-white leading-[0.9] tracking-tight flex flex-col">
+            <h2 className="font-display text-4xl sm:text-6xl md:text-8xl text-white leading-[0.9] tracking-tight flex flex-col">
               <span>More Than</span>
               <span className="font-light text-white/60">Just a Scent.</span>
             </h2>
@@ -144,16 +145,16 @@ const ExperienceSection = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    className="group relative flex items-center gap-10"
+                    className="group relative flex items-center gap-6 sm:gap-10"
                   >
                     {/* Icon Container (Circle) */}
                     <div className="relative shrink-0">
-                      <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full border transition-all duration-700 flex items-center justify-center relative z-10 ${
+                      <div className={`w-14 h-14 sm:w-20 sm:h-20 rounded-full border transition-all duration-700 flex items-center justify-center relative z-10 ${
                         isActive 
                           ? "bg-primary/10 border-primary/40" 
                           : "bg-white/[0.03] border-white/10 group-hover:border-white/20"
                       }`}>
-                        <f.icon className={`w-6 h-6 md:w-7 md:h-7 transition-all duration-700 ${
+                        <f.icon className={`w-5 h-5 sm:w-7 sm:h-7 transition-all duration-700 ${
                           isActive ? "text-primary" : "text-white/30 group-hover:text-white/50"
                         } stroke-[1.25px]`} />
                       </div>

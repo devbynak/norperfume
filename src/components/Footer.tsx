@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Mail, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
@@ -97,7 +97,7 @@ const Footer = () => {
               
               <img 
                 src="/5.png" 
-                alt="NOR PERFUME" 
+                alt="NOR PERFUME Logo - Luxury Car Fragrance" 
                 className="h-16 md:h-24 w-auto group-hover:scale-105 transition-transform duration-500 relative z-10" 
                 loading="lazy"
                 decoding="async"

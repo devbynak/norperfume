@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Star, MessageSquare, ShieldCheck, Trash2, Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -299,7 +299,7 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
           >
             <div 
               ref={scrollRef}
-              className="flex gap-6 overflow-x-auto pb-6 pt-4 px-1 scrollbar-hide snap-x snap-mandatory overscroll-x-contain touch-pan-x"
+              className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-4 px-1 scrollbar-hide snap-x snap-mandatory overscroll-x-contain touch-pan-x"
             >
               {reviews.map((review, idx) => (
                 <motion.div 
@@ -309,9 +309,9 @@ export const ReviewSection = ({ productId, customerId, canWriteReview: initialCa
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="min-w-[300px] md:min-w-[400px] max-w-[400px] snap-center will-change-transform"
+                  className="min-w-[calc(100vw-3rem)] sm:min-w-[400px] max-w-[400px] snap-center will-change-transform"
                 >
-                  <div className="h-full bg-[#121212] border border-white/[0.05] p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] relative group/card hover:border-primary/20 transition-all duration-700">
+                  <div className="h-full bg-[#121212] border border-white/[0.05] p-5 sm:p-8 rounded-[1.5rem] md:rounded-[2rem] relative group/card hover:border-primary/20 transition-all duration-700">
                     <div className="flex flex-col h-full">
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex gap-0.5 pt-1">

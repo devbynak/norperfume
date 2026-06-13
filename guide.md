@@ -1,4 +1,4 @@
-# VOOM — Customer Account API Setup Guide
+# NOR PERFUME — Customer Account API Setup Guide
 
 This guide explains how to wire the **Shopify Customer Account API** to the
 custom `/account`, `/orders`, `/login`, and `/auth/callback` pages built into
@@ -30,10 +30,10 @@ In the same Customer Account API client settings, add the following
 |---|---|
 | Local dev | `http://localhost:8080/auth/callback` (use whatever port Vite prints) |
 | Lovable preview | `https://id-preview--<your-project-id>.lovable.app/auth/callback` |
-| Production | `https://voomcare.com/auth/callback` (replace with your domain) |
+| Production | `https://www.norperfume.com/auth/callback` (replace with your domain) |
 
 Also add the **Logout URI** for each environment (same path as the origin,
-e.g. `https://voomcare.com`).
+e.g. `https://www.norperfume.com`).
 
 ## 3. Paste the credentials in the codebase
 
@@ -42,7 +42,7 @@ Open **`src/lib/shopify/client.ts`** and update the constants inside
 
 ```ts
 const DEFAULT_SHOPIFY_CONFIG = {
-  domain: "shop.voomcare.com",
+  domain: "nor-perfume-4.myshopify.com",
   apiVersion: "2024-04",
   accessToken: "<storefront-api-token>",
   publicClientId: "<PASTE CUSTOMER ACCOUNT API CLIENT ID HERE>",
@@ -63,7 +63,7 @@ For multi-environment deploys, prefer `.env` overrides so prod and preview can
 use different clients. Add to `.env.local` (and Vercel env vars):
 
 ```
-VITE_SHOPIFY_DOMAIN=shop.voomcare.com
+VITE_SHOPIFY_DOMAIN=nor-perfume-4.myshopify.com
 VITE_SHOPIFY_ACCESS_TOKEN=<storefront-api-token>
 ```
 

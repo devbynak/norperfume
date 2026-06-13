@@ -124,7 +124,7 @@ const HeroCarousel = () => {
               ) : (
                 <img
                   src={currentSlide.mobileImage || currentSlide.image}
-                  alt={currentSlide.title}
+                  alt={`Experience ${currentSlide.title} luxury car fragrance`}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                   width={1080}
                   height={1440}
@@ -136,7 +136,7 @@ const HeroCarousel = () => {
             ) : (
               <img
                 src={currentSlide.image}
-                alt={currentSlide.title}
+                alt={`Premium car perfume: ${currentSlide.title}`}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                 width={1920}
                 height={1080}
@@ -168,7 +168,7 @@ const HeroCarousel = () => {
           
           <img 
             src="/5.png" 
-            alt="NOR PERFUME" 
+            alt="NOR PERFUME Logo - Premium Car Fragrances Official" 
             className="w-auto h-[clamp(6rem,20vw,14rem)] filter drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] relative z-10" 
             loading="eager"
           />
@@ -179,7 +179,7 @@ const HeroCarousel = () => {
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ delay: 0.2, duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(1.1rem,3.2vw,1.8rem)] text-foreground/80 max-w-2xl mx-auto leading-relaxed tracking-normal font-light"
+            className="text-[clamp(0.9rem,3.2vw,1.6rem)] text-foreground/80 max-w-2xl mx-auto leading-relaxed tracking-normal font-light px-4"
           >
             {currentSlide.description}
           </motion.p>
@@ -189,10 +189,11 @@ const HeroCarousel = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-6 md:mt-10"
         >
           <Link
             to="/products"
-            className="-mt-32 px-8 py-3 md:px-12 md:py-3.5 glass-card rounded-full text-foreground text-[11px] md:text-[12px] font-medium tracking-wide hover:bg-white/10 transition-all duration-500 backdrop-blur-md inline-block whitespace-nowrap"
+            className="px-8 py-3 md:px-12 md:py-3.5 glass-card rounded-full text-foreground text-[10px] md:text-[12px] font-medium tracking-[0.2em] uppercase hover:bg-white/10 transition-all duration-500 backdrop-blur-md inline-block whitespace-nowrap"
           >
             Explore NOR
           </Link>

@@ -3,7 +3,7 @@
 ## 1. What is Google Merchant Center?
 Google Merchant Center is a tool that helps you upload your store and product data to Google and make it available for Shopping ads and other Google services. 
 
-For **VOOM**, this is the bridge between your website and the "Shopping" tab on Google Search results.
+For **NOR PERFUME**, this is the bridge between your website and the "Shopping" tab on Google Search results.
 
 ## 2. Why is this needed? (The Importance)
 *   **Visual Search Results**: Unlike regular text SEO, GMC allows your products to appear with **Images, Prices, and Ratings** at the very top of Google.
@@ -18,11 +18,11 @@ For **VOOM**, this is the bridge between your website and the "Shopping" tab on 
 ### Step 1: Create the Account
 1.  Go to [merchants.google.com](https://merchants.google.com).
 2.  Sign in with the **same email address** used for Google Search Console.
-3.  Enter your Business Information (Business Name: **VOOM**, Country: **India**).
+3.  Enter your Business Information (Business Name: **NOR PERFUME**, Country: **India**).
 
 ### Step 2: Verify and Claim your Website
 1.  In GMC, go to **Settings > Business Information > Website**.
-2.  Enter `https://voomcare.com`.
+2.  Enter `https://www.norperfume.com`.
 3.  Choose the option to verify via **Google Search Console**.
 4.  Since we have already verified the Search Console, simply click **"Verify"** and then **"Claim Website."**
 
@@ -34,13 +34,13 @@ For **VOOM**, this is the bridge between your website and the "Shopping" tab on 
 4.  Set Tax settings to "India" (standard GST).
 
 ### Step 4: Add Products (The Data Feed)
-For a small, premium collection like VOOM, the **Google Sheets method** is recommended:
+For a small, premium collection like NOR PERFUME, the **Google Sheets method** is recommended:
 1.  Go to **Products > Feeds**.
 2.  Click the **[+]** button to add a new primary feed.
 3.  Select **Google Sheets** and click "Generate a new Google spreadsheet from a template."
 4.  Open the sheet and fill in the following for each product:
-    *   **id**: (e.g., VOOM-SHAMPOO-01)
-    *   **title**: (e.g., VOOM Premium Car Shampoo - 100ml)
+    *   **id**: (e.g., NOR-PERFUME-01)
+    *   **title**: (e.g., NOR PERFUME Premium Car Fragrance - AQUA NOR)
     *   **description**: (Use the SEO description we wrote)
     *   **link**: (The URL to the product page)
     *   **image_link**: (The URL to the product photo)

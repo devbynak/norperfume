@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
@@ -20,6 +21,10 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
         }
       ]
     },
@@ -40,6 +45,74 @@
           "value": "public, max-age=86400"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "norperfume.com"
+        }
+      ],
+      "destination": "https://www.norperfume.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/admin",
+      "destination": "https://nor-perfume-4.myshopify.com/admin",
+      "permanent": true
+    },
+    {
+      "source": "/checkout",
+      "destination": "https://nor-perfume-4.myshopify.com/checkout",
+      "permanent": false
+    },
+    {
+      "source": "/cart",
+      "destination": "https://nor-perfume-4.myshopify.com/cart",
+      "permanent": false
+    },
+    {
+      "source": "/track",
+      "destination": "/track-order",
+      "permanent": true
+    },
+    {
+      "source": "/products/:path*",
+      "destination": "/product/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/pages/about",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/pages/contact",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/pages/faq",
+      "destination": "/faq",
+      "permanent": true
+    },
+    {
+      "source": "/pages/track-order",
+      "destination": "/track-order",
+      "permanent": true
+    },
+    {
+      "source": "/pages/:path*",
+      "destination": "/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)/",
+      "destination": "/$1",
+      "permanent": true
     }
   ],
   "rewrites": [

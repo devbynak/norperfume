@@ -1,3 +1,4 @@
+import React from "react";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -20,10 +21,10 @@ const ProductCard = ({ product }: { product: Product }) => {
       onClick={() => navigate(`/product/${product.id}`)}
     >
       {/* Image Container */}
-      <div className="relative aspect-[3/4] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]">
+      <div className="relative aspect-[3/4] rounded-[1.25rem] sm:rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]">
         <img
           src={product.image}
-          alt={product.name}
+          alt={`Luxury car perfume: ${product.name}`}
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
         />
@@ -33,18 +34,18 @@ const ProductCard = ({ product }: { product: Product }) => {
 
         {/* Gold Discount Badge */}
         {product.discount && (
-          <span className="absolute top-4 left-4 z-10 bg-primary text-black text-[10px] md:text-[11px] font-bold px-3 py-1.5 rounded-full shadow-xl backdrop-blur-md">
+          <span className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-primary text-black text-[8px] sm:text-[10px] md:text-[11px] font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-xl backdrop-blur-md">
             -{product.discount}%
           </span>
         )}
 
         {/* Price Overlay (Bottom Left of Image) */}
-        <div className="absolute bottom-4 left-4 flex items-baseline gap-2 z-10">
-          <span className="text-primary font-bold text-lg md:text-xl font-numbers-inter">
+        <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 flex items-baseline gap-1.5 sm:gap-2 z-10">
+          <span className="text-primary font-bold text-sm sm:text-lg md:text-xl font-numbers-inter">
             {formatCurrency(product.price, product.currencyCode)}
           </span>
           {product.originalPrice && (
-            <span className="text-white/40 line-through text-[10px] md:text-xs font-light font-numbers-inter">
+            <span className="text-white/40 line-through text-[8px] sm:text-[10px] md:text-xs font-light font-numbers-inter">
               {formatCurrency(product.originalPrice, product.currencyCode)}
             </span>
           )}
@@ -52,8 +53,8 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
 
       {/* Info Below Image */}
-      <div className="flex items-center justify-between px-2">
-        <h4 className="font-display text-sm md:text-lg text-white font-bold tracking-widest uppercase truncate flex-1">
+      <div className="flex items-center justify-between px-1 sm:px-2">
+        <h4 className="font-display text-[10px] sm:text-sm md:text-lg text-white font-bold tracking-widest uppercase truncate flex-1">
           {product.name}
         </h4>
         
@@ -62,10 +63,10 @@ const ProductCard = ({ product }: { product: Product }) => {
             event.stopPropagation();
             void addItem(product);
           }}
-          className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary text-black flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-500 active:scale-95 shrink-0 group/btn"
+          className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-primary text-black flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-500 active:scale-95 shrink-0 group/btn"
           aria-label="Add to cart"
         >
-          <ShoppingBag className="w-5 h-5 md:w-6 md:h-6 group-hover/btn:rotate-12 transition-transform" />
+          <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover/btn:rotate-12 transition-transform" />
         </button>
       </div>
     </motion.div>
@@ -76,29 +77,29 @@ const ProductGrid = () => {
   const { data: products = [], isLoading } = useCollectionProducts("best-seller");
 
   return (
-    <section id="collections" className="py-12 md:py-32 relative overflow-hidden bg-white/[0.01] backdrop-blur-md bg-gradient-to-b from-white/[0.02] via-transparent to-transparent">
+    <section id="collections" className="py-8 md:py-32 relative overflow-hidden bg-white/[0.01] backdrop-blur-md bg-gradient-to-b from-white/[0.02] via-transparent to-transparent">
       {/* Top & Bottom Section Blends */}
-      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-background via-background/50 to-transparent pointer-events-none z-10" />
+      <div className="absolute top-0 left-0 right-0 h-20 md:h-40 bg-gradient-to-b from-background via-background/50 to-transparent pointer-events-none z-10" />
       
       {/* Bottom Blend Effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/50 to-transparent pointer-events-none z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-20 md:h-40 bg-gradient-to-t from-background via-background/50 to-transparent pointer-events-none z-10" />
 
-      <div className="max-w-7xl mx-auto px-4 mb-10 md:mb-20 text-center relative z-20">
-        <p className="text-[10px] md:text-[13px] tracking-[0.3em] uppercase font-medium text-primary/80 mb-2 md:mb-3">The Elite Edit</p>
-        <h2 className="font-display text-2xl md:text-5xl lg:text-6xl text-foreground font-bold tracking-tight">
+      <div className="max-w-7xl mx-auto px-4 mb-8 md:mb-20 text-center relative z-20">
+        <p className="text-[9px] md:text-[13px] tracking-[0.3em] uppercase font-medium text-primary/80 mb-2 md:mb-3">The Elite Edit</p>
+        <h2 className="font-display text-xl md:text-5xl lg:text-6xl text-foreground font-bold tracking-tight">
           Best Sellers
         </h2>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 relative z-20">
         {isLoading && !products.length ? (
-          <div className="min-h-[600px] flex items-center justify-center">
+          <div className="min-h-[400px] md:min-h-[600px] flex items-center justify-center">
             <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
           </div>
         ) : !products.length && !isLoading ? (
           null
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 lg:gap-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 md:gap-10">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

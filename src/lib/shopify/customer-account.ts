@@ -33,13 +33,13 @@ export function diagnoseAuthEnvironment() {
 }
 
 export const STORAGE = {
-  accessToken: "voom_customer_access_token",
-  refreshToken: "voom_customer_refresh_token",
-  idToken: "voom_customer_id_token",
-  expiresAt: "voom_customer_expires_at",
-  verifier: "voom_pkce_verifier",
-  state: "voom_oauth_state",
-  redirectAfter: "voom_redirect_after_login",
+  accessToken: "nor_customer_access_token",
+  refreshToken: "nor_customer_refresh_token",
+  idToken: "nor_customer_id_token",
+  expiresAt: "nor_customer_expires_at",
+  verifier: "nor_pkce_verifier",
+  state: "nor_oauth_state",
+  redirectAfter: "nor_redirect_after_login",
 };
 
 function base64UrlEncode(buf: ArrayBuffer) {
@@ -86,6 +86,10 @@ export async function beginLogin(returnTo = window.location.pathname) {
   localStorage.removeItem(STORAGE.verifier);
   localStorage.removeItem(STORAGE.state);
   localStorage.removeItem(STORAGE.redirectAfter);
+  // Also clear session storage to be sure
+  sessionStorage.removeItem(STORAGE.verifier);
+  sessionStorage.removeItem(STORAGE.state);
+  sessionStorage.removeItem(STORAGE.redirectAfter);
 
   // Add preconnect to Shopify auth domain immediately
   const preconnect = document.createElement('link');
@@ -121,6 +125,15 @@ export async function beginLogin(returnTo = window.location.pathname) {
   localStorage.setItem(STORAGE.verifier, verifier);
   localStorage.setItem(STORAGE.state, state);
   localStorage.setItem(STORAGE.redirectAfter, returnTo);
+  
+  // Double-store in sessionStorage as a fallback for some older iOS browsers
+  try {
+    sessionStorage.setItem(STORAGE.verifier, verifier);
+    sessionStorage.setItem(STORAGE.state, state);
+    sessionStorage.setItem(STORAGE.redirectAfter, returnTo);
+  } catch (e) {
+    // Ignore if session storage is disabled
+  }
 
   const params = new URLSearchParams({
     scope: CUSTOMER_OAUTH.scope,

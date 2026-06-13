@@ -1,3 +1,4 @@
+import React from "react";
 import { Truck, ShieldCheck, Headphones } from "lucide-react";
 import { motion } from "framer-motion";
 

@@ -33,7 +33,7 @@ const CartDrawer = () => {
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetContent 
         side="right" 
-        className="bg-[#0d0d0d]/80 backdrop-blur-[32px] border-l border-white/10 w-full sm:max-w-md flex flex-col p-0 overflow-hidden shadow-2xl shadow-black/50 !rounded-none"
+        className="bg-[#0d0d0d]/80 backdrop-blur-[32px] border-l border-white/10 w-full sm:max-w-md flex flex-col p-0 overflow-hidden shadow-2xl shadow-black/50 !rounded-none pb-[env(safe-area-inset-bottom,0px)]"
       >
         {/* Subtle background light gradients - matching side menu */}
         <div className="absolute top-[0%] right-[0%] w-[250px] h-[250px] bg-primary/15 rounded-full blur-[100px] pointer-events-none" />
@@ -159,7 +159,7 @@ const CartDrawer = () => {
               </div>
             </ScrollArea>
 
-            <div className="px-5 pb-8 pt-4 bg-white/[0.02] backdrop-blur-xl relative z-10 space-y-4">
+            <div className="px-5 pb-8 sm:pb-10 pt-4 bg-white/[0.02] backdrop-blur-xl relative z-10 space-y-4 mb-[env(safe-area-inset-bottom,0px)]">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground text-[10px] md:text-sm font-medium tracking-wide uppercase">Subtotal</span>

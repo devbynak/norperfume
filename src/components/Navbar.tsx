@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, Search, User, ShoppingBag, X, Package, ChevronLeft, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -72,8 +72,8 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed left-0 right-0 z-50 px-4 py-2 lg:px-4 lg:py-1 top-[max(0.75rem,env(safe-area-inset-top))]">
-        <div className="max-w-7xl lg:max-w-4xl mx-auto flex items-center justify-between bg-surface-glass rounded-full px-6 py-3 lg:px-5 lg:py-1 relative border border-white/5 shadow-2xl shadow-black/40 backdrop-blur-md">
+      <nav className="fixed left-0 right-0 z-50 px-4 py-2 lg:px-4 lg:py-1 top-[max(0.75rem,env(safe-area-inset-top,0px))]">
+        <div className="max-w-7xl lg:max-w-4xl mx-auto flex items-center justify-between bg-surface-glass rounded-full px-4 sm:px-6 py-2.5 sm:py-3 lg:px-5 lg:py-1 relative border border-white/5 shadow-2xl shadow-black/40 backdrop-blur-md">
           {mobileSearchActive ? (
             <div className="w-full flex items-center gap-3 z-10 py-1">
               <button 
@@ -124,7 +124,7 @@ const Navbar = () => {
                 <img 
                   src={logo} 
                   alt="NOR" 
-                  className="h-9 w-auto sm:h-11 md:h-12 lg:h-14 object-contain transition-all duration-300 group-hover:scale-110 group-active:scale-95 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" 
+                  className="h-8 sm:h-11 md:h-12 lg:h-14 w-auto object-contain transition-all duration-300 group-hover:scale-110 group-active:scale-95 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" 
                   {...({ fetchPriority: "high" } as any)}
                 />
               </Link>
@@ -176,7 +176,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed top-24 left-4 right-4 z-40 bg-[#0d0d0d]/90 backdrop-blur-[32px] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl max-h-[60vh] overflow-y-auto p-4 space-y-3 sm:hidden scrollbar-hide"
+            className="fixed top-[calc(max(0.75rem,env(safe-area-inset-top,0px))+4rem)] left-4 right-4 z-40 bg-[#0d0d0d]/90 backdrop-blur-[32px] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl max-h-[60vh] overflow-y-auto p-4 space-y-3 sm:hidden scrollbar-hide"
           >
             <div className="flex items-center justify-between px-2 mb-2">
               <p className="text-[10px] font-display tracking-[0.3em] uppercase text-white/40">Results ({filteredProducts.length})</p>
