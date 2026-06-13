@@ -100,7 +100,7 @@ const Blogs = () => {
  <motion.img 
  src={featuredPost.image} 
  alt={featuredPost.title}
- className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3s] ease-out"
+ className="w-full h-full object-cover group-hover:scale-105 transition-transform [transition-duration:3s] ease-out"
  />
  
  <div className="absolute inset-0 z-20 p-8 md:p-24 flex flex-col justify-end">
@@ -160,7 +160,7 @@ const Blogs = () => {
  <motion.img 
  src={post.image} 
  alt={post.title}
- className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s] ease-out opacity-60 group-hover:opacity-100 transition-opacity"
+ className="w-full h-full object-cover group-hover:scale-110 transition-transform [transition-duration:2s] ease-out opacity-60 group-hover:opacity-100 transition-opacity"
  />
  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-1000" />
  </div>

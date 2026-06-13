@@ -462,7 +462,7 @@ const ProductDetail = () => {
                           </span>
                         </div>
                         <ChevronDown className={cn(
-                          "w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/20 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]", 
+                          "w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/20 transition-all duration-700 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]", 
                           openSection === section.id && "rotate-180 text-primary scale-125"
                         )} />
                       </button>
@@ -530,7 +530,7 @@ const ProductDetail = () => {
                   initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
                   whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   viewport={{ once: true, margin: "-10%" }}
-                  transition={{ delay: idx * 0.1, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   className="group relative aspect-[4/5] sm:aspect-square md:aspect-[4/3] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] overflow-hidden cursor-pointer shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] w-full transition-all duration-700 border border-white/5 hover:border-primary/20"
                   onClick={() => { haptic("medium"); navigate(`/product/${item.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 >

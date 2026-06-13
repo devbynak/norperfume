@@ -26,7 +26,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           src={product.image}
           alt={`Luxury car perfume: ${product.name}`}
           loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform [transition-duration:1500ms] ease-out"
         />
 
         {/* Refined Dark Gradient Overlay */}

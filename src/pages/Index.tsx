@@ -135,7 +135,7 @@ const Index = () => {
                       src={post.image} 
                       alt={post.title} 
                       loading="lazy"
-                      className="w-full h-full object-cover brightness-[0.6] group-hover:scale-110 transition-transform duration-[1500ms]"
+                      className="w-full h-full object-cover brightness-[0.6] group-hover:scale-110 transition-transform [transition-duration:1500ms]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                     <div className="absolute top-8 left-8">

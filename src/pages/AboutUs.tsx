@@ -152,7 +152,7 @@ const AboutUs = () => {
                 <img 
                   src="/Gemini_Generated_Image_q98tdsq98tdsq98t.jpg" 
                   alt="Botanical Extraction" 
-                  className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-110 transition-all duration-[2s]"
+                  className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-110 transition-all [transition-duration:2s]"
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-1000" />
               </div>
@@ -181,7 +181,7 @@ const AboutUs = () => {
                 <img 
                   src="/IMG_9413.jpg" 
                   alt="NOORUL AMEEN KASIM" 
-                  className="w-full h-full object-cover grayscale brightness-75 contrast-[1.1] group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-[2s]"
+                  className="w-full h-full object-cover grayscale brightness-75 contrast-[1.1] group-hover:grayscale-0 group-hover:brightness-100 transition-all [transition-duration:2s]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
               </div>
@@ -252,7 +252,7 @@ const AboutUs = () => {
                     src={v.image} 
                     alt={v.title}
                     loading="lazy"
-                    className="w-full h-full object-cover grayscale brightness-[0.3] group-hover:grayscale-0 group-hover:brightness-50 group-hover:scale-110 transition-all duration-[2s] ease-out"
+                    className="w-full h-full object-cover grayscale brightness-[0.3] group-hover:grayscale-0 group-hover:brightness-50 group-hover:scale-110 transition-all [transition-duration:2s] ease-out"
                   />
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700" />

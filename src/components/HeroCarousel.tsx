@@ -125,7 +125,7 @@ const HeroCarousel = () => {
                 <img
                   src={currentSlide.mobileImage || currentSlide.image}
                   alt={`Experience ${currentSlide.title} luxury car fragrance`}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform [transition-duration:1500ms] ease-out"
                   width={1080}
                   height={1440}
                   loading={current === 0 ? "eager" : "lazy"}
@@ -137,7 +137,7 @@ const HeroCarousel = () => {
               <img
                 src={currentSlide.image}
                 alt={`Premium car perfume: ${currentSlide.title}`}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform [transition-duration:1500ms] ease-out"
                 width={1920}
                 height={1080}
                 loading={current === 0 ? "eager" : "lazy"}

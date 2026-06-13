@@ -264,7 +264,7 @@ const BlogDetail = () => {
  loading="lazy"
  decoding="async"
  sizes="(max-width: 640px) 100vw, 50vw"
- className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3s] ease-out"
+ className="w-full h-full object-cover group-hover:scale-105 transition-transform [transition-duration:3s] ease-out"
  />
  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-1000" />
  </motion.div>
@@ -280,7 +280,7 @@ const BlogDetail = () => {
  viewport={{ once: true, margin:"-100px" }}
  className="relative py-16 md:py-48 overflow-hidden group"
  >
- <div className="absolute inset-0 bg-primary/[0.02] scale-x-0 group-hover:scale-x-100 transition-transform duration-[2s] origin-left" />
+ <div className="absolute inset-0 bg-primary/[0.02] scale-x-0 group-hover:scale-x-100 transition-transform [transition-duration:2s] origin-left" />
  
  <blockquote className="relative z-10 text-center space-y-8 md:space-y-16 px-4">
  <p className="font-display text-[clamp(1.5rem,6vw,5rem)] md:text-7xl lg:text-8xl text-white uppercase tracking-tighter leading-[1] md:leading-[0.9] italic max-w-4xl mx-auto">

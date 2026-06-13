@@ -46,7 +46,7 @@ const FeaturedProducts = () => {
                   src={product.image}
                   alt={`Featured luxury car fragrance: ${product.name}`}
                   loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1500ms] ease-out"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform [transition-duration:1500ms] ease-out"
                 />
 
                 {/* Refined Dark Gradient Overlay */}
