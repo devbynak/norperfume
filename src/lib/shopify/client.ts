@@ -9,11 +9,12 @@ const DEFAULT_SHOPIFY_CONFIG = {
 // Helper to get environment variables safely across Browser (Vite) and Node (Vercel)
 const getEnv = (key: string): string => {
   // Use import.meta.env for Vite build-time replacement
-  if (key === 'VITE_SHOPIFY_DOMAIN') return import.meta.env.VITE_SHOPIFY_DOMAIN || "";
-  if (key === 'VITE_SHOPIFY_API_VERSION') return import.meta.env.VITE_SHOPIFY_API_VERSION || "";
-  if (key === 'VITE_SHOPIFY_ACCESS_TOKEN') return import.meta.env.VITE_SHOPIFY_ACCESS_TOKEN || "";
-  if (key === 'VITE_SHOPIFY_PUBLIC_CLIENT_ID') return import.meta.env.VITE_SHOPIFY_PUBLIC_CLIENT_ID || "";
-  if (key === 'VITE_SHOPIFY_SHOP_ID') return import.meta.env.VITE_SHOPIFY_SHOP_ID || "";
+  const env = (import.meta as any).env;
+  if (key === 'VITE_SHOPIFY_DOMAIN') return env?.VITE_SHOPIFY_DOMAIN || "";
+  if (key === 'VITE_SHOPIFY_API_VERSION') return env?.VITE_SHOPIFY_API_VERSION || "";
+  if (key === 'VITE_SHOPIFY_ACCESS_TOKEN') return env?.VITE_SHOPIFY_ACCESS_TOKEN || "";
+  if (key === 'VITE_SHOPIFY_PUBLIC_CLIENT_ID') return env?.VITE_SHOPIFY_PUBLIC_CLIENT_ID || "";
+  if (key === 'VITE_SHOPIFY_SHOP_ID') return env?.VITE_SHOPIFY_SHOP_ID || "";
 
   // Fallback to process.env for Node/Vercel environments
   try {
