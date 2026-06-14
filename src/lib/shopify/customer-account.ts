@@ -91,6 +91,12 @@ export async function beginLogin(returnTo = window.location.pathname) {
   sessionStorage.removeItem(STORAGE.state);
   sessionStorage.removeItem(STORAGE.redirectAfter);
 
+  // Clear backup cookies
+  if (typeof document !== 'undefined') {
+    document.cookie = `${STORAGE.state}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${STORAGE.verifier}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  }
+
   // Add preconnect to Shopify auth domain immediately
   const preconnect = document.createElement('link');
   preconnect.rel = 'preconnect';
@@ -135,6 +141,13 @@ export async function beginLogin(returnTo = window.location.pathname) {
     // Ignore if session storage is disabled
   }
 
+  // Set a backup cookie for extremely restrictive browsers (like some in-app iOS views)
+  // that might clear both localStorage and sessionStorage on app-switch
+  if (typeof document !== 'undefined') {
+    document.cookie = `${STORAGE.state}=${state}; path=/; max-age=1800; SameSite=Lax; Secure`;
+    document.cookie = `${STORAGE.verifier}=${verifier}; path=/; max-age=1800; SameSite=Lax; Secure`;
+  }
+
   // Detect In-App browsers (Instagram, Facebook, Google)
   const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
   const isInApp = /Instagram|FBAN|FBAV|GSA/.test(ua);
@@ -174,9 +187,21 @@ export async function handleCallback(search: string) {
   let expectedState = localStorage.getItem(STORAGE.state);
   let verifier = localStorage.getItem(STORAGE.verifier);
   
-  // Fallback to sessionStorage for backward compatibility during transition
+  // Fallback to sessionStorage
   if (!expectedState) expectedState = sessionStorage.getItem(STORAGE.state);
   if (!verifier) verifier = sessionStorage.getItem(STORAGE.verifier);
+
+  // Ultimate fallback to cookies for restrictive mobile browsers
+  if (!expectedState || !verifier) {
+    const cookies = document.cookie.split('; ').reduce((acc, c) => {
+      const [k, v] = c.split('=');
+      acc[k] = v;
+      return acc;
+    }, {} as Record<string, string>);
+    
+    if (!expectedState) expectedState = cookies[STORAGE.state];
+    if (!verifier) verifier = cookies[STORAGE.verifier];
+  }
 
   if (!code) {
     console.error("❌ OAuth Callback Error: No code received from Shopify.");
@@ -240,6 +265,12 @@ export async function handleCallback(search: string) {
   sessionStorage.removeItem(STORAGE.verifier);
   sessionStorage.removeItem(STORAGE.state);
   sessionStorage.removeItem(STORAGE.redirectAfter);
+  
+  // Clean up cookies
+  if (typeof document !== 'undefined') {
+    document.cookie = `${STORAGE.state}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${STORAGE.verifier}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  }
   
   return returnTo;
 }
