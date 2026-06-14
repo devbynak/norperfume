@@ -55,7 +55,15 @@ const AuthCallback = () => {
         console.info("🔍 Auth Diagnostic:", diag);
         
         setError("Unable to complete sign-in");
-        setDetails(`${e.message || "Unknown error"}. (Diag: ${diag.storageType}/${diag.hasVerifier ? 'V' : 'v'}/${diag.hasState ? 'S' : 's'})`);
+        setDetails(`${e.message || "Unknown error"}. (Diag: ${diag.storageType}/${diag.hasVerifier ? 'V' : 'v'}/${diag.hasState ? 'S' : 's'} on ${diag.hostname})`);
+        
+        // Add a detailed log for debugging
+        console.error("📋 Auth Debug Info:", {
+          error: e,
+          diag,
+          url: window.location.href,
+          cookies: document.cookie
+        });
       });
   }, [navigate, signalAuthenticated]);
 

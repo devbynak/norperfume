@@ -144,8 +144,9 @@ export async function beginLogin(returnTo = window.location.pathname) {
   // Set a backup cookie for extremely restrictive browsers (like some in-app iOS views)
   // that might clear both localStorage and sessionStorage on app-switch
   if (typeof document !== 'undefined') {
-    document.cookie = `${STORAGE.state}=${state}; path=/; max-age=1800; SameSite=Lax; Secure`;
-    document.cookie = `${STORAGE.verifier}=${verifier}; path=/; max-age=1800; SameSite=Lax; Secure`;
+    const cookieOptions = "; path=/; max-age=1800; SameSite=Lax; Secure";
+    document.cookie = `${STORAGE.state}=${encodeURIComponent(state)}${cookieOptions}`;
+    document.cookie = `${STORAGE.verifier}=${encodeURIComponent(verifier)}${cookieOptions}`;
   }
 
   // Detect In-App browsers (Instagram, Facebook, Google)
@@ -193,14 +194,17 @@ export async function handleCallback(search: string) {
 
   // Ultimate fallback to cookies for restrictive mobile browsers
   if (!expectedState || !verifier) {
-    const cookies = document.cookie.split('; ').reduce((acc, c) => {
-      const [k, v] = c.split('=');
+    const cookies = document.cookie.split(';').reduce((acc, c) => {
+      const splitAt = c.indexOf('=');
+      if (splitAt === -1) return acc;
+      const k = c.substring(0, splitAt).trim();
+      const v = c.substring(splitAt + 1).trim();
       acc[k] = v;
       return acc;
     }, {} as Record<string, string>);
     
-    if (!expectedState) expectedState = cookies[STORAGE.state];
-    if (!verifier) verifier = cookies[STORAGE.verifier];
+    if (!expectedState) expectedState = decodeURIComponent(cookies[STORAGE.state] || "");
+    if (!verifier) verifier = decodeURIComponent(cookies[STORAGE.verifier] || "");
   }
 
   if (!code) {
