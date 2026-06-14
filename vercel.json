@@ -47,11 +47,15 @@
       ]
     },
     {
-      "source": "/(index.html|sw.js)",
+      "source": "/sw.js",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
         }
       ]
     }
@@ -66,11 +70,6 @@
         }
       ],
       "destination": "https://www.norperfume.com/$1",
-      "permanent": true
-    },
-    {
-      "source": "/:path*/",
-      "destination": "/:path*",
       "permanent": true
     },
     {
@@ -94,8 +93,23 @@
       "permanent": true
     },
     {
+      "source": "/products",
+      "destination": "/products",
+      "permanent": false
+    },
+    {
       "source": "/products/:path*",
       "destination": "/product/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/collections",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/collections/:path*",
+      "destination": "/products",
       "permanent": true
     },
     {
@@ -116,6 +130,26 @@
     {
       "source": "/pages/track-order",
       "destination": "/track-order",
+      "permanent": true
+    },
+    {
+      "source": "/pages/privacy-policy",
+      "destination": "/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/pages/terms-of-service",
+      "destination": "/terms-of-service",
+      "permanent": true
+    },
+    {
+      "source": "/pages/refund-policy",
+      "destination": "/refund-policy",
+      "permanent": true
+    },
+    {
+      "source": "/pages/shipping-policy",
+      "destination": "/shipping-policy",
       "permanent": true
     },
     {

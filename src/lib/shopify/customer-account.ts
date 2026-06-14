@@ -104,9 +104,13 @@ export async function beginLogin(returnTo = window.location.pathname) {
   document.head.appendChild(preconnect);
 
   // Fix domain mismatch before starting:
-  // If user is on norperfume.com, redirect them to www.norperfume.com/login 
-  // to ensure state is preserved when Shopify redirects back to 'www'.
-  if (window.location.hostname === "norperfume.com") {
+  // If user is on the apex domain or any other non-www domain in production,
+  // redirect them to the canonical www domain first.
+  const isProduction = window.location.hostname === "norperfume.com" || window.location.hostname.includes("norperfume.com");
+  const isApex = window.location.hostname === "norperfume.com";
+  
+  if (isApex) {
+    console.info("🔄 Redirecting to canonical domain before login...");
     window.location.href = `https://www.norperfume.com/login?returnTo=${encodeURIComponent(returnTo)}`;
     return;
   }
@@ -144,9 +148,8 @@ export async function beginLogin(returnTo = window.location.pathname) {
   // Set a backup cookie for extremely restrictive browsers (like some in-app iOS views)
   // that might clear both localStorage and sessionStorage on app-switch
   if (typeof document !== 'undefined') {
-    const cookieOptions = "; path=/; max-age=1800; SameSite=Lax; Secure";
-    document.cookie = `${STORAGE.state}=${encodeURIComponent(state)}${cookieOptions}`;
-    document.cookie = `${STORAGE.verifier}=${encodeURIComponent(verifier)}${cookieOptions}`;
+    document.cookie = `${STORAGE.state}=${state}; path=/; max-age=1800; SameSite=Lax; Secure`;
+    document.cookie = `${STORAGE.verifier}=${verifier}; path=/; max-age=1800; SameSite=Lax; Secure`;
   }
 
   // Detect In-App browsers (Instagram, Facebook, Google)
@@ -194,17 +197,14 @@ export async function handleCallback(search: string) {
 
   // Ultimate fallback to cookies for restrictive mobile browsers
   if (!expectedState || !verifier) {
-    const cookies = document.cookie.split(';').reduce((acc, c) => {
-      const splitAt = c.indexOf('=');
-      if (splitAt === -1) return acc;
-      const k = c.substring(0, splitAt).trim();
-      const v = c.substring(splitAt + 1).trim();
+    const cookies = document.cookie.split('; ').reduce((acc, c) => {
+      const [k, v] = c.split('=');
       acc[k] = v;
       return acc;
     }, {} as Record<string, string>);
     
-    if (!expectedState) expectedState = decodeURIComponent(cookies[STORAGE.state] || "");
-    if (!verifier) verifier = decodeURIComponent(cookies[STORAGE.verifier] || "");
+    if (!expectedState) expectedState = cookies[STORAGE.state];
+    if (!verifier) verifier = cookies[STORAGE.verifier];
   }
 
   if (!code) {
