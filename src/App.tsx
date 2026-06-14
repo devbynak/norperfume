@@ -9,6 +9,7 @@ import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import CartDrawer from "@/components/CartDrawer";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
+import DomainCheck from "@/components/DomainCheck";
 
 // Import Home page directly for instant initial load
 import Index from "./pages/Index.tsx";
@@ -38,6 +39,7 @@ const queryClient = new QueryClient();
 const AppRoutes = () => {
   return (
     <>
+      <DomainCheck />
       <SmoothScroll />
       <ScrollToTop />
       <main id="main-content">

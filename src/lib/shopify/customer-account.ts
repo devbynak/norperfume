@@ -135,6 +135,13 @@ export async function beginLogin(returnTo = window.location.pathname) {
     // Ignore if session storage is disabled
   }
 
+  // Detect In-App browsers (Instagram, Facebook, Google)
+  const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
+  const isInApp = /Instagram|FBAN|FBAV|GSA/.test(ua);
+  if (isInApp) {
+    console.info("📱 In-App Browser detected. Using high-compatibility auth mode.");
+  }
+
   const params = new URLSearchParams({
     scope: CUSTOMER_OAUTH.scope,
     client_id: CUSTOMER_OAUTH.clientId,
